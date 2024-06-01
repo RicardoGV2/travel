@@ -103,6 +103,9 @@ def update_votes(selected_date, selected_time, selected_option):
     save_votes(votes)  # Save votes to the file
     st.success(f"Voted for {selected_option} in {selected_time}")
 
+# Autorefresh every 10 seconds
+st_autorefresh(interval=10000, key="datarefresh")
+
 st.title("Itinerary Planner")
 
 # Date selection for voting
