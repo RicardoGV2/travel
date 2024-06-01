@@ -98,8 +98,8 @@ def create_network_with_top_votes(data, top_voted):
     previous_node = None
 
     for date in data:
-        for time in data[date]]:
-            if date in top_voted and time in top_voted[date]]:
+        for time in data[date]:
+            if date in top_voted and time in top_voted[date]:
                 top_option = top_voted[date][time]
                 time_node = f"{date}_{time}_{top_option}"
                 G.add_node(time_node, label=f"{time}\n{top_option}", shape="box")
@@ -164,14 +164,14 @@ if show_add_activity:
             activity_entry = f"{new_activity} {new_cost} AUD"
             if new_date not in data:
                 data[new_date] = {}
-            if new_time in data[new_date]]:
+            if new_time in data[new_date]:
                 data[new_date][new_time].append(activity_entry)
             else:
                 data[new_date][new_time] = [activity_entry]
             # Ensure the new activity is also added to the votes structure
             if new_date not in votes:
                 votes[new_date] = {}
-            if new_time not in votes[new_date]]:
+            if new_time not in votes[new_date]:
                 votes[new_date][new_time] = {}
             votes[new_date][new_time][activity_entry] = 0
             # Sort the times for the date
@@ -179,7 +179,6 @@ if show_add_activity:
             votes[new_date] = dict(OrderedDict(sorted(votes[new_date].items())))
             save_data(data)  # Save the updated data structure
             save_votes(votes)  # Save the updated votes structure
-            st.experimental
             st.experimental_rerun()  # Rerun to update the voting section
         else:
             st.error("Please fill in all fields to add a new activity.")
