@@ -127,8 +127,7 @@ def update_votes(selected_date, selected_time, selected_option):
     votes[selected_date][selected_time][selected_option] += 1
     st.session_state['user_votes'][selected_date][selected_time] = selected_option
     save_votes(votes)  # Save votes to the file
-    st.experimental_rerun()  # Refresh immediately after voting
-    st.success(f"Voted for {selected_option} in {selected_time}")
+    st.experimental_rerun()
 
 # Add a setting to pause or continue autorefresh and to show/hide votes JSON and the add activity section
 st.sidebar.title("Settings")
@@ -191,7 +190,14 @@ for time in sorted(data[selected_date]):
     selected_option_display = st.radio("", vote_display, key=f"display_{selected_date}_{time}")
     selected_option = selected_option_display.split(' - ')[0]
     if st.button(f"Vote for {selected_option}", key=f"button_{selected_date}_{time}"):
-        update_votes(selected_date, time, selected_option)
+        current_vote = st.session_state['user_votes'][selected_date][selected_time]
+        if current_vote:
+            vote_counts[current_vote] -= 1
+        vote_counts[selected_option] += 1
+        st.session_state['user_votes'][selected_date][selected_time] = selected_option
+        votes[selected_date][selected_time][selected_option] += 1
+        save_votes(votes)
+        st.experimental_rerun()
 
 # Get the top voted options
 top_voted = get_top_voted_options(votes)
