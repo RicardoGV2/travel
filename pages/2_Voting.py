@@ -2,6 +2,7 @@ import streamlit as st
 import json
 import os
 from collections import OrderedDict
+from streamlit_autorefresh import st_autorefresh
 
 # Paths to the data and votes files
 data_file = "data.json"
@@ -11,7 +12,7 @@ votes_file = "votes.json"
 if 'user' not in st.session_state:
     st.warning("Please log in first.")
     st.experimental_set_query_params(page="1_Login")
-    st.experimental_rerun()
+    st.rerun()
 
 # Function to load data
 def load_data():
@@ -74,7 +75,7 @@ def update_votes(selected_date, selected_time, selected_option):
     votes[selected_date][selected_time][selected_option] += 1
     st.session_state['user_votes'][selected_date][selected_time] = selected_option
     save_votes(votes)  # Save votes to the file
-    st.experimental_rerun()
+    st.rerun()
 
 st.title("Vote for Preferences")
 
@@ -100,4 +101,7 @@ for time in sorted(data[selected_date]):
         st.session_state['user_votes'][selected_date][time] = selected_option
         votes[selected_date][time][selected_option] += 1
         save_votes(votes)
-        st.experimental_rerun()
+        st.rerun()
+
+# Auto refresh
+st_autorefresh(interval=7000, key="datarefresh")

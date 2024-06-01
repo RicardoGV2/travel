@@ -1,48 +1,31 @@
 import streamlit as st
-import json
-import os
 
-users_file = "users.json"
-
-# Load existing users
-def load_users():
-    if os.path.exists(users_file):
-        with open(users_file, 'r') as file:
-            return json.load(file)
-    else:
-        return ["Jorge", "Raquel", "Karime", "Katia", "Janet", "Ricardo"]
-
-# Save users
-def save_users(users):
-    with open(users_file, 'w') as file:
-        json.dump(users, file, indent=4)
-
-# Load users
-users = load_users()
+# Cargar usuarios desde st.secrets
+users = st.secrets["users"]
 
 st.title("User Login")
 
-# User selection or new user addition
-selected_user = st.selectbox("Select User", users)
-new_user = st.text_input("Add New User")
+# Inputs de nombre de usuario y contraseña
+username = st.text_input("Username")
+password = st.text_input("Password", type="password")
 
-if st.button("Add User"):
-    if new_user and new_user not in users:
-        users.append(new_user)
-        save_users(users)
-        st.success(f"User {new_user} added!")
-    elif new_user in users:
-        st.warning("User already exists.")
+# Función de autenticación
+def authenticate(username, password):
+    if username in users and users[username] == password:
+        return True
+    return False
+
+# Botón de inicio de sesión
+if st.button("Login"):
+    if authenticate(username, password):
+        st.session_state['user'] = username
+        st.success("Login successful")
+        st.experimental_set_query_params(page="2_Voting")
+        st.rerun()
     else:
-        st.error("Please enter a valid name.")
+        st.error("Invalid username or password")
 
-# Button to proceed
-if st.button("Proceed"):
-    st.session_state['user'] = selected_user
-    st.experimental_set_query_params(page="2_Voting")
-    st.experimental_rerun()
-
-# Redirect to the voting page if a user is already selected
+# Redirigir a la página de votación si el usuario ya está autenticado
 if 'user' in st.session_state:
     st.experimental_set_query_params(page="2_Voting")
-    st.experimental_rerun()
+    st.rerun()

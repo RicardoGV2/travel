@@ -23,4 +23,4 @@ if 'user' not in st.session_state:
 else:
     st.sidebar.success("Select a page above.")
     st.experimental_set_query_params(page="2_Voting")
-    st.experimental_rerun()
+    st.rerun()

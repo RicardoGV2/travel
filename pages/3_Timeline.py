@@ -4,6 +4,7 @@ import networkx as nx
 import streamlit.components.v1 as components
 import json
 import os
+from streamlit_autorefresh import st_autorefresh
 
 # Paths to the data and votes files
 data_file = "data.json"
@@ -58,7 +59,6 @@ def get_top_voted_options(votes):
             top_voted[date][time] = top_option
     return top_voted
 
-
 # Function to create network with top voted options
 def create_network_with_top_votes(data, top_voted):
     net = Network(height="1000px", width="100%", directed=True)
@@ -66,8 +66,8 @@ def create_network_with_top_votes(data, top_voted):
 
     previous_node = None
 
-    for date in data:
-        for time in data[date]:
+    for date in sorted(data.keys()):
+        for time in sorted(data[date].keys()):
             if date in top_voted and time in top_voted[date]:
                 top_option = top_voted[date][time]
                 time_node = f"{date}_{time}_{top_option}"
@@ -118,11 +118,13 @@ with open(path, 'r', encoding='utf-8') as file:
 
 st.title("Timeline of Activities")
 
+# Auto refresh
+st_autorefresh(interval=7000, key="datarefresh")
+
 # Display the current votes (optional)
 if st.sidebar.checkbox("Show Votes JSON", value=False):
-    votes_file = "votes.json"
     if os.path.exists(votes_file):
-        with open(votes_file, 'r') as file):
+        with open(votes_file, 'r') as file:
             votes = json.load(file)
         st.write("## Current Votes")
         st.json(votes)
