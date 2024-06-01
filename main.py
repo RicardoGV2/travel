@@ -5,6 +5,7 @@ import streamlit.components.v1 as components
 import json
 import os
 from streamlit_autorefresh import st_autorefresh
+from collections import OrderedDict
 
 # Path to the votes file
 votes_file = "votes.json"
@@ -42,7 +43,7 @@ def load_votes():
 # Function to save votes
 def save_votes(votes):
     with open(votes_file, 'w') as file:
-        json.dump(votes, file)
+        json.dump(votes, file, indent=4)
 
 # Load votes
 votes = load_votes()
@@ -128,7 +129,7 @@ selected_date = st.selectbox("Select Date for Voting:", options=list(data.keys()
 
 # Voting section
 st.write("## Vote for Preferences")
-for time in data[selected_date]:
+for time in sorted(data[selected_date]):
     st.write(f"**{time}**")
     options = data[selected_date][time]
     selected_option = st.radio("", options, key=f"{selected_date}_{time}")
@@ -153,6 +154,9 @@ if st.button("Add New Activity"):
         if new_time not in votes[new_date]:
             votes[new_date][new_time] = {}
         votes[new_date][new_time][activity_entry] = 0
+        # Sort the times for the date
+        data[new_date] = dict(OrderedDict(sorted(data[new_date].items())))
+        votes[new_date] = dict(OrderedDict(sorted(votes[new_date].items())))
         save_votes(votes)  # Save the updated votes structure
         st.success(f"Added new activity: {activity_entry} on {new_date} at {new_time}")
     else:
