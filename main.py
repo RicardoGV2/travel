@@ -80,7 +80,7 @@ def create_network_with_top_votes(data, top_voted):
     previous_node = None
 
     for date in data:
-        for time in data[date]]:
+        for time in data[date]:
             if date in top_voted and time in top_voted[date]:
                 top_option = top_voted[date][time]
                 time_node = f"{date}_{time}_{top_option}"
@@ -174,7 +174,7 @@ else:
                 # Ensure the new activity is also added to the votes structure
                 if new_date not in votes:
                     votes[new_date] = {}
-                if new_time not in votes[new_date]]:
+                if new_time not in votes[new_date]:
                     votes[new_date][new_time] = {}
                 votes[new_date][new_time][activity_entry] = 0
                 # Sort the times for the date
@@ -203,4 +203,5 @@ else:
         vote_display = [f"{option} - {vote_counts[option]} ❤️" for option in options]
         selected_option_display = st.radio("", vote_display, key=f"display_{selected_date}_{time}")
         selected_option = selected_option_display.split(' - ')[0]
-        if st.button
+        if st.button(f"Vote for {selected_option}", key=f"button_{selected_date}_{time}"):
+            current_vote = st
