@@ -127,12 +127,13 @@ def update_votes(selected_date, selected_time, selected_option):
     votes[selected_date][selected_time][selected_option] += 1
     st.session_state['user_votes'][selected_date][selected_time] = selected_option
     save_votes(votes)  # Save votes to the file
+    st.experimental_rerun()  # Refresh immediately after voting
     st.success(f"Voted for {selected_option} in {selected_time}")
 
 # Add a setting to pause or continue autorefresh and to show/hide votes JSON and the add activity section
 st.sidebar.title("Settings")
 auto_refresh = st.sidebar.checkbox("Enable Auto Refresh", value=True)
-refresh_interval = st.sidebar.number_input("Refresh Interval (seconds)", min_value=1, max_value=60, value=5) if auto_refresh else None
+refresh_interval = st.sidebar.number_input("Refresh Interval (seconds)", min_value=1, max_value=60, value=7) if auto_refresh else None
 show_votes_json = st.sidebar.checkbox("Show Votes JSON", value=False)
 show_add_activity = st.sidebar.checkbox("Show Add Activity Section", value=True)
 
