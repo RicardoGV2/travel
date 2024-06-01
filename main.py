@@ -46,6 +46,14 @@ def save_votes(votes):
     with open(votes_file, 'w') as file:
         json.dump(votes, file)
 
+@st.cache
+def load_votes():
+    if os.path.exists(votes_file):
+        with open(votes_file, 'r') as file:
+            return json.load(file)
+    else:
+        return {date: {time: {option: 0 for option in data[date][time]} for time in data[date]} for date in data}
+
 def get_top_voted_options(votes):
     top_voted = {}
     for date in votes:
@@ -104,8 +112,8 @@ def update_votes(selected_date, selected_time, selected_option):
     save_votes(votes)  # Save votes to the file
     st.success(f"Voted for {selected_option} in {selected_time}")
 
-# Autorefresh every 10 seconds
-st_autorefresh(interval=10000, key="datarefresh")
+# Autorefresh every 60 seconds
+st_autorefresh(interval=60000, key="datarefresh")
 
 st.title("Itinerary Planner")
 
@@ -135,6 +143,6 @@ with open(path, 'r', encoding='utf-8') as file:
 
 # Display the current votes
 st.write("## Current Votes")
-st.json(votes)
+st.json(load_votes())
 
 # To run the app, use the command: streamlit run filename.py
