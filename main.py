@@ -4,6 +4,7 @@ import networkx as nx
 import streamlit.components.v1 as components
 import json
 import os
+from streamlit_autorefresh import st_autorefresh
 
 # Path to the votes file
 votes_file = "votes.json"
