@@ -1,4 +1,1 @@
-streamlit
-pyvis
-networkx
-streamlit-autorefresh
+streamlit>=1.31.0
