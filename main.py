@@ -220,4 +220,4 @@ scroll_position_js = """
             localStorage.removeItem('scrollPos');
         }
     });
-    window.addEventListener('beforeun
+    window.addEventListener('before
