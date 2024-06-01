@@ -90,7 +90,7 @@ def create_network_with_top_votes(data, top_voted):
             "hierarchicalRepulsion": {
                 "centralGravity": 0,
                 "springLength": 100,
-                "springConstant": 0.01,
+                "springConstant": 01,
                 "nodeDistance": 120,
                 "damping": 0.09
             },
@@ -121,14 +121,13 @@ if auto_refresh:
 st.title("Itinerary Planner")
 
 # Date selection for voting
-selected_date = st.selectbox("Select Date for Voting:", options=list(data.keys()))
+selected_date = st.selectbox("Select Date for Voting:", options=list(data.keys()), format_func=lambda x: x, disabled=False, label_visibility='collapsed')
 
 # Voting section
 st.write("## Vote for Preferences")
 for time in data[selected_date]:
-    st.write(f"**Options for {time} on {selected_date}:**")
     options = data[selected_date][time]
-    selected_option = st.radio(f"Select option for {time} on {selected_date}", options, key=f"{selected_date}_{time}")
+    selected_option = st.radio("", options, key=f"{selected_date}_{time}")
     if st.button(f"Vote for {selected_option}", key=f"button_{selected_date}_{time}"):
         update_votes(selected_date, time, selected_option)
 
