@@ -129,6 +129,7 @@ selected_date = st.selectbox("Select Date for Voting:", options=list(data.keys()
 # Voting section
 st.write("## Vote for Preferences")
 for time in data[selected_date]:
+    st.write(f"**{time}**")
     options = data[selected_date][time]
     selected_option = st.radio("", options, key=f"{selected_date}_{time}")
     if st.button(f"Vote for {selected_option}", key=f"button_{selected_date}_{time}"):
@@ -143,7 +144,7 @@ new_cost = st.number_input("Enter Cost for New Activity (in AUD):", key="new_cos
 
 if st.button("Add New Activity"):
     if new_date in data and new_time and new_activity:
-        activity_entry = f"{new_activity} {new_cost} AUD"
+        activity_entry = f"{new_time} {new_activity} {new_cost} AUD"
         if new_time in data[new_date]:
             data[new_date][new_time].append(activity_entry)
         else:
@@ -169,4 +170,4 @@ if show_votes_json:
     st.write("## Current Votes")
     st.json(votes)
 
-# To run the app, use the command: streamlit run filename.p
+# To run the app, use the command: streamlit run filename.py
