@@ -169,4 +169,4 @@ if show_votes_json:
     st.write("## Current Votes")
     st.json(votes)
 
-# To run the app, use the command: streamlit run filename.py
+# To run the app, use the command: streamlit run filename.p
