@@ -51,7 +51,7 @@ def save_data(file_path, data):
 
 # Load data, votes, and users
 data = load_data(data_file, initial_data)
-votes = load_data(votes_file, {date: {time: {option: 0 for option in initial_data[date][time]} for time in initial_data[date]} for date in initial_data})
+votes = load_data(votes_file, {date: {time: {option: {"count": 0, "users": []} for option in initial_data[date][time]} for time in initial_data[date]} for date in initial_data})
 users = load_data(users_file, initial_users)
 
 # Initialize session state for tracking votes and user
@@ -68,7 +68,7 @@ def get_top_voted_options(votes):
         top_voted[date] = {}
         for time in votes[date]:
             options = votes[date][time]
-            top_option = max(options, key=options.get)
+            top_option = max(options, key=lambda x: options[x]["count"])
             top_voted[date][time] = top_option
     return top_voted
 
@@ -117,8 +117,10 @@ def create_network_with_top_votes(data, top_voted):
 def update_votes(user, selected_date, selected_time, selected_option):
     current_vote = st.session_state['user_votes'][user][selected_date][selected_time]
     if current_vote:
-        votes[selected_date][selected_time][current_vote] -= 1
-    votes[selected_date][selected_time][selected_option] += 1
+        votes[selected_date][selected_time][current_vote]["count"] -= 1
+        votes[selected_date][selected_time][current_vote]["users"].remove(user)
+    votes[selected_date][selected_time][selected_option]["count"] += 1
+    votes[selected_date][selected_time][selected_option]["users"].append(user)
     st.session_state['user_votes'][user][selected_date][selected_time] = selected_option
     save_data(votes_file, votes)  # Save votes to the file
 
@@ -176,7 +178,7 @@ else:
                     votes[new_date] = {}
                 if new_time not in votes[new_date]:
                     votes[new_date][new_time] = {}
-                votes[new_date][new_time][activity_entry] = 0
+                votes[new_date][new_time][activity_entry] = {"count": 0, "users": []}
                 # Sort the times for the date
                 data[new_date] = dict(OrderedDict(sorted(data[new_date].items())))
                 votes[new_date] = dict(OrderedDict(sorted(votes[new_date].items())))
@@ -197,11 +199,6 @@ else:
         st.write(f"**{time}**")
         options = data[selected_date][time]
         if selected_date in votes and time in votes[selected_date]:
-            vote_counts = {option: votes[selected_date][time].get(option, 0) for option in options}
+            vote_counts = {option: votes[selected_date][time].get(option, {"count": 0, "users": []}) for option in options}
         else:
-            vote_counts = {option: 0 for option in options}
-        vote_display = [f"{option} - {vote_counts[option]} ❤️" for option in options]
-        selected_option_display = st.radio("", vote_display, key=f"display_{selected_date}_{time}")
-        selected_option = selected_option_display.split(' - ')[0]
-        if st.button(f"Vote for {selected_option}", key=f"button_{selected_date}_{time}"):
-            current_vote = st
+            vote_counts = {option: {"count":
