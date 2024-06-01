@@ -6,11 +6,12 @@ import json
 import os
 from collections import OrderedDict
 
-# Path to the votes file
+# Paths to the data and votes files
+data_file = "data.json"
 votes_file = "votes.json"
 
-# Example data for multiple days
-data = {
+# Example initial data for multiple days
+initial_data = {
     "14/06": {
         "06:00": ["Llegada al aeropuerto"],
         "07:00": ["Desayuno en el aeropuerto"],
@@ -31,20 +32,34 @@ data = {
     # Add more days as needed
 }
 
+# Function to load data
+def load_data():
+    if os.path.exists(data_file):
+        with open(data_file, 'r') as file:
+            return json.load(file)
+    else:
+        return initial_data
+
+# Function to save data
+def save_data(data):
+    with open(data_file, 'w') as file:
+        json.dump(data, file, indent=4)
+
 # Function to load votes
 def load_votes():
     if os.path.exists(votes_file):
         with open(votes_file, 'r') as file:
             return json.load(file)
     else:
-        return {date: {time: {option: 0 for option in data[date][time]} for time in data[date]} for date in data}
+        return {date: {time: {option: 0 for option in initial_data[date][time]} for time in initial_data[date]} for date in initial_data}
 
 # Function to save votes
 def save_votes(votes):
     with open(votes_file, 'w') as file:
         json.dump(votes, file, indent=4)
 
-# Load votes
+# Load data and votes
+data = load_data()
 votes = load_votes()
 
 # Initialize session state for tracking votes
@@ -126,34 +141,30 @@ if show_add_activity:
     new_cost = st.number_input("Enter Cost for New Activity (in AUD):", key="new_cost", min_value=0)
 
     if st.button("Add New Activity"):
-        if new_date in data and new_time and new_activity:
+        if new_date and new_time and new_activity:
             activity_entry = f"{new_activity} {new_cost} AUD"
+            if new_date not in data:
+                data[new_date] = {}
             if new_time in data[new_date]:
                 data[new_date][new_time].append(activity_entry)
             else:
                 data[new_date][new_time] = [activity_entry]
             # Ensure the new activity is also added to the votes structure
+            if new_date not in votes:
+                votes[new_date] = {}
             if new_time not in votes[new_date]:
                 votes[new_date][new_time] = {}
             votes[new_date][new_time][activity_entry] = 0
             # Sort the times for the date
             data[new_date] = dict(OrderedDict(sorted(data[new_date].items())))
             votes[new_date] = dict(OrderedDict(sorted(votes[new_date].items())))
+            save_data(data)  # Save the updated data structure
             save_votes(votes)  # Save the updated votes structure
             st.experimental_rerun()  # Rerun to update the voting section
         else:
             st.error("Please fill in all fields to add a new activity.")
 
 st.title("Itinerary Planner")
-
-# Load session state data if available
-if 'data' not in st.session_state:
-    st.session_state['data'] = data
-if 'votes' not in st.session_state:
-    st.session_state['votes'] = votes
-
-data = st.session_state['data']
-votes = st.session_state['votes']
 
 # Date selection for voting
 selected_date = st.selectbox("Select Date for Voting:", options=list(data.keys()), format_func=lambda x: x, disabled=False, label_visibility='collapsed')
