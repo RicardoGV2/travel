@@ -1,4 +1,3 @@
 streamlit
 pyvis
 networkx
-streamlit_autorefresh

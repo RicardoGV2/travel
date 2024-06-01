@@ -4,7 +4,6 @@ import networkx as nx
 import streamlit.components.v1 as components
 import json
 import os
-from streamlit_autorefresh import st_autorefresh
 from collections import OrderedDict
 
 # Path to the votes file
@@ -146,19 +145,25 @@ if show_add_activity:
             data[new_date] = dict(OrderedDict(sorted(data[new_date].items())))
             votes[new_date] = dict(OrderedDict(sorted(votes[new_date].items())))
             save_votes(votes)  # Save the updated votes structure
+            st.session_state['data'] = data  # Update session state data
+            st.session_state['votes'] = votes  # Update session state votes
             st.experimental_rerun()  # Rerun to update the voting section
         else:
             st.error("Please fill in all fields to add a new activity.")
 
 st.title("Itinerary Planner")
 
+# Load session state data if available
+if 'data' in st.session_state:
+    data = st.session_state['data']
+if 'votes' in st.session_state:
+    votes = st.session_state['votes']
+
 # Date selection for voting
 selected_date = st.selectbox("Select Date for Voting:", options=list(data.keys()), format_func=lambda x: x, disabled=False, label_visibility='collapsed')
 
 # Voting section
 st.write("## Vote for Preferences")
-# Re-load votes to make sure we have the latest changes
-votes = load_votes()
 for time in sorted(data[selected_date]):
     st.write(f"**{time}**")
     options = data[selected_date][time]
