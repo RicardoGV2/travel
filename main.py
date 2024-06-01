@@ -161,7 +161,7 @@ if show_add_activity:
             # Ensure the new activity is also added to the votes structure
             if new_date not in votes:
                 votes[new_date] = {}
-            if new_time not in votes[new_date]]:
+            if new_time not in votes[new_date]:
                 votes[new_date][new_time] = {}
             votes[new_date][new_time][activity_entry] = 0
             # Sort the times for the date
@@ -210,14 +210,4 @@ if show_votes_json:
     st.write("## Current Votes")
     st.json(votes)
 
-# Add JavaScript to save and restore scroll position
-scroll_position_js = """
-<script>
-    document.addEventListener("DOMContentLoaded", function(event) {
-        var scrollPos = localStorage.getItem('scrollPos');
-        if (scrollPos) {
-            window.scrollTo(0, scrollPos);
-            localStorage.removeItem('scrollPos');
-        }
-    });
-    window.addEventListener
+# To run the app, use the command: streamlit run filename.py
