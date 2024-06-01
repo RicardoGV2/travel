@@ -31,28 +31,25 @@ data = {
     # Add more days as needed
 }
 
-# Load or initialize votes
-if os.path.exists(votes_file):
-    with open(votes_file, 'r') as file:
-        votes = json.load(file)
-else:
-    votes = {date: {time: {option: 0 for option in data[date][time]} for time in data[date]} for date in data}
-
-# Initialize session state for tracking votes
-if 'user_votes' not in st.session_state:
-    st.session_state['user_votes'] = {date: {time: None for time in data[date]} for date in data}
-
-def save_votes(votes):
-    with open(votes_file, 'w') as file:
-        json.dump(votes, file)
-
-@st.cache
+# Function to load votes
 def load_votes():
     if os.path.exists(votes_file):
         with open(votes_file, 'r') as file:
             return json.load(file)
     else:
         return {date: {time: {option: 0 for option in data[date][time]} for time in data[date]} for date in data}
+
+# Function to save votes
+def save_votes(votes):
+    with open(votes_file, 'w') as file:
+        json.dump(votes, file)
+
+# Load votes
+votes = load_votes()
+
+# Initialize session state for tracking votes
+if 'user_votes' not in st.session_state:
+    st.session_state['user_votes'] = {date: {time: None for time in data[date]} for date in data}
 
 def get_top_voted_options(votes):
     top_voted = {}
@@ -143,6 +140,6 @@ with open(path, 'r', encoding='utf-8') as file:
 
 # Display the current votes
 st.write("## Current Votes")
-st.json(load_votes())
+st.json(votes)
 
 # To run the app, use the command: streamlit run filename.py
