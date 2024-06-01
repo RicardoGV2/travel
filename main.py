@@ -86,7 +86,7 @@ def create_network_with_top_votes(data, top_voted):
     previous_node = None
 
     for date in data:
-        for time in data[date]:
+        for time in data[date]]:
             if date in top_voted and time in top_voted[date]:
                 top_option = top_voted[date][time]
                 time_node = f"{date}_{time}_{top_option}"
@@ -210,4 +210,8 @@ if show_votes_json:
     st.write("## Current Votes")
     st.json(votes)
 
-# To run the app, use the command: streamlit run filename.py
+# Add JavaScript to save and restore scroll position
+scroll_position_js = """
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+        var scrollPos = localStorage.getItem
