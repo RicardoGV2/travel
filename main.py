@@ -51,6 +51,7 @@ votes = load_votes()
 if 'user_votes' not in st.session_state:
     st.session_state['user_votes'] = {date: {time: None for time in data[date]} for date in data}
 
+# Function to get top voted options
 def get_top_voted_options(votes):
     top_voted = {}
     for date in votes:
@@ -61,6 +62,7 @@ def get_top_voted_options(votes):
             top_voted[date][time] = top_option
     return top_voted
 
+# Function to create network with top voted options
 def create_network_with_top_votes(data, top_voted):
     net = Network(height="1000px", width="100%", directed=True)
     G = nx.DiGraph()
@@ -100,6 +102,7 @@ def create_network_with_top_votes(data, top_voted):
     """)
     return net
 
+# Function to update votes
 def update_votes(selected_date, selected_time, selected_option):
     current_vote = st.session_state['user_votes'][selected_date][selected_time]
     if current_vote:
@@ -130,6 +133,24 @@ for time in data[selected_date]:
     selected_option = st.radio("", options, key=f"{selected_date}_{time}")
     if st.button(f"Vote for {selected_option}", key=f"button_{selected_date}_{time}"):
         update_votes(selected_date, time, selected_option)
+
+# Section to add new activities
+st.write("## Propose a New Activity")
+new_date = st.selectbox("Select Date for New Activity:", options=list(data.keys()), key="new_date")
+new_time = st.text_input("Enter Time for New Activity (e.g., 14:00):", key="new_time")
+new_activity = st.text_input("Enter New Activity Description:", key="new_activity")
+new_cost = st.number_input("Enter Cost for New Activity (in AUD):", key="new_cost", min_value=0)
+
+if st.button("Add New Activity"):
+    if new_date in data and new_time and new_activity:
+        activity_entry = f"{new_activity} {new_cost} AUD"
+        if new_time in data[new_date]:
+            data[new_date][new_time].append(activity_entry)
+        else:
+            data[new_date][new_time] = [activity_entry]
+        st.success(f"Added new activity: {activity_entry} on {new_date} at {new_time}")
+    else:
+        st.error("Please fill in all fields to add a new activity.")
 
 # Get the top voted options
 top_voted = get_top_voted_options(votes)
