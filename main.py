@@ -70,7 +70,7 @@ def create_network_with_top_votes(data, top_voted):
     previous_node = None
 
     for date in data:
-        for time in data[date]:
+        for time in data[date]]:
             top_option = top_voted[date][time]
             time_node = f"{date}_{time}_{top_option}"
             G.add_node(time_node, label=f"{time}\n{top_option}", shape="box")
@@ -114,13 +114,8 @@ def update_votes(selected_date, selected_time, selected_option):
 
 # Add a setting to pause or continue autorefresh and to show/hide votes JSON
 st.sidebar.title("Settings")
-auto_refresh = st.sidebar.checkbox("Enable Auto Refresh", value=True)
 show_votes_json = st.sidebar.checkbox("Show Votes JSON", value=False)
 show_add_activity = st.sidebar.checkbox("Show Add Activity Section", value=True)
-
-# Autorefresh every 5 seconds if enabled
-if auto_refresh:
-    st_autorefresh(interval=5000, key="datarefresh")
 
 # Section to add new activities
 if show_add_activity:
