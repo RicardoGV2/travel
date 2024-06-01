@@ -70,7 +70,7 @@ def create_network_with_top_votes(data, top_voted):
     previous_node = None
 
     for date in data:
-        for time in data[date]]:
+        for time in data[date]:
             top_option = top_voted[date][time]
             time_node = f"{date}_{time}_{top_option}"
             G.add_node(time_node, label=f"{time}\n{top_option}", shape="box")
@@ -112,7 +112,7 @@ def update_votes(selected_date, selected_time, selected_option):
     save_votes(votes)  # Save votes to the file
     st.success(f"Voted for {selected_option} in {selected_time}")
 
-# Add a setting to pause or continue autorefresh and to show/hide votes JSON
+# Add a setting to show/hide votes JSON and the add activity section
 st.sidebar.title("Settings")
 show_votes_json = st.sidebar.checkbox("Show Votes JSON", value=False)
 show_add_activity = st.sidebar.checkbox("Show Add Activity Section", value=True)
