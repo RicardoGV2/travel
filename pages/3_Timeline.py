@@ -9,12 +9,7 @@ import os
 data_file = "data.json"
 votes_file = "votes.json"
 
-# Redirect to login if no user is selected
-if 'user' not in st.session_state:
-    st.experimental_set_query_params(page="main")
-    st.experimental_rerun()
-
-# Load data and votes
+# Function to load data
 def load_data():
     if os.path.exists(data_file):
         with open(data_file, 'r') as file:
@@ -28,32 +23,6 @@ def load_votes():
             return json.load(file)
     else:
         return {date: {time: {option: 0 for option in initial_data[date][time]} for time in initial_data[date]} for date in initial_data}
-
-# Initial data for multiple days
-initial_data = {
-    "14/06": {
-        "06:00": ["Llegada al aeropuerto"],
-        "07:00": ["Desayuno en el aeropuerto"],
-        "08:00": ["Bus a Sydney"],
-        "09:30": ["Bus al tour"],
-        "10:00": ["Tour 1 20 AUD", "Tour 2 25 AUD"],
-        "12:00": ["Bus a otra actividad"],
-        "12:30": ["Actividad 1", "Actividad 2"],
-        "18:00": ["Cena"]
-    },
-    "15/06": {
-        "08:00": ["Desayuno en el hotel"],
-        "09:00": ["Visita al parque"],
-        "12:00": ["Almuerzo en el restaurante"],
-        "15:00": ["Visita al museo"],
-        "18:00": ["Cena en el centro"]
-    },
-    # Add more days as needed
-}
-
-# Load data and votes
-data = load_data()
-votes = load_votes()
 
 # Function to get top voted options
 def get_top_voted_options(votes):
@@ -74,8 +43,8 @@ def create_network_with_top_votes(data, top_voted):
     previous_node = None
 
     for date in data:
-        for time in data[date]:
-            if date in top_voted and time in top_voted[date]:
+        for time in data[date]]:
+            if date in top_voted and time in top_voted[date]]:
                 top_option = top_voted[date][time]
                 time_node = f"{date}_{time}_{top_option}"
                 G.add_node(time_node, label=f"{time}\n{top_option}", shape="box")
@@ -107,23 +76,14 @@ def create_network_with_top_votes(data, top_voted):
     """)
     return net
 
+# Load data and votes
+data = load_data()
+votes = load_votes()
+
 # Get the top voted options
 top_voted = get_top_voted_options(votes)
 
 # Create and display the network with top voted options
 net = create_network_with_top_votes(data, top_voted)
 path = 'full_network.html'
-net.save_graph(path)
-
-st.title("Itinerary Timeline")
-
-with open(path, 'r', encoding='utf-8') as file:
-    html_content = file.read()
-    components.html(html_content, height=1000)
-
-# Display the current votes
-if st.checkbox("Show Votes JSON"):
-    st.write("## Current Votes")
-    st.json(votes)
-
-# To run the app, use the command: streamlit run timeline.py
+net.save
