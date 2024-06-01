@@ -9,6 +9,28 @@ import os
 data_file = "data.json"
 votes_file = "votes.json"
 
+# Initial data for multiple days (if data file does not exist)
+initial_data = {
+    "14/06": {
+        "06:00": ["Llegada al aeropuerto"],
+        "07:00": ["Desayuno en el aeropuerto"],
+        "08:00": ["Bus a Sydney"],
+        "09:30": ["Bus al tour"],
+        "10:00": ["Tour 1 20 AUD", "Tour 2 25 AUD"],
+        "12:00": ["Bus a otra actividad"],
+        "12:30": ["Actividad 1", "Actividad 2"],
+        "18:00": ["Cena"]
+    },
+    "15/06": {
+        "08:00": ["Desayuno en el hotel"],
+        "09:00": ["Visita al parque"],
+        "12:00": ["Almuerzo en el restaurante"],
+        "15:00": ["Visita al museo"],
+        "18:00": ["Cena en el centro"]
+    },
+    # Add more days as needed
+}
+
 # Function to load data
 def load_data():
     if os.path.exists(data_file):
@@ -17,6 +39,7 @@ def load_data():
     else:
         return initial_data
 
+# Function to load votes
 def load_votes():
     if os.path.exists(votes_file):
         with open(votes_file, 'r') as file:
