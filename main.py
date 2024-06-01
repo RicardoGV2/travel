@@ -140,8 +140,6 @@ if show_add_activity:
             data[new_date] = dict(OrderedDict(sorted(data[new_date].items())))
             votes[new_date] = dict(OrderedDict(sorted(votes[new_date].items())))
             save_votes(votes)  # Save the updated votes structure
-            st.session_state['data'] = data  # Update session state data
-            st.session_state['votes'] = votes  # Update session state votes
             st.experimental_rerun()  # Rerun to update the voting section
         else:
             st.error("Please fill in all fields to add a new activity.")
@@ -149,10 +147,13 @@ if show_add_activity:
 st.title("Itinerary Planner")
 
 # Load session state data if available
-if 'data' in st.session_state:
-    data = st.session_state['data']
-if 'votes' in st.session_state:
-    votes = st.session_state['votes']
+if 'data' not in st.session_state:
+    st.session_state['data'] = data
+if 'votes' not in st.session_state:
+    st.session_state['votes'] = votes
+
+data = st.session_state['data']
+votes = st.session_state['votes']
 
 # Date selection for voting
 selected_date = st.selectbox("Select Date for Voting:", options=list(data.keys()), format_func=lambda x: x, disabled=False, label_visibility='collapsed')
