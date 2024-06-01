@@ -39,8 +39,10 @@ if st.button("Add User"):
 # Button to proceed
 if st.button("Proceed"):
     st.session_state['user'] = selected_user
+    st.experimental_set_query_params(page="2_Voting")
     st.experimental_rerun()
 
-# Redirect to the main page if a user is already selected
+# Redirect to the voting page if a user is already selected
 if 'user' in st.session_state:
+    st.experimental_set_query_params(page="2_Voting")
     st.experimental_rerun()

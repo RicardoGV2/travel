@@ -10,7 +10,8 @@ votes_file = "votes.json"
 # Redirect to login if no user is selected
 if 'user' not in st.session_state:
     st.warning("Please log in first.")
-    st.stop()
+    st.experimental_set_query_params(page="1_Login")
+    st.experimental_rerun()
 
 # Function to load data
 def load_data():

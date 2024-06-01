@@ -19,3 +19,9 @@ st.markdown(
     **👈 Select a page from the sidebar** to get started!
     """
 )
+
+# Check if the user is logged in
+if 'user' in st.session_state:
+    st.experimental_set_query_params(page="2_Voting")
+    st.experimental_rerun()
+    
