@@ -190,12 +190,12 @@ for time in sorted(data[selected_date]):
     selected_option_display = st.radio("", vote_display, key=f"display_{selected_date}_{time}")
     selected_option = selected_option_display.split(' - ')[0]
     if st.button(f"Vote for {selected_option}", key=f"button_{selected_date}_{time}"):
-        current_vote = st.session_state['user_votes'][selected_date][selected_time]
+        current_vote = st.session_state['user_votes'][selected_date][time]
         if current_vote:
             vote_counts[current_vote] -= 1
         vote_counts[selected_option] += 1
-        st.session_state['user_votes'][selected_date][selected_time] = selected_option
-        votes[selected_date][selected_time][selected_option] += 1
+        st.session_state['user_votes'][selected_date][time] = selected_option
+        votes[selected_date][time][selected_option] += 1
         save_votes(votes)
         st.experimental_rerun()
 
