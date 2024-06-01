@@ -149,6 +149,11 @@ if st.button("Add New Activity"):
             data[new_date][new_time].append(activity_entry)
         else:
             data[new_date][new_time] = [activity_entry]
+        # Ensure the new activity is also added to the votes structure
+        if new_time not in votes[new_date]:
+            votes[new_date][new_time] = {}
+        votes[new_date][new_time][activity_entry] = 0
+        save_votes(votes)  # Save the updated votes structure
         st.success(f"Added new activity: {activity_entry} on {new_date} at {new_time}")
     else:
         st.error("Please fill in all fields to add a new activity.")
