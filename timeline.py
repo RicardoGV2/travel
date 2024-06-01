@@ -4,8 +4,6 @@ import networkx as nx
 import streamlit.components.v1 as components
 import json
 import os
-from collections import OrderedDict
-from streamlit_autorefresh import st_autorefresh
 
 # Paths to the data and votes files
 data_file = "data.json"
@@ -77,7 +75,7 @@ def create_network_with_top_votes(data, top_voted):
 
     for date in data:
         for time in data[date]:
-            if date in top_voted and time in top_voted[date]:
+            if date in top_voted and time in top_voted[date]]:
                 top_option = top_voted[date][time]
                 time_node = f"{date}_{time}_{top_option}"
                 G.add_node(time_node, label=f"{time}\n{top_option}", shape="box")

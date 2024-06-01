@@ -39,14 +39,15 @@ if st.button("Add User"):
 # Button to proceed
 if st.button("Proceed"):
     st.session_state['user'] = selected_user
-    st.experimental_rerun()
+    st.experimental_set_query_params(page="voting")
 
 # Redirect to voting.py if user is selected
 if 'user' in st.session_state:
-    st.experimental_rerun()
-    st.experimental_set_query_params(page="voting")
+    page = st.experimental_get_query_params().get("page", ["voting"])[0]
+    if page == "voting":
+        st.experimental_rerun()
+    elif page == "timeline":
+        st.experimental_rerun()
 
-# Redirect to the voting page if a user is already selected
-if 'user' in st.session_state:
-    st.experimental_set_query_params(page="voting")
-    st.experimental_rerun()
+# Debug information
+st.write(st.experimental_get_query_params())
