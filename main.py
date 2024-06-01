@@ -117,6 +117,7 @@ def update_votes(selected_date, selected_time, selected_option):
 st.sidebar.title("Settings")
 auto_refresh = st.sidebar.checkbox("Enable Auto Refresh", value=True)
 show_votes_json = st.sidebar.checkbox("Show Votes JSON", value=False)
+show_add_activity = st.sidebar.checkbox("Show Add Activity Section", value=True)
 
 # Autorefresh every 5 seconds if enabled
 if auto_refresh:
@@ -127,33 +128,6 @@ st.title("Itinerary Planner")
 # Date selection for voting
 selected_date = st.selectbox("Select Date for Voting:", options=list(data.keys()), format_func=lambda x: x, disabled=False, label_visibility='collapsed')
 
-# Section to add new activities
-st.write("## Propose a New Activity")
-new_date = st.selectbox("Select Date for New Activity:", options=list(data.keys()), key="new_date")
-new_time = st.text_input("Enter Time for New Activity (e.g., 14:00):", key="new_time")
-new_activity = st.text_input("Enter New Activity Description:", key="new_activity")
-new_cost = st.number_input("Enter Cost for New Activity (in AUD):", key="new_cost", min_value=0)
-
-if st.button("Add New Activity"):
-    if new_date in data and new_time and new_activity:
-        activity_entry = f"{new_activity} {new_cost} AUD"
-        if new_time in data[new_date]:
-            data[new_date][new_time].append(activity_entry)
-        else:
-            data[new_date][new_time] = [activity_entry]
-        # Ensure the new activity is also added to the votes structure
-        if new_time not in votes[new_date]:
-            votes[new_date][new_time] = {}
-        votes[new_date][new_time][activity_entry] = 0
-        # Sort the times for the date
-        data[new_date] = dict(OrderedDict(sorted(data[new_date].items())))
-        votes[new_date] = dict(OrderedDict(sorted(votes[new_date].items())))
-        save_votes(votes)  # Save the updated votes structure
-        st.success(f"Added new activity: {activity_entry} on {new_date} at {new_time}")
-        st.experimental_rerun()  # Rerun to update the voting section
-    else:
-        st.error("Please fill in all fields to add a new activity.")
-
 # Voting section
 st.write("## Vote for Preferences")
 for time in sorted(data[selected_date]):
@@ -162,6 +136,34 @@ for time in sorted(data[selected_date]):
     selected_option = st.radio("", options, key=f"{selected_date}_{time}")
     if st.button(f"Vote for {selected_option}", key=f"button_{selected_date}_{time}"):
         update_votes(selected_date, time, selected_option)
+
+# Section to add new activities
+if show_add_activity:
+    st.write("## Propose a New Activity")
+    new_date = st.selectbox("Select Date for New Activity:", options=list(data.keys()), key="new_date")
+    new_time = st.text_input("Enter Time for New Activity (e.g., 14:00):", key="new_time")
+    new_activity = st.text_input("Enter New Activity Description:", key="new_activity")
+    new_cost = st.number_input("Enter Cost for New Activity (in AUD):", key="new_cost", min_value=0)
+
+    if st.button("Add New Activity"):
+        if new_date in data and new_time and new_activity:
+            activity_entry = f"{new_activity} {new_cost} AUD"
+            if new_time in data[new_date]:
+                data[new_date][new_time].append(activity_entry)
+            else:
+                data[new_date][new_time] = [activity_entry]
+            # Ensure the new activity is also added to the votes structure
+            if new_time not in votes[new_date]:
+                votes[new_date][new_time] = {}
+            votes[new_date][new_time][activity_entry] = 0
+            # Sort the times for the date
+            data[new_date] = dict(OrderedDict(sorted(data[new_date].items())))
+            votes[new_date] = dict(OrderedDict(sorted(votes[new_date].items())))
+            save_votes(votes)  # Save the updated votes structure
+            st.success(f"Added new activity: {activity_entry} on {new_date} at {new_time}")
+            st.experimental_rerun()  # Rerun to update the voting section
+        else:
+            st.error("Please fill in all fields to add a new activity.")
 
 # Get the top voted options
 top_voted = get_top_voted_options(votes)
