@@ -182,8 +182,10 @@ st.write("## Vote for Preferences")
 for time in sorted(data[selected_date]):
     st.write(f"**{time}**")
     options = data[selected_date][time]
-    selected_option = st.radio("", options, key=f"{selected_date}_{time}")
-    vote_counts = {option: votes[selected_date][time][option] for option in options}
+    if selected_date in votes and time in votes[selected_date]:
+        vote_counts = {option: votes[selected_date][time].get(option, 0) for option in options}
+    else:
+        vote_counts = {option: 0 for option in options}
     vote_display = [f"{option} - {vote_counts[option]} ❤️" for option in options]
     selected_option_display = st.radio("", vote_display, key=f"display_{selected_date}_{time}")
     selected_option = selected_option_display.split(' - ')[0]
