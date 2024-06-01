@@ -183,6 +183,10 @@ for time in sorted(data[selected_date]):
     st.write(f"**{time}**")
     options = data[selected_date][time]
     selected_option = st.radio("", options, key=f"{selected_date}_{time}")
+    vote_counts = {option: votes[selected_date][time][option] for option in options}
+    vote_display = [f"{option} - {vote_counts[option]} ❤️" for option in options]
+    selected_option_display = st.radio("", vote_display, key=f"display_{selected_date}_{time}")
+    selected_option = selected_option_display.split(' - ')[0]
     if st.button(f"Vote for {selected_option}", key=f"button_{selected_date}_{time}"):
         update_votes(selected_date, time, selected_option)
 
