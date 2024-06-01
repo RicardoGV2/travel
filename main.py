@@ -2,6 +2,11 @@ import streamlit as st
 from pyvis.network import Network
 import networkx as nx
 import streamlit.components.v1 as components
+import json
+import os
+
+# Path to the votes file
+votes_file = "votes.json"
 
 # Example data for multiple days
 data = {
@@ -25,12 +30,20 @@ data = {
     # Add more days as needed
 }
 
-# To store votes
-votes = {date: {time: {option: 0 for option in data[date][time]} for time in data[date]} for date in data}
+# Load or initialize votes
+if os.path.exists(votes_file):
+    with open(votes_file, 'r') as file:
+        votes = json.load(file)
+else:
+    votes = {date: {time: {option: 0 for option in data[date][time]} for time in data[date]} for date in data}
 
 # Initialize session state for tracking votes
 if 'user_votes' not in st.session_state:
     st.session_state['user_votes'] = {date: {time: None for time in data[date]} for date in data}
+
+def save_votes(votes):
+    with open(votes_file, 'w') as file:
+        json.dump(votes, file)
 
 def get_top_voted_options(votes):
     top_voted = {}
@@ -85,6 +98,7 @@ def update_votes(selected_date, selected_time, selected_option):
     if st.session_state['user_votes'][selected_date][selected_time] is None:
         votes[selected_date][selected_time][selected_option] += 1
         st.session_state['user_votes'][selected_date][selected_time] = selected_option
+        save_votes(votes)  # Save votes to the file
         st.success(f"Voted for {selected_option} in {selected_time}")
     else:
         st.warning(f"You have already voted for {st.session_state['user_votes'][selected_date][selected_time]} in {selected_time}")
