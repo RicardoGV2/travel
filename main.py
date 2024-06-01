@@ -132,12 +132,13 @@ def update_votes(selected_date, selected_time, selected_option):
 # Add a setting to pause or continue autorefresh and to show/hide votes JSON and the add activity section
 st.sidebar.title("Settings")
 auto_refresh = st.sidebar.checkbox("Enable Auto Refresh", value=True)
+refresh_interval = st.sidebar.number_input("Refresh Interval (seconds)", min_value=1, max_value=60, value=5) if auto_refresh else None
 show_votes_json = st.sidebar.checkbox("Show Votes JSON", value=False)
 show_add_activity = st.sidebar.checkbox("Show Add Activity Section", value=True)
 
-# Autorefresh every 5 seconds if enabled
-if auto_refresh:
-    st_autorefresh(interval=5000, key="datarefresh")
+# Autorefresh every 'refresh_interval' seconds if enabled
+if auto_refresh and refresh_interval:
+    st_autorefresh(interval=refresh_interval * 1000, key="datarefresh")
 
 # Section to add new activities
 if show_add_activity:
