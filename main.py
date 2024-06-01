@@ -123,14 +123,9 @@ show_add_activity = st.sidebar.checkbox("Show Add Activity Section", value=True)
 if auto_refresh:
     st_autorefresh(interval=5000, key="datarefresh")
 
-st.title("Itinerary Planner")
-
-# Date selection for voting
-selected_date = st.selectbox("Select Date for Voting:", options=list(data.keys()), format_func=lambda x: x, disabled=False, label_visibility='collapsed')
-
 # Section to add new activities
 if show_add_activity:
-    st.write("## Propose a New Activity")
+    st.title("Propose a New Activity")
     new_date = st.selectbox("Select Date for New Activity:", options=list(data.keys()), key="new_date")
     new_time = st.text_input("Enter Time for New Activity (e.g., 14:00):", key="new_time")
     new_activity = st.text_input("Enter New Activity Description:", key="new_activity")
@@ -154,6 +149,11 @@ if show_add_activity:
             st.experimental_rerun()  # Rerun to update the voting section
         else:
             st.error("Please fill in all fields to add a new activity.")
+
+st.title("Itinerary Planner")
+
+# Date selection for voting
+selected_date = st.selectbox("Select Date for Voting:", options=list(data.keys()), format_func=lambda x: x, disabled=False, label_visibility='collapsed')
 
 # Voting section
 st.write("## Vote for Preferences")
