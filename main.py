@@ -161,7 +161,7 @@ if show_add_activity:
             # Ensure the new activity is also added to the votes structure
             if new_date not in votes:
                 votes[new_date] = {}
-            if new_time not in votes[new_date]:
+            if new_time not in votes[new_date]]:
                 votes[new_date][new_time] = {}
             votes[new_date][new_time][activity_entry] = 0
             # Sort the times for the date
@@ -220,4 +220,4 @@ scroll_position_js = """
             localStorage.removeItem('scrollPos');
         }
     });
-    window.addEventListener('before
+    window.addEventListener
