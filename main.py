@@ -125,6 +125,9 @@ if auto_refresh:
 
 st.title("Itinerary Planner")
 
+# Date selection for voting
+selected_date = st.selectbox("Select Date for Voting:", options=list(data.keys()), format_func=lambda x: x, disabled=False, label_visibility='collapsed')
+
 # Section to add new activities
 if show_add_activity:
     st.write("## Propose a New Activity")
@@ -134,7 +137,7 @@ if show_add_activity:
     new_cost = st.number_input("Enter Cost for New Activity (in AUD):", key="new_cost", min_value=0)
 
     if st.button("Add New Activity"):
-        if new_date and new_time and new_activity:
+        if new_date in data and new_time and new_activity:
             activity_entry = f"{new_activity} {new_cost} AUD"
             if new_time in data[new_date]:
                 data[new_date][new_time].append(activity_entry)
@@ -148,16 +151,14 @@ if show_add_activity:
             data[new_date] = dict(OrderedDict(sorted(data[new_date].items())))
             votes[new_date] = dict(OrderedDict(sorted(votes[new_date].items())))
             save_votes(votes)  # Save the updated votes structure
-            st.success(f"Added new activity: {activity_entry} on {new_date} at {new_time}")
             st.experimental_rerun()  # Rerun to update the voting section
         else:
             st.error("Please fill in all fields to add a new activity.")
 
-# Date selection for voting
-selected_date = st.selectbox("Select Date for Voting:", options=list(data.keys()), format_func=lambda x: x, disabled=False, label_visibility='collapsed')
-
 # Voting section
 st.write("## Vote for Preferences")
+# Re-load votes to make sure we have the latest changes
+votes = load_votes()
 for time in sorted(data[selected_date]):
     st.write(f"**{time}**")
     options = data[selected_date][time]
