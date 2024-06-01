@@ -109,13 +109,14 @@ def update_votes(selected_date, selected_time, selected_option):
     save_votes(votes)  # Save votes to the file
     st.success(f"Voted for {selected_option} in {selected_time}")
 
-# Add a setting to pause or continue autorefresh
+# Add a setting to pause or continue autorefresh and to show/hide votes JSON
 st.sidebar.title("Settings")
 auto_refresh = st.sidebar.checkbox("Enable Auto Refresh", value=True)
+show_votes_json = st.sidebar.checkbox("Show Votes JSON", value=False)
 
-# Autorefresh every 10 seconds if enabled
+# Autorefresh every 5 seconds if enabled
 if auto_refresh:
-    st_autorefresh(interval=10000, key="datarefresh")
+    st_autorefresh(interval=5000, key="datarefresh")
 
 st.title("Itinerary Planner")
 
@@ -144,7 +145,8 @@ with open(path, 'r', encoding='utf-8') as file:
     components.html(html_content, height=1000)
 
 # Display the current votes
-st.write("## Current Votes")
-st.json(votes)
+if show_votes_json:
+    st.write("## Current Votes")
+    st.json(votes)
 
 # To run the app, use the command: streamlit run filename.py
