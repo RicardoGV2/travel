@@ -95,13 +95,13 @@ def create_network_with_top_votes(data, top_voted):
     return net
 
 def update_votes(selected_date, selected_time, selected_option):
-    if st.session_state['user_votes'][selected_date][selected_time] is None:
-        votes[selected_date][selected_time][selected_option] += 1
-        st.session_state['user_votes'][selected_date][selected_time] = selected_option
-        save_votes(votes)  # Save votes to the file
-        st.success(f"Voted for {selected_option} in {selected_time}")
-    else:
-        st.warning(f"You have already voted for {st.session_state['user_votes'][selected_date][selected_time]} in {selected_time}")
+    current_vote = st.session_state['user_votes'][selected_date][selected_time]
+    if current_vote:
+        votes[selected_date][selected_time][current_vote] -= 1
+    votes[selected_date][selected_time][selected_option] += 1
+    st.session_state['user_votes'][selected_date][selected_time] = selected_option
+    save_votes(votes)  # Save votes to the file
+    st.success(f"Voted for {selected_option} in {selected_time}")
 
 st.title("Itinerary Planner")
 
