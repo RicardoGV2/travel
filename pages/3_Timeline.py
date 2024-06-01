@@ -58,6 +58,7 @@ def get_top_voted_options(votes):
             top_voted[date][time] = top_option
     return top_voted
 
+
 # Function to create network with top voted options
 def create_network_with_top_votes(data, top_voted):
     net = Network(height="1000px", width="100%", directed=True)
@@ -121,7 +122,7 @@ st.title("Timeline of Activities")
 if st.sidebar.checkbox("Show Votes JSON", value=False):
     votes_file = "votes.json"
     if os.path.exists(votes_file):
-        with open(votes_file, 'r') as file:
+        with open(votes_file, 'r') as file):
             votes = json.load(file)
         st.write("## Current Votes")
         st.json(votes)

@@ -2,4 +2,3 @@ streamlit
 pyvis
 networkx
 streamlit_autorefresh
-streamlit-pages
