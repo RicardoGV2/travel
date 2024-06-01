@@ -86,4 +86,21 @@ top_voted = get_top_voted_options(votes)
 # Create and display the network with top voted options
 net = create_network_with_top_votes(data, top_voted)
 path = 'full_network.html'
-net.save
+net.save_graph(path)
+
+with open(path, 'r', encoding='utf-8') as file:
+    html_content = file.read()
+    components.html(html_content, height=1000)
+
+st.title("Timeline of Activities")
+
+# Display the current votes (optional)
+if st.sidebar.checkbox("Show Votes JSON", value=False):
+    votes_file = "votes.json"
+    if os.path.exists(votes_file):
+        with open(votes_file, 'r') as file:
+            votes = json.load(file)
+        st.write("## Current Votes")
+        st.json(votes)
+    else:
+        st.write("No votes data available.")
