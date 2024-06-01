@@ -109,8 +109,13 @@ def update_votes(selected_date, selected_time, selected_option):
     save_votes(votes)  # Save votes to the file
     st.success(f"Voted for {selected_option} in {selected_time}")
 
-# Autorefresh every 60 seconds
-st_autorefresh(interval=60000, key="datarefresh")
+# Add a setting to pause or continue autorefresh
+st.sidebar.title("Settings")
+auto_refresh = st.sidebar.checkbox("Enable Auto Refresh", value=True)
+
+# Autorefresh every 10 seconds if enabled
+if auto_refresh:
+    st_autorefresh(interval=10000, key="datarefresh")
 
 st.title("Itinerary Planner")
 
