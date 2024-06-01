@@ -127,15 +127,6 @@ st.title("Itinerary Planner")
 # Date selection for voting
 selected_date = st.selectbox("Select Date for Voting:", options=list(data.keys()), format_func=lambda x: x, disabled=False, label_visibility='collapsed')
 
-# Voting section
-st.write("## Vote for Preferences")
-for time in sorted(data[selected_date]):
-    st.write(f"**{time}**")
-    options = data[selected_date][time]
-    selected_option = st.radio("", options, key=f"{selected_date}_{time}")
-    if st.button(f"Vote for {selected_option}", key=f"button_{selected_date}_{time}"):
-        update_votes(selected_date, time, selected_option)
-
 # Section to add new activities
 st.write("## Propose a New Activity")
 new_date = st.selectbox("Select Date for New Activity:", options=list(data.keys()), key="new_date")
@@ -159,8 +150,18 @@ if st.button("Add New Activity"):
         votes[new_date] = dict(OrderedDict(sorted(votes[new_date].items())))
         save_votes(votes)  # Save the updated votes structure
         st.success(f"Added new activity: {activity_entry} on {new_date} at {new_time}")
+        st.experimental_rerun()  # Rerun to update the voting section
     else:
         st.error("Please fill in all fields to add a new activity.")
+
+# Voting section
+st.write("## Vote for Preferences")
+for time in sorted(data[selected_date]):
+    st.write(f"**{time}**")
+    options = data[selected_date][time]
+    selected_option = st.radio("", options, key=f"{selected_date}_{time}")
+    if st.button(f"Vote for {selected_option}", key=f"button_{selected_date}_{time}"):
+        update_votes(selected_date, time, selected_option)
 
 # Get the top voted options
 top_voted = get_top_voted_options(votes)
