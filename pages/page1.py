@@ -4,6 +4,7 @@ import json
 import os
 from collections import OrderedDict
 from streamlit_autorefresh import st_autorefresh
+from time import sleep  # Import sleep function
 
 make_sidebar()
 
@@ -75,6 +76,7 @@ def update_votes(selected_date, selected_time, selected_option):
     votes[selected_date][selected_time][selected_option] += 1
     st.session_state['user_votes'][selected_date][selected_time] = selected_option
     save_votes(votes)
+    sleep(2)  # Add a delay of 2 seconds after voting
     st.experimental_rerun()
 
 # Add a setting to pause or continue autorefresh and to show/hide votes JSON and the add activity section
