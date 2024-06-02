@@ -11,6 +11,7 @@ import json
 import os
 from collections import OrderedDict
 from streamlit_autorefresh import st_autorefresh
+from time import sleep
 
 # Paths to the data and votes files
 data_file = "data.json"

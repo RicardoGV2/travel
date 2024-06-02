@@ -4,7 +4,7 @@ from navigation import make_sidebar
 
 make_sidebar()
 
-st.title("Welcome to Diamond Corsp")
+st.title("Welcome to australia")
 
 st.write("Please log in to continue (username `test`, password `test`).")
 

@@ -16,12 +16,12 @@ def get_current_page_name():
 
 def make_sidebar():
     with st.sidebar:
-        st.title("💎 Diamond Corp")
+        st.title("🛩️ Australia")
         st.write("")
         st.write("")
 
         if st.session_state.get("logged_in", False):
-            st.page_link("pages/page1.py", label="Secret Company Stuff", icon="🔒")
+            st.page_link("pages/page1.py", label="Voting", icon="🔒")
             st.page_link("pages/page2.py", label="More Secret Stuff", icon="🕵️")
 
             st.write("")
