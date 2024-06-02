@@ -79,12 +79,33 @@ def update_votes(selected_date, selected_time, selected_option):
     sleep(2)  # Add a delay of 2 seconds after voting
     st.experimental_rerun()
 
+# Function to delete an activity
+def delete_activity(selected_date, selected_time, selected_activity):
+    if selected_date in data and selected_time in data[selected_date]:
+        if selected_activity in data[selected_date][selected_time]:
+            data[selected_date][selected_time].remove(selected_activity)
+            if not data[selected_date][selected_time]:
+                del data[selected_date][selected_time]
+            if selected_time in votes[selected_date]:
+                if selected_activity in votes[selected_date][selected_time]:
+                    del votes[selected_date][selected_time][selected_activity]
+                if not votes[selected_date][selected_time]:
+                    del votes[selected_date][selected_time]
+            save_data(data)
+            save_votes(votes)
+            st.experimental_rerun()
+        else:
+            st.error("Activity not found.")
+    else:
+        st.error("Date or time not found.")
+
 # Add a setting to pause or continue autorefresh and to show/hide votes JSON and the add activity section
 st.sidebar.title("Settings")
 auto_refresh = st.sidebar.checkbox("Enable Auto Refresh", value=True)
 refresh_interval = st.sidebar.number_input("Refresh Interval (seconds)", min_value=1, max_value=60, value=7) if auto_refresh else None
 show_votes_json = st.sidebar.checkbox("Show Votes JSON", value=False)
 show_add_activity = st.sidebar.checkbox("Show Add Activity Section", value=True)
+show_delete_activity = st.sidebar.checkbox("Show Delete Activity Section", value=True)
 
 # Autorefresh every 'refresh_interval' seconds if enabled
 if auto_refresh and refresh_interval:
@@ -124,6 +145,17 @@ if show_add_activity:
                 st.error(f"Error adding new activity: {e}")
         else:
             st.error("Please fill in all fields to add a new activity.")
+
+# Section to delete activities
+if show_delete_activity:
+    st.title("Delete an Activity")
+    del_date = st.selectbox("Select Date for Deleting Activity:", options=list(data.keys()), key="del_date")
+    if del_date:
+        del_time = st.selectbox("Select Time for Deleting Activity:", options=list(data[del_date].keys()), key="del_time")
+        if del_time:
+            del_activity = st.selectbox("Select Activity to Delete:", options=data[del_date][del_time], key="del_activity")
+            if st.button("Delete Selected Activity"):
+                delete_activity(del_date, del_time, del_activity)
 
 st.title("Itinerary Planner")
 
