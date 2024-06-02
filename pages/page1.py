@@ -71,7 +71,7 @@ if 'user_votes' not in st.session_state:
 # Function to update votes
 def update_votes(selected_date, selected_time, selected_option):
     current_vote = st.session_state['user_votes'][selected_date][selected_time]
-    if current_vote and current_vote != selected_option:
+    if current_vote:
         votes[selected_date][selected_time][current_vote] -= 1
     votes[selected_date][selected_time][selected_option] += 1
     st.session_state['user_votes'][selected_date][selected_time] = selected_option
@@ -146,10 +146,10 @@ for time in sorted(data[selected_date]):
     selected_option_display = st.radio("", vote_display, key=f"display_{selected_date}_{time}")
     selected_option = selected_option_display.split(' - ')[0]
     if st.button(f"Vote for {selected_option}", key=f"button_{selected_date}_{time}"):
-        if current_vote and current_vote == selected_option:
-            st.warning("You have already voted for this option.")
-        else:
+        if current_vote != selected_option:
             update_votes(selected_date, time, selected_option)
+        else:
+            st.warning("You have already voted for this option.")
 
 # Display the current votes
 if show_votes_json:
