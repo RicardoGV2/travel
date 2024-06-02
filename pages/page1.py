@@ -50,7 +50,7 @@ def save_data(data):
 # Function to load votes
 def load_votes():
     if os.path.exists(votes_file):
-        with open(votes_file, 'r') as file:
+        with open(votes_file, 'r') as file):
             return json.load(file)
     else:
         return {date: {time: {option: 0 for option in initial_data[date][time]} for time in initial_data[date]} for date in initial_data}
@@ -71,7 +71,7 @@ if 'user_votes' not in st.session_state:
 # Function to update votes
 def update_votes(selected_date, selected_time, selected_option):
     current_vote = st.session_state['user_votes'][selected_date][selected_time]
-    if current_vote:
+    if current_vote and current_vote != selected_option:
         votes[selected_date][selected_time][current_vote] -= 1
     votes[selected_date][selected_time][selected_option] += 1
     st.session_state['user_votes'][selected_date][selected_time] = selected_option
@@ -137,17 +137,19 @@ for time in sorted(data[selected_date]):
     else:
         vote_counts = {option: 0 for option in options}
     vote_display = [f"{option} - {vote_counts[option]} ❤️" for option in options]
+    
+    # Check if the user has already voted
+    current_vote = st.session_state['user_votes'][selected_date][time]
+    if current_vote:
+        st.info(f"You have already voted for {current_vote}. You can change your vote below.")
+    
     selected_option_display = st.radio("", vote_display, key=f"display_{selected_date}_{time}")
     selected_option = selected_option_display.split(' - ')[0]
     if st.button(f"Vote for {selected_option}", key=f"button_{selected_date}_{time}"):
-        current_vote = st.session_state['user_votes'][selected_date][time]
-        if current_vote:
-            vote_counts[current_vote] -= 1
-        vote_counts[selected_option] += 1
-        st.session_state['user_votes'][selected_date][time] = selected_option
-        votes[selected_date][time][selected_option] += 1
-        save_votes(votes)
-        st.experimental_rerun()
+        if current_vote and current_vote == selected_option:
+            st.warning("You have already voted for this option.")
+        else:
+            update_votes(selected_date, time, selected_option)
 
 # Display the current votes
 if show_votes_json:
