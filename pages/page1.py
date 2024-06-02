@@ -70,7 +70,7 @@ if 'user_votes' not in st.session_state:
 
 # Function to update votes
 def update_votes(selected_date, selected_time, selected_option):
-    current_vote = st.session_state['user_votes'][selected_date][selected_time]
+    current_vote = st.session_state['user_votes'][selected_date].get(selected_time)
     if current_vote:
         votes[selected_date][selected_time][current_vote] -= 1
     votes[selected_date][selected_time][selected_option] += 1
@@ -100,25 +100,28 @@ if show_add_activity:
 
     if st.button("Add New Activity"):
         if new_date and new_time and new_activity:
-            activity_entry = f"{new_activity} {new_cost} AUD"
-            if new_date not in data:
-                data[new_date] = {}
-            if new_time in data[new_date]:
-                data[new_date][new_time].append(activity_entry)
-            else:
-                data[new_date][new_time] = [activity_entry]
-            # Ensure the new activity is also added to the votes structure
-            if new_date not in votes:
-                votes[new_date] = {}
-            if new_time not in votes[new_date]:
-                votes[new_date][new_time] = {}
-            votes[new_date][new_time][activity_entry] = 0
-            # Sort the times for the date
-            data[new_date] = dict(OrderedDict(sorted(data[new_date].items())))
-            votes[new_date] = dict(OrderedDict(sorted(votes[new_date].items())))
-            save_data(data)
-            save_votes(votes)
-            st.experimental_rerun()
+            try:
+                activity_entry = f"{new_activity} {new_cost} AUD"
+                if new_date not in data:
+                    data[new_date] = {}
+                if new_time in data[new_date]:
+                    data[new_date][new_time].append(activity_entry)
+                else:
+                    data[new_date][new_time] = [activity_entry]
+                # Ensure the new activity is also added to the votes structure
+                if new_date not in votes:
+                    votes[new_date] = {}
+                if new_time not in votes[new_date]:
+                    votes[new_date][new_time] = {}
+                votes[new_date][new_time][activity_entry] = 0
+                # Sort the times for the date
+                data[new_date] = dict(OrderedDict(sorted(data[new_date].items())))
+                votes[new_date] = dict(OrderedDict(sorted(votes[new_date].items())))
+                save_data(data)
+                save_votes(votes)
+                st.experimental_rerun()
+            except Exception as e:
+                st.error(f"Error adding new activity: {e}")
         else:
             st.error("Please fill in all fields to add a new activity.")
 
@@ -139,7 +142,7 @@ for time in sorted(data[selected_date]):
     vote_display = [f"{option} - {vote_counts[option]} ❤️" for option in options]
     
     # Check if the user has already voted
-    current_vote = st.session_state['user_votes'][selected_date][time]
+    current_vote = st.session_state['user_votes'][selected_date].get(time)
     if current_vote:
         st.info(f"You have already voted for {current_vote}. You can change your vote below.")
     
