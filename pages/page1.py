@@ -164,8 +164,27 @@ selected_date = st.selectbox("Select Date for Voting:", options=list(data.keys()
 
 # Voting section
 st.write("## Vote for Preferences")
+
+# Style for making dates more visible
+st.markdown("""
+<style>
+.date-section {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2E86C1;
+    margin-top: 20px;
+    border-left: 4px solid #2E86C1;
+    padding-left: 10px;
+}
+.time-section {
+    font-size: 18px;
+    margin-top: 10px;
+}
+</style>
+""", unsafe_allow_html=True)
+
 for time in sorted(data[selected_date]):
-    st.write(f"**{time}**")
+    st.markdown(f'<div class="date-section">{time}</div>', unsafe_allow_html=True)
     options = data[selected_date][time]
     if selected_date in votes and time in votes[selected_date]:
         vote_counts = {option: votes[selected_date][time].get(option, 0) for option in options}
