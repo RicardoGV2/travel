@@ -1,17 +1,11 @@
 from navigation import make_sidebar
 import streamlit as st
-
-make_sidebar()
-
-import streamlit as st
-from pyvis.network import Network
-import networkx as nx
-import streamlit.components.v1 as components
 import json
 import os
 from collections import OrderedDict
 from streamlit_autorefresh import st_autorefresh
-from time import sleep
+
+make_sidebar()
 
 # Paths to the data and votes files
 data_file = "data.json"
@@ -73,58 +67,6 @@ votes = load_votes()
 if 'user_votes' not in st.session_state:
     st.session_state['user_votes'] = {date: {time: None for time in data[date]} for date in data}
 
-# Function to get top voted options
-def get_top_voted_options(votes):
-    top_voted = {}
-    for date in votes:
-        top_voted[date] = {}
-        for time in votes[date]:
-            options = votes[date][time]
-            top_option = max(options, key=options.get)
-            top_voted[date][time] = top_option
-    return top_voted
-
-# Function to create network with top voted options
-def create_network_with_top_votes(data, top_voted):
-    net = Network(height="1000px", width="100%", directed=True)
-    G = nx.DiGraph()
-
-    previous_node = None
-
-    for date in data:
-        for time in data[date]:
-            if date in top_voted and time in top_voted[date]:
-                top_option = top_voted[date][time]
-                time_node = f"{date}_{time}_{top_option}"
-                G.add_node(time_node, label=f"{time}\n{top_option}", shape="box")
-                if previous_node:
-                    G.add_edge(previous_node, time_node)
-                previous_node = time_node
-    
-    net.from_nx(G)
-    net.set_options("""
-    var options = {
-        "layout": {
-            "hierarchical": {
-                "enabled": true,
-                "direction": "UD",
-                "sortMethod": "directed"
-            }
-        },
-        "physics": {
-            "hierarchicalRepulsion": {
-                "centralGravity": 0,
-                "springLength": 100,
-                "springConstant": 0.01,
-                "nodeDistance": 120,
-                "damping": 0.09
-            },
-            "minVelocity": 0.75
-        }
-    }
-    """)
-    return net
-
 # Function to update votes
 def update_votes(selected_date, selected_time, selected_option):
     current_vote = st.session_state['user_votes'][selected_date][selected_time]
@@ -132,7 +74,7 @@ def update_votes(selected_date, selected_time, selected_option):
         votes[selected_date][selected_time][current_vote] -= 1
     votes[selected_date][selected_time][selected_option] += 1
     st.session_state['user_votes'][selected_date][selected_time] = selected_option
-    save_votes(votes)  # Save votes to the file
+    save_votes(votes)
     st.experimental_rerun()
 
 # Add a setting to pause or continue autorefresh and to show/hide votes JSON and the add activity section
@@ -172,9 +114,9 @@ if show_add_activity:
             # Sort the times for the date
             data[new_date] = dict(OrderedDict(sorted(data[new_date].items())))
             votes[new_date] = dict(OrderedDict(sorted(votes[new_date].items())))
-            save_data(data)  # Save the updated data structure
-            save_votes(votes)  # Save the updated votes structure
-            st.experimental_rerun()  # Rerun to update the voting section
+            save_data(data)
+            save_votes(votes)
+            st.experimental_rerun()
         else:
             st.error("Please fill in all fields to add a new activity.")
 
@@ -205,21 +147,7 @@ for time in sorted(data[selected_date]):
         save_votes(votes)
         st.experimental_rerun()
 
-# Get the top voted options
-top_voted = get_top_voted_options(votes)
-
-# Create and display the network with top voted options
-net = create_network_with_top_votes(data, top_voted)
-path = 'full_network.html'
-net.save_graph(path)
-
-with open(path, 'r', encoding='utf-8') as file:
-    html_content = file.read()
-    components.html(html_content, height=1000)
-
 # Display the current votes
 if show_votes_json:
     st.write("## Current Votes")
     st.json(votes)
-
-# To run the app, use the command: streamlit run filename.py
