@@ -21,6 +21,7 @@ def make_sidebar():
         st.write("")
 
         if st.session_state.get("logged_in", False):
+            st.write(f"Logged in as: {st.session_state.username}")  # Display the current user
             st.page_link("pages/page1.py", label="Voting", icon="⚖️")
             st.page_link("pages/page2.py", label="Time-Line", icon="⏲️")
 
@@ -38,6 +39,7 @@ def make_sidebar():
 
 def logout():
     st.session_state.logged_in = False
+    st.session_state.username = ""  # Clear the username
     st.info("Logged out successfully!")
     sleep(0.5)
     st.switch_page("main.py")
