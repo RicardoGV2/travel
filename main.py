@@ -4,15 +4,18 @@ from navigation import make_sidebar
 
 make_sidebar()
 
-st.title("Welcome to australia")
+st.title("Welcome to Australia")
 
-st.write("Please log in to continue (username `test`, password `test`).")
+# List of allowed users
+allowed_users = ["Jorge", "Raquel", "Karime", "Katia", "Janet", "Ricardo"]
+password_placeholder = "Password (use 'australia')"
 
-username = st.text_input("Username")
-password = st.text_input("Password", type="password")
+# Login form
+username = st.selectbox("Username", options=allowed_users)
+password = st.text_input(password_placeholder, type="password")
 
 if st.button("Log in", type="primary"):
-    if username == "test" and password == "test":
+    if username in allowed_users and password == "australia":
         st.session_state.logged_in = True
         st.session_state.username = username  # Store the username in session state
         st.success("Logged in successfully!")
