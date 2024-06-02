@@ -50,7 +50,7 @@ def save_data(data):
 # Function to load votes
 def load_votes():
     if os.path.exists(votes_file):
-        with open(votes_file, 'r') as file):
+        with open(votes_file, 'r') as file:
             return json.load(file)
     else:
         return {date: {time: {option: 0 for option in initial_data[date][time]} for time in initial_data[date]} for date in initial_data}
