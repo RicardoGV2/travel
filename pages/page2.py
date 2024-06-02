@@ -62,9 +62,11 @@ data = load_data()
 votes = load_votes()
 
 # Function to get top voted options
-def get_top_voted_options(votes):
+def get_top_voted_options(votes, selected_date=None):
     top_voted = {}
     for date in votes:
+        if selected_date and date != selected_date:
+            continue
         top_voted[date] = {}
         for time in votes[date]:
             options = votes[date][time]
@@ -80,6 +82,8 @@ def create_network_with_top_votes(data, top_voted):
     previous_node = None
 
     for date in data:
+        if date not in top_voted:
+            continue
         for time in data[date]:
             if date in top_voted and time in top_voted[date]:
                 top_option = top_voted[date][time]
@@ -122,8 +126,12 @@ refresh_interval = st.sidebar.number_input("Refresh Interval (seconds)", min_val
 if auto_refresh and refresh_interval:
     st_autorefresh(interval=refresh_interval * 1000, key="datarefresh")
 
-# Get the top voted options
-top_voted = get_top_voted_options(votes)
+# Date selection for timeline
+st.title("Timeline Viewer")
+selected_date = st.selectbox("Select Date to View Timeline:", options=list(data.keys()), format_func=lambda x: x)
+
+# Get the top voted options for the selected date
+top_voted = get_top_voted_options(votes, selected_date)
 
 # Create and display the network with top voted options
 net = create_network_with_top_votes(data, top_voted)
