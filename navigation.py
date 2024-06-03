@@ -24,6 +24,7 @@ def make_sidebar():
             st.write(f"Logged in as: {st.session_state.username}")  # Display the current user
             st.page_link("pages/page1.py", label="Voting", icon="⚖️")
             st.page_link("pages/page2.py", label="Time-Line", icon="⏲️")
+            st.page_link("pages/page3.py", label="Debt Management", icon="💲")
 
             st.write("")
             st.write("")
