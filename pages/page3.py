@@ -177,9 +177,9 @@ show_debts_history_json = st.sidebar.checkbox("Show Debts History JSON", value=F
 
 # Display JSON files
 if show_debts_json:
-    st.sidebar.write("### Debts JSON")
-    st.sidebar.json(load_data(debts_file, {}))
+    st.write("### Debts JSON")
+    st.json(load_data(debts_file, {}))
 
 if show_debts_history_json:
-    st.sidebar.write("### Debts History JSON")
-    st.sidebar.json(load_data(debts_history_file, []))
+    st.write("### Debts History JSON")
+    st.json(load_data(debts_history_file, []))
