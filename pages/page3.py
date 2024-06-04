@@ -132,7 +132,7 @@ if st.button("Add Debt"):
         st.error("Please fill in all fields")
 
 # Section to simplify debts
-st.header("Simplified Debts")
+st.header("Debts")
 simplified_debts = simplify_debts(debts)
 
 if simplified_debts:
