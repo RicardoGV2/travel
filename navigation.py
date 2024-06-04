@@ -28,6 +28,7 @@ def make_sidebar():
             st.page_link("pages/page1.py", label="Voting", icon="⚖️")
             st.page_link("pages/page2.py", label="Time-Line", icon="⏲️")
             st.page_link("pages/page3.py", label="Debt Management", icon="💲")
+            st.page_link("pages/page4.py", label="checklist", icon="✅")
 
             st.write("")
             st.write("")
