@@ -69,4 +69,16 @@ def logout():
     st.switch_page("main.py")
 
 def delete_all_json_files():
-    json_files = [debts_file, debts_history_file
+    json_files = [debts_file, debts_history_file, votes_file, data_file, checklists_file]
+    for file in json_files:
+        if os.path.exists(file):
+            os.remove(file)
+    st.success("All JSON files have been deleted.")
+    st.experimental_rerun()
+
+def load_data(file_path, default_data):
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as file:
+            return json.load(file)
+    else:
+        return default_data
