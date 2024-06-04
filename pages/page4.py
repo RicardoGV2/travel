@@ -42,10 +42,18 @@ checklists = load_data(checklists_file, default_checklists)
 
 # Function to add an item to a checklist
 def add_item_to_checklist(user, item):
-    if item not in checklists["users"][user]:
-        checklists["users"][user].append(item)
+    if item not in [i["name"] for i in checklists["users"][user]]:
+        checklists["users"][user].append({"name": item, "checked": False})
         save_data(checklists_file, checklists)
         st.experimental_rerun()
+
+# Function to update the checked state of an item
+def update_item_state(user, item_name, checked):
+    for item in checklists["users"][user]:
+        if item["name"] == item_name:
+            item["checked"] = checked
+            break
+    save_data(checklists_file, checklists)
 
 # Page layout
 st.title("Checklist")
@@ -61,12 +69,13 @@ if st.button("Add Item"):
     else:
         st.error("Please enter an item.")
 
-# Display shared checklist
+# Display checklists with checkboxes
 st.subheader("Checklist Items")
 for user, items in checklists["users"].items():
     st.write(f"**{user}'s Checklist:**")
     for item in items:
-        st.write(f"- {item}")
+        checked = st.checkbox(item["name"], value=item["checked"], key=f"{user}_{item['name']}")
+        update_item_state(user, item["name"], checked)
 
 # Option to show/hide checklists JSON, available only for user "Ricardo"
 if st.session_state.get("username") == "Ricardo":
