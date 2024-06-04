@@ -27,6 +27,7 @@ def save_data(file_path, data):
 default_checklists = {
     "shared": [],
     "users": {
+        "Shared": [],
         "Jorge": [],
         "Raquel": [],
         "Karime": [],
@@ -40,55 +41,39 @@ default_checklists = {
 checklists = load_data(checklists_file, default_checklists)
 
 # Function to add an item to a checklist
-def add_item_to_checklist(checklist, item):
-    if item not in checklist:
-        checklist.append(item)
+def add_item_to_checklist(user, item):
+    if item not in checklists["users"][user]:
+        checklists["users"][user].append(item)
         save_data(checklists_file, checklists)
         st.experimental_rerun()
 
 # Page layout
 st.title("Checklist")
 
-# Section to add items to the shared checklist
-st.header("Shared Checklist")
-shared_item = st.text_input("Add an item to the shared checklist:", key="shared_item")
-if st.button("Add to Shared Checklist"):
-    if shared_item:
-        add_item_to_checklist(checklists["shared"], shared_item)
-        st.success(f"Added '{shared_item}' to the shared checklist.")
+# Section to add items to a checklist
+st.header("Add an Item to a Checklist")
+user = st.selectbox("Select User:", ["Shared", "Jorge", "Raquel", "Karime", "Katia", "Janet", "Ricardo"], key="user")
+item = st.text_input("Add an item:", key="item")
+if st.button("Add Item"):
+    if item:
+        add_item_to_checklist(user, item)
+        st.success(f"Added '{item}' to {user}'s checklist.")
     else:
         st.error("Please enter an item.")
 
 # Display shared checklist
-st.subheader("Shared Checklist Items")
-for item in checklists["shared"]:
-    st.write(f"- {item}")
-
-# Section to add items to individual checklists
-st.header("Individual Checklists")
-user = st.selectbox("Select User:", ["Jorge", "Raquel", "Karime", "Katia", "Janet", "Ricardo"], key="user")
-user_item = st.text_input(f"Add an item to {user}'s checklist:", key="user_item")
-if st.button(f"Add to {user}'s Checklist"):
-    if user_item:
-        add_item_to_checklist(checklists["users"][user], user_item)
-        st.success(f"Added '{user_item}' to {user}'s checklist.")
-    else:
-        st.error("Please enter an item.")
-
-# Display individual checklists
-st.subheader("Individual Checklist Items")
+st.subheader("Checklist Items")
 for user, items in checklists["users"].items():
     st.write(f"**{user}'s Checklist:**")
     for item in items:
         st.write(f"- {item}")
 
-# Option to show/hide checklists JSON
-show_checklists_json = st.sidebar.checkbox("Show Checklists JSON", value=False)
-
-# Display the current checklists JSON
-if show_checklists_json:
-    st.write("## Current Checklists JSON")
-    st.json(checklists)
+# Option to show/hide checklists JSON, available only for user "Ricardo"
+if st.session_state.get("username") == "Ricardo":
+    show_checklists_json = st.sidebar.checkbox("Show Checklists JSON", value=False)
+    if show_checklists_json:
+        st.write("## Current Checklists JSON")
+        st.json(checklists)
 
 # Auto refresh settings
 st.sidebar.title("Settings")
