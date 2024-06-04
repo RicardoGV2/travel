@@ -12,13 +12,12 @@ def load_users():
     else:
         # Return a default user if the file does not exist
         default_users = {
-            "test": {"password": "test"},
-            "Ricardo": {"password": "ricardo123"},
-            "Jorge": {"password": "jorge123"},
-            "Raquel": {"password": "raquel123"},
-            "Karime": {"password": "karime123"},
-            "Katia": {"password": "katia123"},
-            "Janet": {"password": "janet123"}
+            "Jorge": {"password": "australia"},
+            "Raquel": {"password": "australia"},
+            "Karime": {"password": "australia"},
+            "Katia": {"password": "australia"},
+            "Janet": {"password": "australia"},
+            "Ricardo": {"password": "australia"}
         }
         save_users(default_users)
         return default_users
