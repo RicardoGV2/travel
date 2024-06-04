@@ -148,7 +148,7 @@ show_deletion_section = st.checkbox("Show Debt History and Deletion Section", va
 if show_deletion_section:
     # Section to display and delete debts
     st.header("Debt History and Deletion")
-    selected_debt = st.selectbox("Select a debt to delete:", [f"{debt['from']} owes {debt['to']} {debt['amount']} AUD" for debt in debts_history], key="selected_debt")
+    selected_debt = st.radio("Select a debt to delete:", [f"{debt['from']} owes {debt['to']} {debt['amount']} AUD" for debt in debts_history], key="selected_debt")
     selected_index = next((i for i, debt in enumerate(debts_history) if f"{debt['from']} owes {debt['to']} {debt['amount']} AUD" == selected_debt), None)
     
     if st.button("Delete Selected Debt"):
