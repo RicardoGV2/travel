@@ -46,24 +46,29 @@ def add_debt(from_user, to_user, amount):
     save_data(debts_file, debts)
     save_data(debts_history_file, debts_history)
 
+# Function to recalculate debts from history
+def recalculate_debts_from_history():
+    new_debts = defaultdict(lambda: defaultdict(int))
+    for debt in debts_history:
+        from_user = debt['from']
+        to_user = debt['to']
+        amount = debt['amount']
+        if from_user not in new_debts:
+            new_debts[from_user] = defaultdict(int)
+        if to_user not in new_debts[from_user]:
+            new_debts[from_user][to_user] = 0
+        new_debts[from_user][to_user] += amount
+    return new_debts
+
 # Function to delete a debt
 def delete_debt(index):
-    debt = debts_history[index]
-    from_user = debt['from']
-    to_user = debt['to']
-    amount = debt['amount']
-    if from_user in debts and to_user in debts[from_user]:
-        debts[from_user][to_user] -= amount
-        if debts[from_user][to_user] <= 0:
-            del debts[from_user][to_user]
-        if not debts[from_user]:  # If the dictionary is empty, remove the key
-            del debts[from_user]
-        save_data(debts_file, debts)
-        st.success(f"Deleted debt: {from_user} owed {to_user} {amount} AUD")
-    else:
-        st.error("Debt not found.")
     del debts_history[index]
     save_data(debts_history_file, debts_history)
+    st.success("Debt deleted from history.")
+    # Recalculate debts from history after deletion
+    global debts
+    debts = recalculate_debts_from_history()
+    save_data(debts_file, debts)
     st.experimental_rerun()
 
 # Function to simplify debts
@@ -143,7 +148,7 @@ else:
     st.write("No debts to display.")
 
 # Option to show/hide debt history and deletion
-show_deletion_section = st.checkbox("Show Debt History and Deletion Section", value=True)
+show_deletion_section = st.checkbox("Show Debt History and Deletion Section", value=False)
 
 if show_deletion_section:
     # Section to display and delete debts
