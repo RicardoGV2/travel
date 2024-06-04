@@ -3,15 +3,11 @@ from time import sleep
 from streamlit.runtime.scriptrunner import get_script_run_ctx
 from streamlit.source_util import get_pages
 import os
-import json
-from user_management import authenticate_user, load_users
 
 # Paths to the debts files
 debts_file = "debts.json"
 debts_history_file = "debts_history.json"
-votes_file = "votes.json"
-data_file = "data.json"
-checklists_file = "checklists.json"
+checklist_file = "checklist.json"
 
 def get_current_page_name():
     ctx = get_script_run_ctx()
@@ -42,16 +38,6 @@ def make_sidebar():
             if st.session_state.username == 'Ricardo':
                 if st.button("Delete All JSON Files"):
                     delete_all_json_files()
-                if st.checkbox("Show Debts JSON"):
-                    st.json(load_data(debts_file, {}))
-                if st.checkbox("Show Debts History JSON"):
-                    st.json(load_data(debts_history_file, []))
-                if st.checkbox("Show Votes JSON"):
-                    st.json(load_data(votes_file, {}))
-                if st.checkbox("Show Data JSON"):
-                    st.json(load_data(data_file, {}))
-                if st.checkbox("Show Checklists JSON"):
-                    st.json(load_data(checklists_file, {}))
 
             if st.button("Log out"):
                 logout()
@@ -69,16 +55,11 @@ def logout():
     st.switch_page("main.py")
 
 def delete_all_json_files():
-    json_files = [debts_file, debts_history_file, votes_file, data_file, checklists_file]
-    for file in json_files:
-        if os.path.exists(file):
-            os.remove(file)
+    if os.path.exists(debts_file):
+        os.remove(debts_file)
+    if os.path.exists(debts_history_file):
+        os.remove(debts_history_file)
+    if os.path.exists(checklist_file):
+        os.remove(checklist_file)
     st.success("All JSON files have been deleted.")
     st.experimental_rerun()
-
-def load_data(file_path, default_data):
-    if os.path.exists(file_path):
-        with open(file_path, 'r') as file:
-            return json.load(file)
-    else:
-        return default_data
