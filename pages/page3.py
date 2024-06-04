@@ -171,15 +171,16 @@ refresh_interval = st.sidebar.number_input("Refresh Interval (seconds)", min_val
 if auto_refresh and refresh_interval:
     st_autorefresh(interval=refresh_interval * 1000, key="datarefresh")
 
-# Option to show/hide JSON files
-show_debts_json = st.sidebar.checkbox("Show Debts JSON", value=False)
-show_debts_history_json = st.sidebar.checkbox("Show Debts History JSON", value=False)
+# Option to show/hide JSON files, only available for user "Ricardo"
+if st.session_state.get('username') == "Ricardo":
+    show_debts_json = st.sidebar.checkbox("Show Debts JSON", value=False)
+    show_debts_history_json = st.sidebar.checkbox("Show Debts History JSON", value=False)
 
-# Display JSON files
-if show_debts_json:
-    st.write("### Debts JSON")
-    st.json(load_data(debts_file, {}))
+    # Display JSON files
+    if show_debts_json:
+        st.write("### Debts JSON")
+        st.json(load_data(debts_file, {}))
 
-if show_debts_history_json:
-    st.write("### Debts History JSON")
-    st.json(load_data(debts_history_file, []))
+    if show_debts_history_json:
+        st.write("### Debts History JSON")
+        st.json(load_data(debts_history_file, []))
