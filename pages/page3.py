@@ -143,7 +143,7 @@ else:
     st.write("No debts to display.")
 
 # Option to show/hide debt history and deletion
-show_deletion_section = st.checkbox("Show Debt History and Deletion Section", value=False)
+show_deletion_section = st.checkbox("Show Debt History and Deletion Section", value=True)
 
 if show_deletion_section:
     # Section to display and delete debts
