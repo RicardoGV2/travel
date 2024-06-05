@@ -1,15 +1,10 @@
-from navigation import make_sidebar
+from navigation import make_sidebar, cookies
 import streamlit as st
 import json
 import os
 from collections import OrderedDict
 from streamlit_autorefresh import st_autorefresh
 from time import sleep  # Import sleep function
-
-# Ensure user is logged in before loading the page
-if 'logged_in' not in st.session_state or not st.session_state.logged_in:
-    st.error("You must log in first.")
-    st.stop()
 
 make_sidebar()
 
@@ -49,7 +44,7 @@ def load_data():
 
 # Function to save data
 def save_data(data):
-    with open(data_file, 'w') as file:
+    with open(data_file, 'w') as file):
         json.dump(data, file, indent=4)
 
 # Function to load votes
@@ -128,7 +123,7 @@ if show_add_activity:
     new_cost = st.number_input("Enter Cost for New Activity (in AUD):", key="new_cost", min_value=0)
 
     if st.button("Add New Activity"):
-                if new_date and new_time and new_activity:
+        if new_date and new_time and new_activity:
             try:
                 activity_entry = f"{new_activity} {new_cost} AUD"
                 if new_date not in data:
@@ -217,4 +212,3 @@ for time in sorted(data[selected_date]):
 if st.session_state.get('username') == "Ricardo" and show_votes_json:
     st.write("## Current Votes")
     st.json(votes)
-
