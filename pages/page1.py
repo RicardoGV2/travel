@@ -1,4 +1,4 @@
-from navigation import make_sidebar, cookies
+from navigation import make_sidebar
 import streamlit as st
 import json
 import os
@@ -44,7 +44,7 @@ def load_data():
 
 # Function to save data
 def save_data(data):
-    with open(data_file, 'w') as file):
+    with open(data_file, 'w') as file:
         json.dump(data, file, indent=4)
 
 # Function to load votes
@@ -106,9 +106,9 @@ refresh_interval = st.sidebar.number_input("Refresh Interval (seconds)", min_val
 show_add_activity = st.sidebar.checkbox("Show Add Activity Section", value=True)
 show_delete_activity = st.sidebar.checkbox("Show Delete Activity Section", value=True)
 
-# Show the "Show Votes JSON" checkbox only for user "Ricardo"
-if st.session_state.get('username') == "Ricardo":
-    show_votes_json = st.sidebar.checkbox("Show Votes JSON", value=False)
+# Always declare the checkbox but only use it for Ricardo
+show_votes_json = st.sidebar.checkbox("Show Votes JSON", value=False)
+show_votes_json_visible = st.session_state.get('username') == "Ricardo"
 
 # Autorefresh every 'refresh_interval' seconds if enabled
 if auto_refresh and refresh_interval:
@@ -209,6 +209,6 @@ for time in sorted(data[selected_date]):
             st.warning("You have already voted for this option.")
 
 # Display the current votes
-if st.session_state.get('username') == "Ricardo" and show_votes_json:
+if show_votes_json_visible and show_votes_json:
     st.write("## Current Votes")
     st.json(votes)
