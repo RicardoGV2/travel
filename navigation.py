@@ -5,13 +5,16 @@ from streamlit.source_util import get_pages
 from streamlit_cookies_manager import EncryptedCookieManager
 import os
 
+# Initialize the cookie manager
+cookies = EncryptedCookieManager(prefix="my_app", key="your_secret_key")
+
+# Load cookies (must be called in the main script)
+if not cookies.ready():
+    st.stop()
+
 # Paths to the debts files
 debts_file = "debts.json"
 debts_history_file = "debts_history.json"
-checklist_file = "checklist.json"
-
-# Create a cookie manager
-cookies = EncryptedCookieManager(prefix="my_app", key="secret_key")
 
 def get_current_page_name():
     ctx = get_script_run_ctx()
@@ -23,18 +26,13 @@ def get_current_page_name():
     return pages[ctx.page_script_hash]["page_name"]
 
 def make_sidebar():
-    if cookies.ready():
-        cookies.load()
-    else:
-        st.stop()
-
     with st.sidebar:
         st.title("🛩️ Australia")
         st.write("")
         st.write("")
 
-        if cookies.get("logged_in") == "True":
-            st.write(f"Logged in as: {cookies.get('username')}")
+        if cookies.get("logged_in", False):
+            st.write(f"Logged in as: {cookies['username']}")  # Display the current user
             st.page_link("pages/page1.py", label="Voting", icon="⚖️")
             st.page_link("pages/page2.py", label="Time-Line", icon="⏲️")
             st.page_link("pages/page3.py", label="Debt Management", icon="💲")
@@ -44,7 +42,7 @@ def make_sidebar():
             st.write("")
 
             # Delete all JSON files button (visible only to Ricardo)
-            if cookies.get("username") == 'Ricardo':
+            if cookies["username"] == 'Ricardo':
                 if st.button("Delete All JSON Files"):
                     delete_all_json_files()
 
@@ -52,22 +50,22 @@ def make_sidebar():
                 logout()
 
         elif get_current_page_name() != "main":
+            # If anyone tries to access a secret page without being logged in,
+            # redirect them to the login page
             st.switch_page("main.py")
 
 def logout():
-    cookies.set("logged_in", "False")
-    cookies.set("username", "")
+    cookies["logged_in"] = False
+    cookies["username"] = ""
     cookies.save()
     st.info("Logged out successfully!")
     sleep(0.5)
-    st.experimental_rerun()
+    st.switch_page("main.py")
 
 def delete_all_json_files():
     if os.path.exists(debts_file):
         os.remove(debts_file)
     if os.path.exists(debts_history_file):
         os.remove(debts_history_file)
-    if os.path.exists(checklist_file):
-        os.remove(checklist_file)
     st.success("All JSON files have been deleted.")
     st.experimental_rerun()
