@@ -1,7 +1,15 @@
 import streamlit as st
 from time import sleep
 from navigation import make_sidebar
-from user_management import authenticate_user
+from streamlit_cookies_manager import EncryptedCookieManager
+
+# This should be on top of your app, for example in main.py
+cookies = EncryptedCookieManager(prefix="myapp/")
+
+# This should be inside your app
+if not cookies.ready():
+    # Wait for the component to load and send us current cookies.
+    st.stop()
 
 make_sidebar()
 
@@ -16,7 +24,10 @@ username = st.selectbox("Username", options=allowed_users)
 password = st.text_input(password_placeholder, type="password")
 
 if st.button("Log in", type="primary"):
-    if authenticate_user(username, password):
+    if username in allowed_users and password == "australia":
+        cookies["logged_in"] = "true"
+        cookies["username"] = username
+        cookies.save()
         st.session_state.logged_in = True
         st.session_state.username = username  # Store the username in session state
         st.success("Logged in successfully!")
@@ -24,3 +35,11 @@ if st.button("Log in", type="primary"):
         st.switch_page("pages/page1.py")
     else:
         st.error("Incorrect username or password")
+
+# Check if the user is already logged in
+if cookies.get("logged_in") == "true":
+    st.session_state.logged_in = True
+    st.session_state.username = cookies.get("username")
+    st.success(f"Welcome back, {st.session_state.username}!")
+    sleep(0.5)
+    st.switch_page("pages/page1.py")
