@@ -51,12 +51,12 @@ def logout():
     st.session_state.username = ""  # Clear the username
     st.info("Logged out successfully!")
     sleep(0.5)
-    st.switch_page("main.py")
+    st.experimental_rerun()  # Rerun the script to ensure state is updated
 
 def delete_all_json_files():
     if os.path.exists(debts_file):
         os.remove(debts_file)
-    if os.path.exists(debts_history_file):
+    if os.exists(debts_history_file):
         os.remove(debts_history_file)
     st.success("All JSON files have been deleted.")
     st.experimental_rerun()

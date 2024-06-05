@@ -2,6 +2,12 @@ import streamlit as st
 from time import sleep
 from navigation import make_sidebar
 
+# Initialize session state for login if not already done
+if 'logged_in' not in st.session_state:
+    st.session_state.logged_in = False
+if 'username' not in st.session_state:
+    st.session_state.username = ""
+
 make_sidebar()
 
 st.title("Welcome to Australia")
@@ -20,6 +26,6 @@ if st.button("Log in", type="primary"):
         st.session_state.username = username  # Store the username in session state
         st.success("Logged in successfully!")
         sleep(0.5)
-        st.switch_page("pages/page1.py")
+        st.experimental_rerun()  # Rerun the script to ensure state is updated
     else:
         st.error("Incorrect username or password")
