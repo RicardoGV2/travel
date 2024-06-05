@@ -1,6 +1,6 @@
 import streamlit as st
 from time import sleep
-from navigation import make_sidebar, cookies
+from navigation import make_sidebar
 
 make_sidebar()
 
@@ -16,9 +16,8 @@ password = st.text_input(password_placeholder, type="password")
 
 if st.button("Log in", type="primary"):
     if username in allowed_users and password == "australia":
-        cookies["logged_in"] = True
-        cookies["username"] = username  # Store the username in cookies
-        cookies.save()
+        st.session_state.logged_in = True
+        st.session_state.username = username  # Store the username in session state
         st.success("Logged in successfully!")
         sleep(0.5)
         st.switch_page("pages/page1.py")
