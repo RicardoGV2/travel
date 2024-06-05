@@ -2,4 +2,3 @@ streamlit>=1.31.0
 pyvis
 networkx
 streamlit_autorefresh
-streamlit-cookies-manager

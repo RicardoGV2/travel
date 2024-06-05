@@ -3,15 +3,11 @@ from time import sleep
 from streamlit.runtime.scriptrunner import get_script_run_ctx
 from streamlit.source_util import get_pages
 import os
-from streamlit_cookies_manager import EncryptedCookieManager
 
 # Paths to the debts files
 debts_file = "debts.json"
 debts_history_file = "debts_history.json"
 checklist_file = "checklist.json"
-
-# Initialize cookie manager
-cookies = EncryptedCookieManager(prefix="myapp/")
 
 def get_current_page_name():
     ctx = get_script_run_ctx()
@@ -23,16 +19,13 @@ def get_current_page_name():
     return pages[ctx.page_script_hash]["page_name"]
 
 def make_sidebar():
-    if not cookies.ready():
-        st.stop()
-
     with st.sidebar:
         st.title("🛩️ Australia")
         st.write("")
         st.write("")
 
-        if st.session_state.get("logged_in", False) or cookies.get("logged_in") == "true":
-            st.write(f"Logged in as: {st.session_state.get('username', cookies.get('username'))}")  # Display the current user
+        if st.session_state.get("logged_in", False):
+            st.write(f"Logged in as: {st.session_state.username}")  # Display the current user
             st.page_link("pages/page1.py", label="Voting", icon="⚖️")
             st.page_link("pages/page2.py", label="Time-Line", icon="⏲️")
             st.page_link("pages/page3.py", label="Debt Management", icon="💲")
@@ -42,7 +35,7 @@ def make_sidebar():
             st.write("")
 
             # Delete all JSON files button (visible only to Ricardo)
-            if st.session_state.get('username', cookies.get('username')) == 'Ricardo':
+            if st.session_state.username == 'Ricardo':
                 if st.button("Delete All JSON Files"):
                     delete_all_json_files()
 
@@ -55,8 +48,6 @@ def make_sidebar():
             st.switch_page("main.py")
 
 def logout():
-    cookies["logged_in"] = "false"
-    cookies.save()
     st.session_state.logged_in = False
     st.session_state.username = ""  # Clear the username
     st.info("Logged out successfully!")
