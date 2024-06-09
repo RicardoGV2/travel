@@ -10,6 +10,7 @@ make_sidebar()
 # Paths to the debts files
 debts_file = "debts.json"
 debts_history_file = "debts_history.json"
+users_file = "users.json"
 
 # Load data
 def load_data(file_path, default_data):
@@ -37,14 +38,22 @@ debts_history = load_data(debts_history_file, [])
 
 # Function to add a debt
 def add_debt(from_user, to_user, amount):
-    if from_user not in debts:
-        debts[from_user] = defaultdict(int)
-    if to_user not in debts[from_user]:
-        debts[from_user][to_user] = 0
-    debts[from_user][to_user] += amount
-    debts_history.append({"from": from_user, "to": to_user, "amount": amount})
+    if from_user == "All":
+        for user in users_list:
+            if user != to_user:
+                debts[user][to_user] += amount
+                debts_history.append({"from": user, "to": to_user, "amount": amount})
+    elif to_user == "All":
+        for user in users_list:
+            if user != from_user:
+                debts[from_user][user] += amount
+                debts_history.append({"from": from_user, "to": user, "amount": amount})
+    else:
+        debts[from_user][to_user] += amount
+        debts_history.append({"from": from_user, "to": to_user, "amount": amount})
     save_data(debts_file, debts)
     save_data(debts_history_file, debts_history)
+
 
 # Function to recalculate debts from history
 def recalculate_debts_from_history():
@@ -119,22 +128,30 @@ def simplify_debts(debts):
 # Page layout
 st.title("Debt Management")
 
+
+# Load users
+users_data = load_data(users_file, {})
+users_list = list(users_data.keys())
+
 # Section to add a new debt
-st.header("Add a New Debt")
-from_user = st.selectbox("From:", ["Jorge", "Raquel", "Karime", "Katia", "Janet", "Ricardo"], key="from_user")
-to_user = st.selectbox("To:", ["Jorge", "Raquel", "Karime", "Katia", "Janet", "Ricardo"], key="to_user")
+st.header("Add a New Debt/Payment")
+from_user = st.selectbox("From:", users_list + ["All"], key="from_user")
+to_user = st.selectbox("To:", users_list + ["All"], key="to_user")
 amount = st.number_input("Amount (in AUD):", min_value=1, key="amount")
 
 if st.button("Add Debt"):
     if from_user and to_user and amount > 0:
-        if from_user != to_user:
+        if from_user == "All" and to_user == "All":
+            st.error("Cannot select 'All' for both 'From' and 'To'")
+        elif from_user == to_user:
+            st.error("The same user cannot owe to themselves.")
+        else:
             add_debt(from_user, to_user, amount)
             st.success(f"Added debt: {from_user} owes {to_user} {amount} AUD")
             st.experimental_rerun()
-        else:
-            st.error("The same user cannot owe to themselves.")
     else:
         st.error("Please fill in all fields")
+
 
 # Section to simplify debts
 st.header("Debts")
