@@ -72,6 +72,7 @@ def make_sidebar():
                             with open(users_file, 'w') as file:
                                 json.dump(users_data, file, indent=4)
                             st.success("Password changed successfully!")
+                            sleep(2)  # Wait for 3 seconds before closing the popover
                             st.session_state.show_change_password = False
                             st.experimental_rerun()  # Hide the popover after successful submission
                         else:
