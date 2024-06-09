@@ -33,7 +33,7 @@ def make_sidebar():
 
             # Show page4 if the user is Ricardo
             if st.session_state.username == "Ricardo":
-                st.page_link("pages/page4.py", label="JSONS", icon="📄")
+                st.page_link("pages/page5.py", label="JSONS", icon="📄")
 
             st.write("")
             st.write("")
