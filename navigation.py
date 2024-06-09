@@ -73,6 +73,7 @@ def make_sidebar():
                                 json.dump(users_data, file, indent=4)
                             st.success("Password changed successfully!")
                             st.session_state.show_change_password = False
+                            st.experimental_rerun()  # Hide the popover after successful submission
                         else:
                             st.error("Passwords do not match.")
 
