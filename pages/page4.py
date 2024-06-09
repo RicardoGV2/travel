@@ -7,8 +7,9 @@ from streamlit_autorefresh import st_autorefresh
 
 make_sidebar()
 
-# Paths to the checklists file
+# Paths to the checklists and users files
 checklists_file = "checklists.json"
+users_file = "users.json"
 
 # Load data
 def load_data(file_path, default_data):
@@ -23,19 +24,15 @@ def save_data(file_path, data):
     with open(file_path, 'w') as file:
         json.dump(data, file, indent=4)
 
+# Load users
+users = load_data(users_file, {})
+
 # Initialize default data
 default_checklists = {
     "shared": [],
-    "users": {
-        "Shared": [],
-        "Jorge": [],
-        "Raquel": [],
-        "Karime": [],
-        "Katia": [],
-        "Janet": [],
-        "Ricardo": []
-    }
+    "users": {user: [] for user in users}
 }
+default_checklists["users"]["Shared"] = []
 
 # Load checklists
 checklists = load_data(checklists_file, default_checklists)
@@ -55,12 +52,18 @@ def update_item_state(user, item_name, checked):
             break
     save_data(checklists_file, checklists)
 
+# Function to delete an item from a checklist
+def delete_item_from_checklist(user, item_name):
+    checklists["users"][user] = [item for item in checklists["users"][user] if item["name"] != item_name]
+    save_data(checklists_file, checklists)
+    st.experimental_rerun()
+
 # Page layout
 st.title("Checklist")
 
 # Section to add items to a checklist
 st.header("Add an Item to a Checklist")
-user = st.selectbox("Select User:", ["Shared", "Jorge", "Raquel", "Karime", "Katia", "Janet", "Ricardo"], key="user")
+user = st.selectbox("Select User:", ["Shared"] + list(users.keys()), key="user")
 item = st.text_input("Add an item:", key="item")
 if st.button("Add Item"):
     if item:
@@ -69,13 +72,25 @@ if st.button("Add Item"):
     else:
         st.error("Please enter an item.")
 
-# Display checklists with checkboxes
-st.subheader("Checklist Items")
-for user, items in checklists["users"].items():
-    st.write(f"**{user}'s Checklist:**")
-    for item in items:
-        checked = st.checkbox(item["name"], value=item["checked"], key=f"{user}_{item['name']}")
-        update_item_state(user, item["name"], checked)
+# User selector for viewing checklists
+selected_user = st.selectbox("View Checklist for User:", ["Shared"] + list(users.keys()), key="selected_user")
+
+# Display checklists with checkboxes and delete buttons, including shared items
+st.subheader(f"{selected_user}'s Checklist (including Shared)")
+shared_items = checklists["users"]["Shared"]
+user_items = checklists["users"][selected_user]
+
+# Combine shared and user-specific items without duplicating shared items
+all_items = {item["name"]: item for item in shared_items + user_items}.values()
+
+for item in all_items:
+    col1, col2 = st.columns([0.8, 0.2])
+    with col1:
+        checked = st.checkbox(item["name"], value=item["checked"], key=f"{selected_user}_{item['name']}")
+        update_item_state(selected_user, item["name"], checked)
+    with col2:
+        if st.button("Delete", key=f"delete_{selected_user}_{item['name']}"):
+            delete_item_from_checklist(selected_user, item["name"])
 
 # Option to show/hide checklists JSON, available only for user "Ricardo"
 if st.session_state.get("username") == "Ricardo":
