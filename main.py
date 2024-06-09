@@ -1,5 +1,7 @@
 import streamlit as st
 from time import sleep
+import os
+import json
 from navigation import make_sidebar
 from user_management import authenticate_user
 
@@ -7,8 +9,19 @@ make_sidebar()
 
 st.title("Welcome to Australia")
 
-# List of allowed users
-allowed_users = ["Jorge", "Raquel", "Karime", "Katia", "Janet", "Ricardo"]
+# Paths to jsons
+users_file = "users.json"
+
+# Load users
+def load_data(file_path):
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as file:
+            return json.load(file)
+    else:
+        return {}
+
+users_data = load_data(users_file)
+allowed_users = list(users_data.keys())
 password_placeholder = "Password (use 'australia')"
 
 # Login form
