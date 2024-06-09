@@ -103,9 +103,12 @@ def delete_activity(selected_date, selected_time, selected_activity):
 st.sidebar.title("Settings")
 auto_refresh = st.sidebar.checkbox("Enable Auto Refresh", value=True)
 refresh_interval = st.sidebar.number_input("Refresh Interval (seconds)", min_value=1, max_value=60, value=7) if auto_refresh else None
-show_votes_json = st.sidebar.checkbox("Show Votes JSON", value=False)
 show_add_activity = st.sidebar.checkbox("Show Add Activity Section", value=True)
 show_delete_activity = st.sidebar.checkbox("Show Delete Activity Section", value=True)
+
+# Always declare the checkbox but only use it for Ricardo
+show_votes_json = st.sidebar.checkbox("Show Votes JSON", value=False)
+show_votes_json_visible = st.session_state.get('username') == "Ricardo"
 
 # Autorefresh every 'refresh_interval' seconds if enabled
 if auto_refresh and refresh_interval:
@@ -206,6 +209,6 @@ for time in sorted(data[selected_date]):
             st.warning("You have already voted for this option.")
 
 # Display the current votes
-if show_votes_json:
+if show_votes_json_visible and show_votes_json:
     st.write("## Current Votes")
     st.json(votes)

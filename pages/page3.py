@@ -46,24 +46,29 @@ def add_debt(from_user, to_user, amount):
     save_data(debts_file, debts)
     save_data(debts_history_file, debts_history)
 
+# Function to recalculate debts from history
+def recalculate_debts_from_history():
+    new_debts = defaultdict(lambda: defaultdict(int))
+    for debt in debts_history:
+        from_user = debt['from']
+        to_user = debt['to']
+        amount = debt['amount']
+        if from_user not in new_debts:
+            new_debts[from_user] = defaultdict(int)
+        if to_user not in new_debts[from_user]:
+            new_debts[from_user][to_user] = 0
+        new_debts[from_user][to_user] += amount
+    return new_debts
+
 # Function to delete a debt
 def delete_debt(index):
-    debt = debts_history[index]
-    from_user = debt['from']
-    to_user = debt['to']
-    amount = debt['amount']
-    if from_user in debts and to_user in debts[from_user]:
-        debts[from_user][to_user] -= amount
-        if debts[from_user][to_user] <= 0:
-            del debts[from_user][to_user]
-        if not debts[from_user]:  # If the dictionary is empty, remove the key
-            del debts[from_user]
-        save_data(debts_file, debts)
-        st.success(f"Deleted debt: {from_user} owed {to_user} {amount} AUD")
-    else:
-        st.error("Debt not found.")
     del debts_history[index]
     save_data(debts_history_file, debts_history)
+    st.success("Debt deleted from history.")
+    # Recalculate debts from history after deletion
+    global debts
+    debts = recalculate_debts_from_history()
+    save_data(debts_file, debts)
     st.experimental_rerun()
 
 # Function to simplify debts
@@ -132,7 +137,7 @@ if st.button("Add Debt"):
         st.error("Please fill in all fields")
 
 # Section to simplify debts
-st.header("Simplified Debts")
+st.header("Debts")
 simplified_debts = simplify_debts(debts)
 
 if simplified_debts:
@@ -148,7 +153,7 @@ show_deletion_section = st.checkbox("Show Debt History and Deletion Section", va
 if show_deletion_section:
     # Section to display and delete debts
     st.header("Debt History and Deletion")
-    selected_debt = st.selectbox("Select a debt to delete:", [f"{debt['from']} owes {debt['to']} {debt['amount']} AUD" for debt in debts_history], key="selected_debt")
+    selected_debt = st.radio("Select a debt to delete:", [f"{debt['from']} owes {debt['to']} {debt['amount']} AUD" for debt in debts_history], key="selected_debt")
     selected_index = next((i for i, debt in enumerate(debts_history) if f"{debt['from']} owes {debt['to']} {debt['amount']} AUD" == selected_debt), None)
     
     if st.button("Delete Selected Debt"):
@@ -165,3 +170,17 @@ refresh_interval = st.sidebar.number_input("Refresh Interval (seconds)", min_val
 # Auto refresh
 if auto_refresh and refresh_interval:
     st_autorefresh(interval=refresh_interval * 1000, key="datarefresh")
+
+# Option to show/hide JSON files, only available for user "Ricardo"
+if st.session_state.get('username') == "Ricardo":
+    show_debts_json = st.sidebar.checkbox("Show Debts JSON", value=False)
+    show_debts_history_json = st.sidebar.checkbox("Show Debts History JSON", value=False)
+
+    # Display JSON files
+    if show_debts_json:
+        st.write("### Debts JSON")
+        st.json(load_data(debts_file, {}))
+
+    if show_debts_history_json:
+        st.write("### Debts History JSON")
+        st.json(load_data(debts_history_file, []))

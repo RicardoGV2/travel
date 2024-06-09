@@ -1,6 +1,7 @@
 import streamlit as st
 from time import sleep
 from navigation import make_sidebar
+from user_management import authenticate_user
 
 make_sidebar()
 
@@ -15,7 +16,7 @@ username = st.selectbox("Username", options=allowed_users)
 password = st.text_input(password_placeholder, type="password")
 
 if st.button("Log in", type="primary"):
-    if username in allowed_users and password == "australia":
+    if authenticate_user(username, password):
         st.session_state.logged_in = True
         st.session_state.username = username  # Store the username in session state
         st.success("Logged in successfully!")
