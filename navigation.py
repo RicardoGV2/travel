@@ -26,6 +26,10 @@ def make_sidebar():
             st.page_link("pages/page2.py", label="Time-Line", icon="⏲️")
             st.page_link("pages/page3.py", label="Debt Management", icon="💲")
 
+            # Show page4 if the user is Ricardo
+            if st.session_state.username == "Ricardo":
+                st.page_link("pages/page4.py", label="JSONS", icon="📄")
+
             st.write("")
             st.write("")
 
