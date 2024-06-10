@@ -4,7 +4,7 @@ import os
 import json
 from navigation import make_sidebar
 from user_management import authenticate_user
-import streamlit.components.v1 as components
+from streamlit_autorefresh import st_autorefresh
 
 make_sidebar()
 
@@ -29,23 +29,17 @@ password_placeholder = "Password (use 'australia')"
 if 'char_count' not in st.session_state:
     st.session_state.char_count = 0
 
+# Function to update the character count
+def update_char_count():
+    st.session_state.char_count = len(st.session_state.password_input)
+
 # Login form
 username = st.selectbox("Username", options=allowed_users)
-password = st.text_input(password_placeholder, type="password", autocomplete="off", key="password_input")
-
-if st.button("Log in", type="primary"):
-    if authenticate_user(username, password):
-        st.session_state.logged_in = True
-        st.session_state.username = username  # Store the username in session state
-        st.success("Logged in successfully!")
-        sleep(0.5)
-        st.switch_page("pages/page1.py")
-    else:
-        st.error("Incorrect username or password")
+password = st.text_input(password_placeholder, type="password", autocomplete="off", key="password_input", on_change=update_char_count)
 
 st.write(f"Character Count: {st.session_state.char_count}")
 
-# Custom HTML, CSS, and JavaScript for the arrow animation and character count
+# Custom HTML, CSS, and JavaScript for the arrow animation
 st.markdown(f"""
     <style>
     .arrow {{
@@ -70,27 +64,32 @@ st.markdown(f"""
     }}
     </style>
     <div class="arrow" id="arrow"></div>
-    <div id="char-count">Character Count: {st.session_state.char_count}</div>
     <script>
     document.addEventListener('DOMContentLoaded', function() {{
-        const passwordInput = document.querySelector('input[data-baseweb="input"]');
         const arrow = document.getElementById('arrow');
-        const charCountDiv = document.getElementById('char-count');
+        const passwordInput = document.querySelector('input[data-baseweb="input"]');
 
-        if (passwordInput) {{
-            passwordInput.addEventListener('input', function() {{
-                const charWidth = 9;  // Approximate character width, you may need to adjust this
-                const rect = passwordInput.getBoundingClientRect();
-                const lastCharPos = rect.left + (passwordInput.value.length * charWidth);
-                arrow.style.left = lastCharPos + 'px';  // Adjust to point correctly
-                arrow.style.top = (rect.top - 40) + 'px';
-
-                // Update character count
-                charCountDiv.textContent = 'Character Count: ' + passwordInput.value.length;
-            }});
+        function updateArrowPosition() {{
+            const charWidth = 9;  // Approximate character width, you may need to adjust this
+            const rect = passwordInput.getBoundingClientRect();
+            const lastCharPos = rect.left + (passwordInput.value.length * charWidth);
+            arrow.style.left = lastCharPos + 'px';  // Adjust to point correctly
+            arrow.style.top = (rect.top - 40) + 'px';
         }}
+
+        setInterval(updateArrowPosition, 500);  // Adjust interval as needed
     }});
     </script>
 """, unsafe_allow_html=True)
 
-components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
+if st.button("Log in", type="primary"):
+    if authenticate_user(username, password):
+        st.session_state.logged_in = True
+        st.session_state.username = username  # Store the username in session state
+        st.success("Logged in successfully!")
+        sleep(0.5)
+        st.switch_page("pages/page1.py")
+    else:
+        st.error("Incorrect username or password")
+
+st_autorefresh(interval=1000, key="char_count_refresh")
