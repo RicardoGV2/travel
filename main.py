@@ -13,6 +13,10 @@ make_sidebar()
 users_file = "users.json"
 state_file = "state.json"
 
+components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
+
+st.title("Welcome to Australia")
+
 # Load users
 def load_data(file_path):
     if os.path.exists(file_path):
@@ -73,9 +77,6 @@ if disable_arrow_animation != st.session_state.disable_arrow_animation:
     st.session_state.disable_arrow_animation = disable_arrow_animation
     state_data['disable_arrow_animation'] = disable_arrow_animation
     save_state(state_file, state_data)
-
-if not st.session_state.get('disable_arrow_animation', False):
-    components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
 
 # Initialize arrow position in session state
 if "arrow_position" not in st.session_state:
