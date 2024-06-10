@@ -30,62 +30,47 @@ password_placeholder = "Password (use 'australia')"
 if 'char_count' not in st.session_state:
     st.session_state.char_count = 0
 
-# Function to set device type in session state
-def set_device_type(device_type):
-    st.session_state.device_type = device_type
-
-# JavaScript to detect device type and send it to Streamlit
-device_detection_script = """
+# JavaScript to detect window width and send it to Streamlit
+window_detection_script = """
 <script>
-    function detectDevice() {
-        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        let deviceType = "desktop";
-
-        if (/windows phone/i.test(userAgent)) {
-            deviceType = "mobile";
-        } else if (/android/i.test(userAgent)) {
-            deviceType = "mobile";
-        } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-            deviceType = "mobile";
-        } else if (/Mac|Windows|Linux/.test(userAgent)) {
-            deviceType = "desktop";
-        }
-
-        const message = { type: "DEVICE_TYPE", device_type: deviceType };
+    function detectWindowSize() {
+        const windowWidth = window.innerWidth;
+        const message = { type: "WINDOW_SIZE", window_width: windowWidth };
         window.parent.postMessage(message, "*");
     }
 
-    window.addEventListener("load", detectDevice);
+    window.addEventListener("resize", detectWindowSize);
+    window.addEventListener("load", detectWindowSize);
 </script>
 """
 
-st.components.v1.html(device_detection_script, height=0)
+st.components.v1.html(window_detection_script, height=0)
 
 # JavaScript to handle messages from the iframe
 st.markdown("""
     <script>
         window.addEventListener("message", (event) => {
             const data = event.data;
-            if (data.type === "DEVICE_TYPE") {
-                const deviceType = data.device_type;
+            if (data.type === "WINDOW_SIZE") {
+                const windowWidth = data.window_width;
                 window.streamlitEvent.send({
                     type: "STREAMLIT_SET_SESSION_STATE",
-                    data: { device_type: deviceType }
+                    data: { window_width: windowWidth }
                 });
             }
         });
     </script>
 """, unsafe_allow_html=True)
 
-# Initialize device type in session state
-if 'device_type' not in st.session_state:
-    st.session_state.device_type = 'desktop'
+# Initialize window width in session state
+if 'window_width' not in st.session_state:
+    st.session_state.window_width = 1200  # Default to a standard laptop width
 
-# Display device type
-st.write(f"Device Type: {st.session_state.device_type}")
+# Display window width
+st.write(f"Window Width: {st.session_state.window_width}px")
 
-# Adjust arrow position based on device type
-if st.session_state.device_type == "mobile":
+# Adjust arrow position based on window width
+if st.session_state.window_width < 768:
     st.session_state.arrow_position = st.session_state.char_count * 8.7
 else:
     st.session_state.arrow_position = st.session_state.char_count * 5.3
