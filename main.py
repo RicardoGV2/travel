@@ -64,13 +64,13 @@ st.markdown(f"""
     .arrow {{
         width: 0; 
         height: 0; 
-        border-left: 10px solid transparent;
-        border-right: 10px solid transparent;
-        border-bottom: 20px solid red;
+        border-left: 7px solid transparent;
+        border-right: 7px solid transparent;
+        border-bottom: 17px solid red;
         position: absolute;
         animation: bounce 1s infinite;
         left: {st.session_state.arrow_position}px;  /* Adjust to point correctly */
-        top: -100px;  /* Adjust this value based on the position of your input field */
+        top: -130px;  /* Adjust this value based on the position of your input field */
     }}
     @keyframes bounce {{
         0%, 20%, 50%, 80%, 100% {{
