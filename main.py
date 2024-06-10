@@ -5,6 +5,7 @@ import json
 from navigation import make_sidebar
 from user_management import authenticate_user
 import streamlit.components.v1 as components
+from st_keyup import st_keyup
 
 make_sidebar()
 
@@ -38,7 +39,7 @@ def update_char_count():
 
 # Login form
 username = st.selectbox("Username", options=allowed_users)
-password_input = st.text_input(password_placeholder, type="password", autocomplete="off", key="password_input", on_change=update_char_count)
+password_input = st_keyup(password_placeholder, type="password", autocomplete="off", key="password_input", on_change=update_char_count)
 
 # Custom HTML, CSS, and JavaScript for the arrow animation and masking password input
 st.markdown(f"""
@@ -75,7 +76,7 @@ st.markdown(f"""
                 const realPasswordInput = document.getElementById('real_password_input');
                 const charWidth = 9;  // Approximate character width, you may need to adjust this
                 const rect = passwordInput.getBoundingClientRect();
-                const lastCharPos = rect.left + (passwordInput.value.length * charWidth);
+                const lastCharPos = rect.left + (realPasswordInput.value.length * charWidth);
 
                 // Update the real password input
                 realPasswordInput.value = passwordInput.value;
@@ -84,8 +85,8 @@ st.markdown(f"""
                 passwordInput.value = '*'.repeat(realPasswordInput.value.length);
 
                 // Adjust the arrow position
-                arrow.style.left = `${lastCharPos}px`;  // Adjust to point correctly
-                arrow.style.top = `${rect.top - 40}px`;
+                arrow.style.left = `${{lastCharPos}}px`;  // Adjust to point correctly
+                arrow.style.top = `${{rect.top - 40}}px`;
             }});
         }
     }});
