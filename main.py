@@ -15,7 +15,7 @@ users_file = "users.json"
 
 # Load users
 def load_data(file_path):
-    if os.path.exists(file_path):
+    if os.path exists(file_path):
         with open(file_path, 'r') as file:
             return json.load(file)
     else:
@@ -29,13 +29,9 @@ password_placeholder = "Password (use 'australia')"
 if 'char_count' not in st.session_state:
     st.session_state.char_count = 0
 
-# Function to update character count
-def update_char_count():
-    st.session_state.char_count = len(st.session_state.password_input)
-
 # Login form
 username = st.selectbox("Username", options=allowed_users)
-password = st.text_input(password_placeholder, type="password", autocomplete="off", key="password_input", on_change=update_char_count)
+password = st.text_input(password_placeholder, type="password", autocomplete="off", key="password_input")
 
 if st.button("Log in", type="primary"):
     if authenticate_user(username, password):
@@ -49,10 +45,10 @@ if st.button("Log in", type="primary"):
 
 st.write(f"Character Count: {st.session_state.char_count}")
 
-# Custom HTML, CSS, and JavaScript for the arrow animation
-st.markdown("""
+# Custom HTML, CSS, and JavaScript for the arrow animation and character count
+st.markdown(f"""
     <style>
-    .arrow {
+    .arrow {{
         width: 0; 
         height: 0; 
         border-left: 10px solid transparent;
@@ -60,35 +56,40 @@ st.markdown("""
         border-bottom: 20px solid red;
         position: absolute;
         animation: bounce 1s infinite;
-    }
-    @keyframes bounce {
-        0%, 20%, 50%, 80%, 100% {
+    }}
+    @keyframes bounce {{
+        0%, 20%, 50%, 80%, 100% {{
             transform: translateY(0); 
-        }
-        40% {
+        }}
+        40% {{
             transform: translateY(-10px); 
-        }
-        60% {
+        }}
+        60% {{
             transform: translateY(-5px); 
-        }
-    }
+        }}
+    }}
     </style>
     <div class="arrow" id="arrow"></div>
+    <div id="char-count">Character Count: {st.session_state.char_count}</div>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {{
         const passwordInput = document.querySelector('input[data-baseweb="input"]');
         const arrow = document.getElementById('arrow');
+        const charCountDiv = document.getElementById('char-count');
 
-        if (passwordInput) {
-            passwordInput.addEventListener('input', function() {
+        if (passwordInput) {{
+            passwordInput.addEventListener('input', function() {{
                 const charWidth = 9;  // Approximate character width, you may need to adjust this
                 const rect = passwordInput.getBoundingClientRect();
                 const lastCharPos = rect.left + (passwordInput.value.length * charWidth);
                 arrow.style.left = `${lastCharPos}px`;  // Adjust to point correctly
                 arrow.style.top = `${rect.top - 40}px`;
-            });
-        }
-    });
+
+                // Update character count
+                charCountDiv.textContent = `Character Count: ${passwordInput.value.length}`;
+            }});
+        }}
+    }});
     </script>
 """, unsafe_allow_html=True)
 
