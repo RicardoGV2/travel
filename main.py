@@ -77,12 +77,12 @@ st.markdown(f"""
     <div class="arrow" id="arrow"></div>
     <script>
     document.addEventListener('DOMContentLoaded', function() {{
-        const passwordInput = document.querySelector('input[data-baseweb="input"]');
+        const passwordInput = document.querySelector('input[type="password"]');
         const arrow = document.getElementById('arrow');
 
         if (passwordInput) {{
             passwordInput.addEventListener('input', function() {{
-                const charWidth = 9;  // Approximate character width, you may need to adjust this
+                const charWidth = passwordInput.clientWidth / passwordInput.value.length;  // Approximate character width based on input width
                 const rect = passwordInput.getBoundingClientRect();
                 const cursorPos = passwordInput.selectionStart;
                 const lastCharPos = rect.left + (cursorPos * charWidth);
