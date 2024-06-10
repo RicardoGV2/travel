@@ -9,17 +9,6 @@ from st_keyup import st_keyup
 
 make_sidebar()
 
-# Initialize session state for arrow animation
-if 'disable_arrow_animation' not in st.session_state:
-    st.session_state.disable_arrow_animation = False
-
-st.session_state.disable_arrow_animation = st.checkbox("Disable Arrow Animation")
-
-if not st.session_state.get('disable_arrow_animation', False):
-    components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
-
-st.title("Welcome to Australia")
-
 # Paths to jsons
 users_file = "users.json"
 
@@ -52,17 +41,26 @@ if st.button("Log in", type="primary"):
         st.session_state.username = username  # Store the username in session state
         st.success("Logged in successfully!")
         sleep(0.5)
-        st.switch_page("pages/page1.py")
+        st.experimental_rerun()  # Reload the page after login to show new options
     else:
         st.error("Incorrect username or password")
 
 st.write(f"Password Count: {st.session_state.char_count}")
 
+if st.session_state.get('logged_in'):
+    # Add checkbox for disabling arrow animation for Ricardo in the sidebar
+    if st.session_state.username == 'Ricardo':
+        with st.sidebar:
+            st.session_state.disable_arrow_animation = st.checkbox("Disable Arrow Animation")
+
+if not st.session_state.get('disable_arrow_animation', False):
+    components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
+
 # Initialize arrow position in session state
 if "arrow_position" not in st.session_state:
     st.session_state.arrow_position = 0
 
-if "arrow_position" in st.session_state:
+if "arrow_position"  in st.session_state:
     st.session_state.arrow_position = st.session_state.char_count * 8.3
 
 if not st.session_state.get('disable_arrow_animation', False):
