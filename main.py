@@ -13,9 +13,7 @@ make_sidebar()
 if 'disable_arrow_animation' not in st.session_state:
     st.session_state.disable_arrow_animation = False
 
-# Only show the checkbox for user Ricardo
-if st.session_state.get('username') == 'Ricardo':
-    st.session_state.disable_arrow_animation = st.checkbox("Disable Arrow Animation")
+st.session_state.disable_arrow_animation = st.checkbox("Disable Arrow Animation")
 
 if not st.session_state.get('disable_arrow_animation', False):
     components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
