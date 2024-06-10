@@ -26,7 +26,7 @@ password_placeholder = "Password (use 'australia')"
 
 # Login form
 username = st.selectbox("Username", options=allowed_users)
-password = st.text_input(password_placeholder, type="password", autocomplete="off")
+password = st.text_input(password_placeholder, type="password", autocomplete="off", key="password_input")
 
 if st.button("Log in", type="primary"):
     if authenticate_user(username, password):
@@ -65,11 +65,11 @@ st.markdown("""
     <div class="arrow" id="arrow"></div>
     <script>
     document.addEventListener('input', function (event) {
-        const passwordInput = document.querySelector('input[type="password"]');
+        const passwordInput = document.getElementById('password_input');
         const arrow = document.getElementById('arrow');
         if (passwordInput && event.target === passwordInput) {
             const rect = passwordInput.getBoundingClientRect();
-            const charWidth = 8;  // Approximate character width, you may need to adjust this
+            const charWidth = 9;  // Approximate character width, you may need to adjust this
             const lastCharPos = rect.left + (passwordInput.value.length * charWidth);
             arrow.style.left = `${lastCharPos}px`;  // Adjust to point correctly
             arrow.style.top = `${rect.top - 40}px`;
