@@ -11,6 +11,7 @@ make_sidebar()
 
 # Paths to jsons
 users_file = "users.json"
+state_file = "state.json"
 
 # Load users
 def load_data(file_path):
@@ -24,9 +25,16 @@ users_data = load_data(users_file)
 allowed_users = list(users_data.keys())
 password_placeholder = "Password (use 'australia')"
 
+# Load state
+state_data = load_data(state_file)
+
 # Initialize character count in session state
 if 'char_count' not in st.session_state:
     st.session_state.char_count = 0
+
+# Initialize arrow animation state in session state
+if 'disable_arrow_animation' not in st.session_state:
+    st.session_state.disable_arrow_animation = state_data.get('disable_arrow_animation', False)
 
 # Login form
 username = st.selectbox("Username", options=allowed_users)
@@ -41,15 +49,18 @@ if st.button("Log in", type="primary"):
         st.session_state.username = username  # Store the username in session state
         st.success("Logged in successfully!")
         sleep(0.5)
-        st.switch_page("pages/page1.py")  # Set the query parameter to navigate to page1
+        st.experimental_rerun()  # Reload the page after login to show new options
     else:
         st.error("Incorrect username or password")
 
-#st.write(f"Password Count: {st.session_state.char_count}")
-
-
+# Disable Arrow Animation
 with st.sidebar:
-    st.session_state.disable_arrow_animation = st.checkbox("Disable Arrow Animation")
+    disable_arrow_animation = st.checkbox("Disable Arrow Animation", value=st.session_state.disable_arrow_animation)
+
+if disable_arrow_animation != st.session_state.disable_arrow_animation:
+    st.session_state.disable_arrow_animation = disable_arrow_animation
+    state_data['disable_arrow_animation'] = disable_arrow_animation
+    save_state(state_file, state_data)
 
 if not st.session_state.get('disable_arrow_animation', False):
     components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
