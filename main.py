@@ -28,6 +28,61 @@ password_placeholder = "Password (use 'australia')"
 if 'char_count' not in st.session_state:
     st.session_state.char_count = 0
 
+# Function to set device type in session state
+def set_device_type(device_type):
+    st.session_state.device_type = device_type
+
+# JavaScript to detect device type and send it to Streamlit
+device_detection_script = """
+<script>
+    function detectDevice() {
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        let deviceType = "desktop";
+
+        if (/windows phone/i.test(userAgent)) {
+            deviceType = "mobile";
+        } else if (/android/i.test(userAgent)) {
+            deviceType = "mobile";
+        } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+            deviceType = "mobile";
+        }
+
+        const message = { type: "DEVICE_TYPE", device_type: deviceType };
+        window.parent.postMessage(message, "*");
+    }
+
+    window.addEventListener("load", detectDevice);
+</script>
+"""
+
+st.components.v1.html(device_detection_script, height=0)
+
+# JavaScript to handle messages from the iframe
+st.markdown("""
+    <script>
+        window.addEventListener("message", (event) => {
+            const data = event.data;
+            if (data.type === "DEVICE_TYPE") {
+                const deviceType = data.device_type;
+                window.streamlitEvent.send({
+                    type: "STREAMLIT_SET_SESSION_STATE",
+                    data: { device_type: deviceType }
+                });
+            }
+        });
+    </script>
+""", unsafe_allow_html=True)
+
+# Initialize device type in session state
+if 'device_type' not in st.session_state:
+    st.session_state.device_type = 'desktop'
+
+# Adjust arrow position based on device type
+if st.session_state.device_type == "mobile":
+    st.session_state.arrow_position = st.session_state.char_count * 8.7
+else:
+    st.session_state.arrow_position = st.session_state.char_count * 5.3
+
 # Login form
 username = st.selectbox("Username", options=allowed_users)
 password = st_keyup(password_placeholder, key="password_input", type="password")
@@ -45,21 +100,11 @@ if st.button("Log in", type="primary"):
     else:
         st.error("Incorrect username or password")
 
-#st.write(f"Password Count: {st.session_state.char_count}")
-
-
 with st.sidebar:
     st.session_state.disable_arrow_animation = st.checkbox("Disable Arrow Animation")
 
 if not st.session_state.get('disable_arrow_animation', False):
     components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
-
-# Initialize arrow position in session state
-if "arrow_position" not in st.session_state:
-    st.session_state.arrow_position = 0
-
-if "arrow_position"  in st.session_state:
-    st.session_state.arrow_position = st.session_state.char_count * 8.7
 
 if not st.session_state.get('disable_arrow_animation', False):
     # Custom HTML, CSS, and JavaScript for the arrow animation
