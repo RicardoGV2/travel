@@ -83,10 +83,10 @@ st.markdown(f"""
 
         if (passwordInput) {{
             passwordInput.addEventListener('input', function() {{
-                const charWidth = passwordInput.offsetWidth / (passwordInput.value.length || 1);
+                const charWidth = 9;  // Approximate character width, you may need to adjust this
                 const rect = passwordInput.getBoundingClientRect();
                 const lastCharPos = rect.left + (passwordInput.value.length * charWidth);
-                arrow.style.left = `${lastCharPos}px`;  // Adjust to point correctly
+                arrow.style.left = `${{lastCharPos}}px`;  // Adjust to point correctly
             }});
         }}
     }});
