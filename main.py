@@ -59,7 +59,7 @@ if 'debounce' not in st.session_state:
 # Sidebar settings
 with st.sidebar:
     disable_arrow_animation = st.checkbox("Disable Arrow Animation", value=st.session_state.disable_arrow_animation)
-    debounce = st.checkbox("Add 0.2s debounce?", value=st.session_state.debounce)
+    debounce = st.checkbox("Add 0.15s debounce?", value=st.session_state.debounce)
 
 # Save state when checkboxes change
 if disable_arrow_animation != st.session_state.disable_arrow_animation:
@@ -74,7 +74,7 @@ if debounce != st.session_state.debounce:
 
 # Login form
 username = st.selectbox("Username", options=allowed_users)
-password = st_keyup(password_placeholder, key="password_input", type="password", debounce=200 if st.session_state.debounce else None)
+password = st_keyup(password_placeholder, key="password_input", type="password", debounce=150 if st.session_state.debounce else None)
 
 # Update character count
 st.session_state.char_count = len(password)
