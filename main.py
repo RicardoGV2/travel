@@ -48,8 +48,6 @@ st.markdown("""
         border-right: 10px solid transparent;
         border-bottom: 20px solid red;
         position: absolute;
-        left: 50px;
-        top: 100px;
         animation: bounce 1s infinite;
     }
     @keyframes bounce {
@@ -64,16 +62,16 @@ st.markdown("""
         }
     }
     </style>
-    <div class="arrow"></div>
+    <div class="arrow" id="arrow"></div>
     <script>
     document.addEventListener('input', function (event) {
         const passwordInput = document.querySelector('input[type="password"]');
-        const arrow = document.querySelector('.arrow');
+        const arrow = document.getElementById('arrow');
         if (passwordInput && event.target === passwordInput) {
             const rect = passwordInput.getBoundingClientRect();
             const charWidth = 8;  // Approximate character width, you may need to adjust this
             const lastCharPos = rect.left + (passwordInput.value.length * charWidth);
-            arrow.style.left = `${lastCharPos - 20}px`;  // Adjust to point correctly
+            arrow.style.left = `${lastCharPos}px`;  // Adjust to point correctly
             arrow.style.top = `${rect.top - 40}px`;
         }
     });
