@@ -76,21 +76,21 @@ st.markdown(f"""
     </style>
     <div class="arrow" id="arrow"></div>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {{
         const passwordInput = document.querySelector('input[data-baseweb="input"]');
         const arrow = document.getElementById('arrow');
 
-        if (passwordInput) {
-            passwordInput.addEventListener('input', function() {
+        if (passwordInput) {{
+            passwordInput.addEventListener('input', function() {{
                 const charWidth = 9;  // Approximate character width, you may need to adjust this
                 const rect = passwordInput.getBoundingClientRect();
                 const cursorPos = passwordInput.selectionStart;
                 const lastCharPos = rect.left + (cursorPos * charWidth);
-                arrow.style.left = `${lastCharPos}px`;  // Adjust to point correctly
-                arrow.style.top = `${rect.top - 40}px`;
-            });
-        }
-    });
+                arrow.style.left = `${{lastCharPos}}px`;  // Adjust to point correctly
+                arrow.style.top = `${{rect.top - 40}}px`;
+            }});
+        }}
+    }});
     </script>
 """, unsafe_allow_html=True)
 
