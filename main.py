@@ -74,7 +74,7 @@ if not st.session_state.get('disable_arrow_animation', False):
             position: absolute;
             animation: bounce 1s infinite;
             left: {st.session_state.arrow_position + 6}px;  /* Adjust to point correctly */
-            top: -326px;  /* Adjust this value based on the position of your input field */
+            top: -266px;  /* Adjust this value based on the position of your input field */
         }}
         @keyframes bounce {{
             0%, 20%, 50%, 80%, 100% {{
