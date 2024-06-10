@@ -9,6 +9,8 @@ from st_keyup import st_keyup
 
 make_sidebar()
 
+st.title("Welcome to Australia")
+
 # Paths to jsons
 users_file = "users.json"
 
@@ -77,6 +79,9 @@ st.markdown("""
 if 'device_type' not in st.session_state:
     st.session_state.device_type = 'desktop'
 
+# Display device type
+st.write(f"Device Type: {st.session_state.device_type}")
+
 # Adjust arrow position based on device type
 if st.session_state.device_type == "mobile":
     st.session_state.arrow_position = st.session_state.char_count * 8.7
@@ -99,6 +104,10 @@ if st.button("Log in", type="primary"):
         st.experimental_rerun()  # Reload the page after login to show new options
     else:
         st.error("Incorrect username or password")
+
+# Initialize arrow position in session state
+if "arrow_position" not in st.session_state:
+    st.session_state.arrow_position = 0
 
 with st.sidebar:
     st.session_state.disable_arrow_animation = st.checkbox("Disable Arrow Animation")
