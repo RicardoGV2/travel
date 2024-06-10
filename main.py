@@ -36,7 +36,7 @@ def update_char_count():
 
 # Login form
 username = st.selectbox("Username", options=allowed_users)
-password = st_keyup(password_placeholder, type="password", autocomplete="off", key="password_input", debounce=0)
+password = st_keyup(password_placeholder, type="password", autocomplete="off", key="password_input")
 
 # Update character count
 st.session_state.char_count = len(password)
