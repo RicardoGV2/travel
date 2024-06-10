@@ -48,7 +48,7 @@ if st.button("Log in", type="primary"):
         st.error("Incorrect username or password")
 
 st.write(f"Character Count: {st.session_state.char_count}")
-
+'''
 # Custom HTML, CSS, and JavaScript for the arrow animation
 st.markdown("""
     <style>
@@ -91,5 +91,5 @@ st.markdown("""
     });
     </script>
 """, unsafe_allow_html=True)
-
+'''
 components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
