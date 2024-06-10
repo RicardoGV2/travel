@@ -41,7 +41,7 @@ if st.button("Log in", type="primary"):
         st.session_state.username = username  # Store the username in session state
         st.success("Logged in successfully!")
         sleep(0.5)
-        st.experimental_set_query_params(page="page1")  # Set the query parameter to navigate to page1
+        st.switch_page("pages/page1.py")  # Set the query parameter to navigate to page1
     else:
         st.error("Incorrect username or password")
 
