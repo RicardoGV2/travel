@@ -70,7 +70,7 @@ st.markdown(f"""
         position: absolute;
         animation: bounce 1s infinite;
         left: {st.session_state.arrow_position}px;  /* Adjust to point correctly */
-        top: -70px;  /* Adjust this value based on the position of your input field */
+        top: -100px;  /* Adjust this value based on the position of your input field */
     }}
     @keyframes bounce {{
         0%, 20%, 50%, 80%, 100% {{
