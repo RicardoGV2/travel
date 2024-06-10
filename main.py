@@ -47,14 +47,14 @@ if st.button("Log in", type="primary"):
     else:
         st.error("Incorrect username or password")
 
-st.write(f"Character Count: {st.session_state.char_count}")
+st.write(f"Password Count: {st.session_state.char_count}")
 
 # Initialize arrow position in session state
 if "arrow_position" not in st.session_state:
     st.session_state.arrow_position = 0
 
 if "arrow_position"  in st.session_state:
-    st.session_state.arrow_position = st.session_state.char_count * 5.3
+    st.session_state.arrow_position = st.session_state.char_count * 7.3
 
 
 
