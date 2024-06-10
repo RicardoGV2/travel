@@ -48,48 +48,7 @@ if st.button("Log in", type="primary"):
         st.error("Incorrect username or password")
 
 st.write(f"Character Count: {st.session_state.char_count}")
-'''
-# Custom HTML, CSS, and JavaScript for the arrow animation
-st.markdown("""
-    <style>
-    .arrow {
-        width: 0; 
-        height: 0; 
-        border-left: 10px solid transparent;
-        border-right: 10px solid transparent;
-        border-bottom: 20px solid red;
-        position: absolute;
-        animation: bounce 1s infinite;
-    }
-    @keyframes bounce {
-        0%, 20%, 50%, 80%, 100% {
-            transform: translateY(0); 
-        }
-        40% {
-            transform: translateY(-10px); 
-        }
-        60% {
-            transform: translateY(-5px); 
-        }
-    }
-    </style>
-    <div class="arrow" id="arrow"></div>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const passwordInput = document.querySelector('input[data-baseweb="input"]');
-        const arrow = document.getElementById('arrow');
 
-        if (passwordInput) {
-            passwordInput.addEventListener('input', function() {
-                const charWidth = 9;  // Approximate character width, you may need to adjust this
-                const rect = passwordInput.getBoundingClientRect();
-                const lastCharPos = rect.left + (passwordInput.value.length * charWidth);
-                arrow.style.left = `${lastCharPos}px`;  // Adjust to point correctly
-                arrow.style.top = `${rect.top - 40}px`;
-            });
-        }
-    });
-    </script>
-""", unsafe_allow_html=True)
-'''
+
+
 components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
