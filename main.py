@@ -59,7 +59,7 @@ if "arrow_position" not in st.session_state:
     st.session_state.arrow_position = 0
 
 if "arrow_position"  in st.session_state:
-    st.session_state.arrow_position = st.session_state.char_count * 8.5
+    st.session_state.arrow_position = st.session_state.char_count * 8.7
 
 if not st.session_state.get('disable_arrow_animation', False):
     # Custom HTML, CSS, and JavaScript for the arrow animation
@@ -73,7 +73,7 @@ if not st.session_state.get('disable_arrow_animation', False):
             border-bottom: 17px solid red;
             position: absolute;
             animation: bounce 1s infinite;
-            left: {st.session_state.arrow_position + 7}px;  /* Adjust to point correctly */
+            left: {st.session_state.arrow_position + 9}px;  /* Adjust to point correctly */
             top: -250px;  /* Adjust this value based on the position of your input field */
         }}
         @keyframes bounce {{
