@@ -32,7 +32,8 @@ if 'char_count' not in st.session_state:
 
 # Login form
 username = st.selectbox("Username", options=allowed_users)
-password = st_keyup(password_placeholder, type="password", autocomplete="off", key="password_input")
+password = st_keyup("Enter a value", key="0")
+#password = st_keyup(password_placeholder, type="password", autocomplete="off", key="password_input")
 
 # Update character count
 st.session_state.char_count = len(password)
