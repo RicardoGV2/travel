@@ -5,7 +5,6 @@ import json
 from navigation import make_sidebar
 from user_management import authenticate_user
 import streamlit.components.v1 as components
-from st_keyup import st_keyup
 
 make_sidebar()
 
@@ -39,7 +38,7 @@ def update_char_count():
 
 # Login form
 username = st.selectbox("Username", options=allowed_users)
-password_input = st_keyup(password_placeholder, type="password", autocomplete="off", key="password_input", on_change=update_char_count)
+password_input = st.text_input(password_placeholder, type="password", autocomplete="off", key="password_input")
 
 # Custom HTML, CSS, and JavaScript for the arrow animation and masking password input
 st.markdown("""
