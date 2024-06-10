@@ -37,3 +37,45 @@ if st.button("Log in", type="primary"):
         st.switch_page("pages/page1.py")
     else:
         st.error("Incorrect username or password")
+
+# Custom HTML, CSS, and JavaScript for the arrow animation
+st.markdown("""
+    <style>
+    .arrow {
+        width: 0; 
+        height: 0; 
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 20px solid red;
+        position: absolute;
+        left: 50px;
+        top: 100px;
+        animation: bounce 1s infinite;
+    }
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+            transform: translateY(0); 
+        }
+        40% {
+            transform: translateY(-10px); 
+        }
+        60% {
+            transform: translateY(-5px); 
+        }
+    }
+    </style>
+    <div class="arrow"></div>
+    <script>
+    const observer = new MutationObserver(() => {
+        const passwordInput = document.querySelector('input[type="password"]');
+        const arrow = document.querySelector('.arrow');
+        if (passwordInput) {
+            const rect = passwordInput.getBoundingClientRect();
+            arrow.style.left = `${rect.left - 20}px`;
+            arrow.style.top = `${rect.top - 40}px`;
+        }
+    });
+
+    observer.observe(document, { childList: true, subtree: true });
+    </script>
+""", unsafe_allow_html=True)
