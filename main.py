@@ -49,7 +49,7 @@ if st.button("Log in", type="primary"):
 
 st.write(f"Character Count: {st.session_state.char_count}")
 
-# Custom HTML, CSS, and JavaScript for the arrow animation and positioning
+# Custom HTML, CSS, and JavaScript for the arrow animation
 st.markdown(f"""
     <style>
     .arrow {{
@@ -60,8 +60,6 @@ st.markdown(f"""
         border-bottom: 17px solid red;
         position: absolute;
         animation: bounce 1s infinite;
-        left: {st.session_state.char_count * 9}px;  /* Adjust to point correctly */
-        top: -126px;  /* Adjust this value based on the position of your input field */
     }}
     @keyframes bounce {{
         0%, 20%, 50%, 80%, 100% {{
@@ -77,19 +75,20 @@ st.markdown(f"""
     </style>
     <div class="arrow" id="arrow"></div>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {{
+    document.addEventListener('DOMContentLoaded', function() {
         const passwordInput = document.querySelector('input[data-baseweb="input"]');
         const arrow = document.getElementById('arrow');
 
-        if (passwordInput) {{
-            passwordInput.addEventListener('input', function() {{
-                const charWidth = 9;  // Approximate character width, you may need to adjust this
+        if (passwordInput) {
+            passwordInput.addEventListener('input', function() {
+                const charWidth = 10;  // Adjust this value based on character width
                 const rect = passwordInput.getBoundingClientRect();
                 const lastCharPos = rect.left + (passwordInput.value.length * charWidth);
-                arrow.style.left = `${{lastCharPos}}px`;  // Adjust to point correctly
-            }});
-        }}
-    }});
+                arrow.style.left = `${lastCharPos}px`;  // Adjust to point correctly
+                arrow.style.top = `${rect.top - 40}px`;
+            });
+        }
+    });
     </script>
 """, unsafe_allow_html=True)
 
