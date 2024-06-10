@@ -58,7 +58,7 @@ if "arrow_position"  in st.session_state:
 
 # Button to move arrow to the right
 if st.button("Move Arrow Right"):
-    st.session_state.arrow_position += 10
+    st.session_state.arrow_position += 7
 
 # Custom HTML, CSS, and JavaScript for the arrow animation
 st.markdown(f"""
