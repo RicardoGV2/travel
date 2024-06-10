@@ -4,7 +4,7 @@ import os
 import json
 from navigation import make_sidebar
 from user_management import authenticate_user
-from streamlit.components.v1 import com
+from streamlit.components.v1 as com
 
 make_sidebar()
 
