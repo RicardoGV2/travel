@@ -49,6 +49,14 @@ if st.button("Log in", type="primary"):
 
 st.write(f"Character Count: {st.session_state.char_count}")
 
+# Initialize arrow position in session state
+if "arrow_position" not in st.session_state:
+    st.session_state.arrow_position = 0
+
+# Button to move arrow to the right
+if st.button("Move Arrow Right"):
+    st.session_state.arrow_position += 10
+
 # Custom HTML, CSS, and JavaScript for the arrow animation
 st.markdown(f"""
     <style>
