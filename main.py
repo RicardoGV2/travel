@@ -9,8 +9,6 @@ from st_keyup import st_keyup
 
 make_sidebar()
 
-st.title("Welcome to Australia")
-
 # Paths to jsons
 users_file = "users.json"
 
@@ -30,53 +28,8 @@ password_placeholder = "Password (use 'australia')"
 if 'char_count' not in st.session_state:
     st.session_state.char_count = 0
 
-# JavaScript to detect window width and send it to Streamlit
-window_detection_script = """
-<script>
-    function detectWindowSize() {
-        const windowWidth = window.innerWidth;
-        const message = { type: "WINDOW_SIZE", window_width: windowWidth };
-        window.parent.postMessage(message, "*");
-    }
-
-    window.addEventListener("resize", detectWindowSize);
-    window.addEventListener("load", detectWindowSize);
-</script>
-"""
-
-st.components.v1.html(window_detection_script, height=0)
-
-# JavaScript to handle messages from the iframe
-st.markdown("""
-    <script>
-        window.addEventListener("message", (event) => {
-            const data = event.data;
-            if (data.type === "WINDOW_SIZE") {
-                const windowWidth = data.window_width;
-                window.streamlitEvent.send({
-                    type: "STREAMLIT_SET_SESSION_STATE",
-                    data: { window_width: windowWidth }
-                });
-            }
-        });
-    </script>
-""", unsafe_allow_html=True)
-
-# Initialize window width in session state
-if 'window_width' not in st.session_state:
-    st.session_state.window_width = 1200  # Default to a standard laptop width
-
-# Display window width
-st.write(f"Window Width: {st.session_state.window_width}px")
-
-# Adjust arrow position based on window width
-if st.session_state.window_width < 768:
-    st.session_state.arrow_position = st.session_state.char_count * 8.7
-else:
-    st.session_state.arrow_position = st.session_state.char_count * 5.3
-
 # Login form
-username = st.selectbox("Username ", options=allowed_users)
+username = st.selectbox("Username", options=allowed_users)
 password = st_keyup(password_placeholder, key="password_input", type="password")
 
 # Update character count
@@ -92,15 +45,21 @@ if st.button("Log in", type="primary"):
     else:
         st.error("Incorrect username or password")
 
-# Initialize arrow position in session state
-if "arrow_position" not in st.session_state:
-    st.session_state.arrow_position = 0
+#st.write(f"Password Count: {st.session_state.char_count}")
+
 
 with st.sidebar:
     st.session_state.disable_arrow_animation = st.checkbox("Disable Arrow Animation")
 
 if not st.session_state.get('disable_arrow_animation', False):
     components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
+
+# Initialize arrow position in session state
+if "arrow_position" not in st.session_state:
+    st.session_state.arrow_position = 0
+
+if "arrow_position"  in st.session_state:
+    st.session_state.arrow_position = st.session_state.char_count * 8.7
 
 if not st.session_state.get('disable_arrow_animation', False):
     # Custom HTML, CSS, and JavaScript for the arrow animation
