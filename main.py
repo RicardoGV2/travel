@@ -9,6 +9,8 @@ from st_keyup import st_keyup
 
 make_sidebar()
 
+components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
+
 st.title("Welcome to Australia")
 
 # Paths to jsons
@@ -54,7 +56,7 @@ if "arrow_position" not in st.session_state:
     st.session_state.arrow_position = 0
 
 if "arrow_position"  in st.session_state:
-    st.session_state.arrow_position = st.session_state.char_count * 7.3
+    st.session_state.arrow_position = st.session_state.char_count * 8.3
 
 
 
@@ -87,4 +89,3 @@ st.markdown(f"""
     <div class="arrow" id="arrow"></div>
 """, unsafe_allow_html=True)
 
-components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
