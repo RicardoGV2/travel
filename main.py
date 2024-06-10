@@ -52,13 +52,29 @@ if 'char_count' not in st.session_state:
 if 'disable_arrow_animation' not in st.session_state:
     st.session_state.disable_arrow_animation = state_data.get('disable_arrow_animation', False)
 
-debounce = st.checkbox("Add 0.1s debounce?")
+# Initialize debounce state in session state
+if 'debounce' not in st.session_state:
+    st.session_state.debounce = state_data.get('debounce', False)
 
-name = st_keyup("Enter city name")
+# Sidebar settings
+with st.sidebar:
+    disable_arrow_animation = st.checkbox("Disable Arrow Animation", value=st.session_state.disable_arrow_animation)
+    debounce = st.checkbox("Add 0.3s debounce?", value=st.session_state.debounce)
+
+# Save state when checkboxes change
+if disable_arrow_animation != st.session_state.disable_arrow_animation:
+    st.session_state.disable_arrow_animation = disable_arrow_animation
+    state_data['disable_arrow_animation'] = disable_arrow_animation
+    save_state(state_file, state_data)
+
+if debounce != st.session_state.debounce:
+    st.session_state.debounce = debounce
+    state_data['debounce'] = debounce
+    save_state(state_file, state_data)
 
 # Login form
 username = st.selectbox("Username", options=allowed_users)
-password = st_keyup(password_placeholder, key="password_input", type="password", debounce=100 if debounce else None)
+password = st_keyup(password_placeholder, key="password_input", type="password", debounce=300 if st.session_state.debounce else None)
 
 # Update character count
 st.session_state.char_count = len(password)
@@ -72,15 +88,6 @@ if st.button("Log in", type="primary"):
         st.switch_page("pages/page1.py") 
     else:
         st.error("Incorrect username or password")
-
-# Disable Arrow Animation
-with st.sidebar:
-    disable_arrow_animation = st.checkbox("Disable Arrow Animation", value=st.session_state.disable_arrow_animation)
-
-if disable_arrow_animation != st.session_state.disable_arrow_animation:
-    st.session_state.disable_arrow_animation = disable_arrow_animation
-    state_data['disable_arrow_animation'] = disable_arrow_animation
-    save_state(state_file, state_data)
 
 # Initialize arrow position in session state
 if "arrow_position" not in st.session_state:
