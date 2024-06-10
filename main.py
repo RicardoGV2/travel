@@ -49,6 +49,33 @@ if st.button("Log in", type="primary"):
 
 st.write(f"Character Count: {st.session_state.char_count}")
 
-
+# Custom HTML, CSS, and JavaScript for the arrow animation
+st.markdown(f"""
+    <style>
+    .arrow {{
+        width: 0; 
+        height: 0; 
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 20px solid red;
+        position: absolute;
+        animation: bounce 1s infinite;
+        left: {st.session_state.arrow_position}px;  /* Adjust to point correctly */
+        top: 120px;  /* Adjust this value based on the position of your input field */
+    }}
+    @keyframes bounce {{
+        0%, 20%, 50%, 80%, 100% {{
+            transform: translateY(0); 
+        }}
+        40% {{
+            transform: translateY(-10px); 
+        }}
+        60% {{
+            transform: translateY(-5px); 
+        }}
+    }}
+    </style>
+    <div class="arrow" id="arrow"></div>
+""", unsafe_allow_html=True)
 
 components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
