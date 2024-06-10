@@ -67,7 +67,7 @@ st.markdown("""
     <div id="char-count">Character Count: 0</div>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const passwordInput = document.querySelector('input[data-testid="stTextInput"]');
+        const passwordInput = document.querySelector('input[data-baseweb="input"]');
         const arrow = document.getElementById('arrow');
         const charCount = document.getElementById('char-count');
 
@@ -85,4 +85,4 @@ st.markdown("""
     </script>
 """, unsafe_allow_html=True)
 
-components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
+components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx
