@@ -47,6 +47,8 @@ device_detection_script = """
             deviceType = "mobile";
         } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
             deviceType = "mobile";
+        } else if (/Mac|Windows|Linux/.test(userAgent)) {
+            deviceType = "desktop";
         }
 
         const message = { type: "DEVICE_TYPE", device_type: deviceType };
