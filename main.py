@@ -41,7 +41,7 @@ if st.button("Log in", type="primary"):
         st.session_state.username = username  # Store the username in session state
         st.success("Logged in successfully!")
         sleep(0.5)
-        st.experimental_rerun()  # Reload the page after login to show new options
+        st.experimental_set_query_params(page="page1")  # Set the query parameter to navigate to page1
     else:
         st.error("Incorrect username or password")
 
@@ -58,7 +58,7 @@ if not st.session_state.get('disable_arrow_animation', False):
 if "arrow_position" not in st.session_state:
     st.session_state.arrow_position = 0
 
-if "arrow_position"  in st.session_state:
+if "arrow_position" in st.session_state:
     st.session_state.arrow_position = st.session_state.char_count * 8.7
 
 if not st.session_state.get('disable_arrow_animation', False):
