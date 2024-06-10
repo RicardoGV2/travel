@@ -76,7 +76,7 @@ else:
     st.session_state.arrow_position = st.session_state.char_count * 5.3
 
 # Login form
-username = st.selectbox("Username", options=allowed_users)
+username = st.selectbox("Username ", options=allowed_users)
 password = st_keyup(password_placeholder, key="password_input", type="password")
 
 # Update character count
