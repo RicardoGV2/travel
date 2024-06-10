@@ -32,7 +32,7 @@ if 'char_count' not in st.session_state:
 
 # Login form
 username = st.selectbox("Username", options=allowed_users)
-password = st_keyup(password_placeholder, type="password", autocomplete="off", key="password_input")
+password = st_keyup(password_placeholder, key="password_input")
 
 # Update character count
 st.session_state.char_count = len(password)
@@ -49,47 +49,42 @@ if st.button("Log in", type="primary"):
 
 st.write(f"Character Count: {st.session_state.char_count}")
 
+# Initialize arrow position in session state
+if "arrow_position" not in st.session_state:
+    st.session_state.arrow_position = 0
+
+if "arrow_position"  in st.session_state:
+    st.session_state.arrow_position = st.session_state.char_count * 8
+
+
+
 # Custom HTML, CSS, and JavaScript for the arrow animation
-st.markdown("""
+st.markdown(f"""
     <style>
-    .arrow {
+    .arrow {{
         width: 0; 
         height: 0; 
-        border-left: 10px solid transparent;
-        border-right: 10px solid transparent;
-        border-bottom: 20px solid red;
+        border-left: 7px solid transparent;
+        border-right: 7px solid transparent;
+        border-bottom: 17px solid red;
         position: absolute;
         animation: bounce 1s infinite;
-    }
-    @keyframes bounce {
-        0%, 20%, 50%, 80%, 100% {
+        left: {st.session_state.arrow_position+5}px;  /* Adjust to point correctly */
+        top: -126px;  /* Adjust this value based on the position of your input field */
+    }}
+    @keyframes bounce {{
+        0%, 20%, 50%, 80%, 100% {{
             transform: translateY(0); 
-        }
-        40% {
+        }}
+        40% {{
             transform: translateY(-10px); 
-        }
-        60% {
+        }}
+        60% {{
             transform: translateY(-5px); 
-        }
-    }
+        }}
+    }}
     </style>
     <div class="arrow" id="arrow"></div>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const passwordInput = document.querySelector('input[data-baseweb="input"]');
-        const arrow = document.getElementById('arrow');
-
-        if (passwordInput) {
-            passwordInput.addEventListener('input', function() {
-                const charWidth = 9;  // Approximate character width, you may need to adjust this
-                const rect = passwordInput.getBoundingClientRect();
-                const lastCharPos = rect.left + (passwordInput.value.length * charWidth);
-                arrow.style.left = `${lastCharPos}px`;  // Adjust to point correctly
-                arrow.style.top = `${rect.top - 40}px`;
-            });
-        }
-    });
-    </script>
 """, unsafe_allow_html=True)
 
 components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
