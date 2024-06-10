@@ -65,9 +65,10 @@ st.markdown(f"""
     #spacer {{
         visibility: hidden;
         position: absolute;
-        top: 0;
-        left: 0;
         white-space: pre;
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
     }}
     </style>
     <div class="arrow" id="arrow"></div>
@@ -80,7 +81,7 @@ st.markdown(f"""
 
         if (passwordInput) {{
             passwordInput.addEventListener('input', function() {{
-                spacer.innerHTML = passwordInput.value.replace(/./g, '•');  // Use the bullet character to match password input
+                spacer.textContent = passwordInput.value.replace(/./g, '•');  // Use the bullet character to match password input
                 const rect = passwordInput.getBoundingClientRect();
                 const spacerRect = spacer.getBoundingClientRect();
                 const lastCharPos = rect.left + spacerRect.width;
