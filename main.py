@@ -4,7 +4,7 @@ import os
 import json
 from navigation import make_sidebar
 from user_management import authenticate_user
-from streamlit.components.v1 as com
+import streamlit.components.v1 as components
 
 make_sidebar()
 
@@ -79,4 +79,4 @@ st.markdown("""
     </script>
 """, unsafe_allow_html=True)
 
-com.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
+components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
