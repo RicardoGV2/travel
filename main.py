@@ -21,12 +21,24 @@ def load_data(file_path):
     else:
         return {}
 
+# Load and save state functions
+def load_state(file_path):
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as file:
+            return json.load(file)
+    else:
+        return {}
+
+def save_state(file_path, data):
+    with open(file_path, 'w') as file:
+        json.dump(data, file, indent=4)
+
 users_data = load_data(users_file)
 allowed_users = list(users_data.keys())
 password_placeholder = "Password (use 'australia')"
 
 # Load state
-state_data = load_data(state_file)
+state_data = load_state(state_file)
 
 # Initialize character count in session state
 if 'char_count' not in st.session_state:
