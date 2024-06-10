@@ -30,9 +30,14 @@ password_placeholder = "Password (use 'australia')"
 if 'char_count' not in st.session_state:
     st.session_state.char_count = 0
 
+debounce = st.checkbox("Add 0.5s debounce?")
+
+
+
 # Login form
 username = st.selectbox("Username", options=allowed_users)
-password = st_keyup(password_placeholder, key="password_input", type="password")
+#password = st_keyup(password_placeholder, key="password_input", type="password")
+password = st_keyup(password_placeholder, key="password_input", type="password", debounce=500 if debounce else None)
 
 # Update character count
 st.session_state.char_count = len(password)
