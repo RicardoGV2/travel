@@ -54,7 +54,7 @@ if "arrow_position" not in st.session_state:
     st.session_state.arrow_position = 0
 
 if "arrow_position"  in st.session_state:
-st.session_state.arrow_position = st.session_state.char_count * 10
+    st.session_state.arrow_position = st.session_state.char_count * 10
 
 # Button to move arrow to the right
 if st.button("Move Arrow Right"):
