@@ -25,9 +25,17 @@ users_data = load_data(users_file)
 allowed_users = list(users_data.keys())
 password_placeholder = "Password (use 'australia')"
 
+# Initialize character count in session state
+if 'char_count' not in st.session_state:
+    st.session_state.char_count = 0
+
+# Function to update character count
+def update_char_count():
+    st.session_state.char_count = len(st.session_state.password_input)
+
 # Login form
 username = st.selectbox("Username", options=allowed_users)
-password = st.text_input(password_placeholder, type="password", autocomplete="off", key="password_input")
+password = st.text_input(password_placeholder, type="password", autocomplete="off", key="password_input", on_change=update_char_count)
 
 if st.button("Log in", type="primary"):
     if authenticate_user(username, password):
@@ -38,6 +46,8 @@ if st.button("Log in", type="primary"):
         st.switch_page("pages/page1.py")
     else:
         st.error("Incorrect username or password")
+
+st.write(f"Character Count: {st.session_state.char_count}")
 
 # Custom HTML, CSS, and JavaScript for the arrow animation
 st.markdown("""
@@ -64,12 +74,10 @@ st.markdown("""
     }
     </style>
     <div class="arrow" id="arrow"></div>
-    <div id="char-count">Character Count: 0</div>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const passwordInput = document.querySelector('input[data-baseweb="input"]');
         const arrow = document.getElementById('arrow');
-        const charCount = document.getElementById('char-count');
 
         if (passwordInput) {
             passwordInput.addEventListener('input', function() {
@@ -78,7 +86,6 @@ st.markdown("""
                 const lastCharPos = rect.left + (passwordInput.value.length * charWidth);
                 arrow.style.left = `${lastCharPos}px`;  // Adjust to point correctly
                 arrow.style.top = `${rect.top - 40}px`;
-                charCount.textContent = `Character Count: ${passwordInput.value.length}`;
             });
         }
     });
