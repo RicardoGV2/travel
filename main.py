@@ -49,15 +49,6 @@ if st.button("Log in", type="primary"):
 
 st.write(f"Character Count: {st.session_state.char_count}")
 
-# Initialize arrow position in session state
-if "arrow_position" not in st.session_state:
-    st.session_state.arrow_position = 0
-
-if "arrow_position"  in st.session_state:
-    st.session_state.arrow_position = st.session_state.char_count * 5.3
-
-
-
 # Custom HTML, CSS, and JavaScript for the arrow animation
 st.markdown(f"""
     <style>
@@ -69,22 +60,37 @@ st.markdown(f"""
         border-bottom: 17px solid red;
         position: absolute;
         animation: bounce 1s infinite;
-        left: {st.session_state.arrow_position+6}px;  /* Adjust to point correctly */
         top: -126px;  /* Adjust this value based on the position of your input field */
     }}
-    @keyframes bounce {{
-        0%, 20%, 50%, 80%, 100% {{
-            transform: translateY(0); 
-        }}
-        40% {{
-            transform: translateY(-10px); 
-        }}
-        60% {{
-            transform: translateY(-5px); 
-        }}
+    #spacer {{
+        visibility: hidden;
+        position: absolute;
+        white-space: pre;
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
     }}
     </style>
     <div class="arrow" id="arrow"></div>
+    <span id="spacer"></span>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {{
+        const passwordInput = document.querySelector('input[type="password"]');
+        const arrow = document.getElementById('arrow');
+        const spacer = document.getElementById('spacer');
+
+        if (passwordInput) {{
+            passwordInput.addEventListener('input', function() {{
+                spacer.textContent = passwordInput.value.replace(/./g, '•');  // Use the bullet character to match password input
+                const rect = passwordInput.getBoundingClientRect();
+                const spacerRect = spacer.getBoundingClientRect();
+                const lastCharPos = rect.left + spacerRect.width;
+                arrow.style.left = `${{lastCharPos}}px`;  // Adjust to point correctly
+                arrow.style.top = `${{rect.top - 40}}px`;
+            }});
+        }}
+    }});
+    </script>
 """, unsafe_allow_html=True)
 
 components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
