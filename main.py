@@ -43,10 +43,6 @@ if st.button("Log in", type="primary"):
 if "arrow_position" not in st.session_state:
     st.session_state.arrow_position = 0
 
-# Button to move arrow to the right
-if st.button("Move Arrow Right"):
-    st.session_state.arrow_position += 10
-
 # Custom HTML, CSS, and JavaScript for the arrow animation
 st.markdown(f"""
     <style>
@@ -59,7 +55,7 @@ st.markdown(f"""
         position: absolute;
         animation: bounce 1s infinite;
         left: {st.session_state.arrow_position}px;  /* Adjust to point correctly */
-        top: 120px;  /* Adjust this value based on the position of your input field */
+        top: 140px;  /* Adjust this value based on the position of your input field */
     }}
     @keyframes bounce {{
         0%, 20%, 50%, 80%, 100% {{
@@ -74,6 +70,20 @@ st.markdown(f"""
     }}
     </style>
     <div class="arrow" id="arrow"></div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {{
+        const passwordInput = document.getElementById('password_input');
+        const arrow = document.getElementById('arrow');
+        
+        passwordInput.addEventListener('input', function() {{
+            const charWidth = 9;  // Approximate character width, you may need to adjust this
+            const rect = passwordInput.getBoundingClientRect();
+            const lastCharPos = rect.left + (passwordInput.value.length * charWidth);
+            arrow.style.left = `${lastCharPos}px`;  // Adjust to point correctly
+            arrow.style.top = `${rect.top - 40}px`;
+        }});
+    }});
+    </script>
 """, unsafe_allow_html=True)
 
 components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
