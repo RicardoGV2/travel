@@ -13,9 +13,9 @@ make_sidebar()
 users_file = "users.json"
 state_file = "state.json"
 
-st.title("Welcome to Australia")
-
 components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
+
+st.title("Welcome to Australia")
 
 # Load users
 def load_data(file_path):
@@ -98,7 +98,7 @@ if not st.session_state.get('disable_arrow_animation', False):
             position: absolute;
             animation: bounce 1s infinite;
             left: {st.session_state.arrow_position + 9}px;  /* Adjust to point correctly */
-            top: -150px;  /* Adjust this value based on the position of your input field */
+            top: -50px;  /* Adjust this value based on the position of your input field */
         }}
         @keyframes bounce {{
             0%, 20%, 50%, 80%, 100% {{
