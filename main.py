@@ -49,6 +49,15 @@ if st.button("Log in", type="primary"):
 
 st.write(f"Character Count: {st.session_state.char_count}")
 
+# Initialize arrow position in session state
+if "arrow_position" not in st.session_state:
+    st.session_state.arrow_position = 0
+
+if "arrow_position"  in st.session_state:
+    st.session_state.arrow_position = st.session_state.char_count * 5.3
+
+
+
 # Custom HTML, CSS, and JavaScript for the arrow animation
 st.markdown(f"""
     <style>
@@ -60,6 +69,8 @@ st.markdown(f"""
         border-bottom: 17px solid red;
         position: absolute;
         animation: bounce 1s infinite;
+        left: {st.session_state.arrow_position+6}px;  /* Adjust to point correctly */
+        top: -126px;  /* Adjust this value based on the position of your input field */
     }}
     @keyframes bounce {{
         0%, 20%, 50%, 80%, 100% {{
@@ -74,22 +85,6 @@ st.markdown(f"""
     }}
     </style>
     <div class="arrow" id="arrow"></div>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const passwordInput = document.querySelector('input[data-baseweb="input"]');
-        const arrow = document.getElementById('arrow');
-
-        if (passwordInput) {
-            passwordInput.addEventListener('input', function() {
-                const charWidth = 10;  // Adjust this value based on character width
-                const rect = passwordInput.getBoundingClientRect();
-                const lastCharPos = rect.left + (passwordInput.value.length * charWidth);
-                arrow.style.left = `${lastCharPos}px`;  // Adjust to point correctly
-                arrow.style.top = `${rect.top - 40}px`;
-            });
-        }
-    });
-    </script>
 """, unsafe_allow_html=True)
 
 components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
