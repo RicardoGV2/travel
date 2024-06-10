@@ -70,10 +70,10 @@ st.markdown("""
         const arrow = document.getElementById('arrow');
         if (passwordInput && event.target === passwordInput) {
             const rect = passwordInput.getBoundingClientRect();
-            const charWidth = 9;  // Approximate character width, you may need to adjust this
+            const charWidth = 10;  // Approximate character width, you may need to adjust this
             const lastCharPos = rect.left + (passwordInput.value.length * charWidth);
             arrow.style.left = `${lastCharPos}px`;  // Adjust to point correctly
-            arrow.style.top = `${rect.top - 40}px`;
+            arrow.style.top = `${rect.top + window.scrollY + 20}px`;
         }
     });
     </script>
