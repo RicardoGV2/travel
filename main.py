@@ -61,7 +61,7 @@ if st.button("Log in", type="primary"):
         st.session_state.username = username  # Store the username in session state
         st.success("Logged in successfully!")
         sleep(0.5)
-        st.experimental_rerun()  # Reload the page after login to show new options
+        st.switch_page("pages/page1.py") 
     else:
         st.error("Incorrect username or password")
 
