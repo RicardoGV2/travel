@@ -60,7 +60,7 @@ st.markdown(f"""
         border-bottom: 17px solid red;
         position: absolute;
         animation: bounce 1s infinite;
-        left: {st.session_state.arrow_position}px;  /* Adjust to point correctly */
+        left: {st.session_state.char_count * 9}px;  /* Adjust to point correctly */
         top: -126px;  /* Adjust this value based on the position of your input field */
     }}
     @keyframes bounce {{
@@ -77,19 +77,19 @@ st.markdown(f"""
     </style>
     <div class="arrow" id="arrow"></div>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {{
         const passwordInput = document.querySelector('input[data-baseweb="input"]');
         const arrow = document.getElementById('arrow');
 
-        if (passwordInput) {
-            passwordInput.addEventListener('input', function() {
-                const charWidth = passwordInput.offsetWidth / passwordInput.value.length || 1;
+        if (passwordInput) {{
+            passwordInput.addEventListener('input', function() {{
+                const charWidth = passwordInput.offsetWidth / (passwordInput.value.length || 1);
                 const rect = passwordInput.getBoundingClientRect();
                 const lastCharPos = rect.left + (passwordInput.value.length * charWidth);
                 arrow.style.left = `${lastCharPos}px`;  // Adjust to point correctly
-            });
-        }
-    });
+            }});
+        }}
+    }});
     </script>
 """, unsafe_allow_html=True)
 
