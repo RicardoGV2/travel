@@ -62,30 +62,28 @@ st.markdown(f"""
         animation: bounce 1s infinite;
         top: -126px;  /* Adjust this value based on the position of your input field */
     }}
-    @keyframes bounce {{
-        0%, 20%, 50%, 80%, 100% {{
-            transform: translateY(0); 
-        }}
-        40% {{
-            transform: translateY(-10px); 
-        }}
-        60% {{
-            transform: translateY(-5px); 
-        }}
+    #spacer {{
+        visibility: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+        white-space: pre;
     }}
     </style>
     <div class="arrow" id="arrow"></div>
+    <span id="spacer"></span>
     <script>
     document.addEventListener('DOMContentLoaded', function() {{
         const passwordInput = document.querySelector('input[type="password"]');
         const arrow = document.getElementById('arrow');
+        const spacer = document.getElementById('spacer');
 
         if (passwordInput) {{
             passwordInput.addEventListener('input', function() {{
-                const charWidth = passwordInput.clientWidth / passwordInput.value.length;  // Approximate character width based on input width
+                spacer.innerHTML = passwordInput.value.replace(/./g, '•');  // Use the bullet character to match password input
                 const rect = passwordInput.getBoundingClientRect();
-                const cursorPos = passwordInput.selectionStart;
-                const lastCharPos = rect.left + (cursorPos * charWidth);
+                const spacerRect = spacer.getBoundingClientRect();
+                const lastCharPos = rect.left + spacerRect.width;
                 arrow.style.left = `${{lastCharPos}}px`;  // Adjust to point correctly
                 arrow.style.top = `${{rect.top - 40}}px`;
             }});
