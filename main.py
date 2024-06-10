@@ -5,6 +5,7 @@ import json
 from navigation import make_sidebar
 from user_management import authenticate_user
 import streamlit.components.v1 as components
+from st_keyup import st_keyup
 
 make_sidebar()
 
@@ -25,22 +26,30 @@ users_data = load_data(users_file)
 allowed_users = list(users_data.keys())
 password_placeholder = "Password (use 'australia')"
 
-# Initialize character count and password value in session state
+# Initialize character count in session state
 if 'char_count' not in st.session_state:
     st.session_state.char_count = 0
-if 'real_password' not in st.session_state:
-    st.session_state.real_password = ''
-
-# Function to update character count and password value
-def update_char_count():
-    st.session_state.char_count = len(st.session_state.password_input)
-    st.session_state.real_password = st.session_state.password_input
 
 # Login form
 username = st.selectbox("Username", options=allowed_users)
-password_input = st.text_input(password_placeholder, type="password", autocomplete="off", key="password_input")
+password = st_keyup(password_placeholder, key="password_input")
 
-# Custom HTML, CSS, and JavaScript for the arrow animation and masking password input
+# Update character count
+st.session_state.char_count = len(password)
+
+if st.button("Log in", type="primary"):
+    if authenticate_user(username, password):
+        st.session_state.logged_in = True
+        st.session_state.username = username  # Store the username in session state
+        st.success("Logged in successfully!")
+        sleep(0.5)
+        st.switch_page("pages/page1.py")
+    else:
+        st.error("Incorrect username or password")
+
+st.write(f"Character Count: {st.session_state.char_count}")
+
+# Custom HTML, CSS, and JavaScript for the arrow animation
 st.markdown("""
     <style>
     .arrow {
@@ -72,18 +81,9 @@ st.markdown("""
 
         if (passwordInput) {
             passwordInput.addEventListener('input', function() {
-                const realPasswordInput = document.getElementById('real_password_input');
                 const charWidth = 9;  // Approximate character width, you may need to adjust this
                 const rect = passwordInput.getBoundingClientRect();
-                const lastCharPos = rect.left + (realPasswordInput.value.length * charWidth);
-
-                // Update the real password input
-                realPasswordInput.value = passwordInput.value;
-
-                // Mask the password input with asterisks
-                passwordInput.value = '*'.repeat(realPasswordInput.value.length);
-
-                // Adjust the arrow position
+                const lastCharPos = rect.left + (passwordInput.value.length * charWidth);
                 arrow.style.left = `${lastCharPos}px`;  // Adjust to point correctly
                 arrow.style.top = `${rect.top - 40}px`;
             });
@@ -91,22 +91,5 @@ st.markdown("""
     });
     </script>
 """, unsafe_allow_html=True)
-
-# Hidden input field to store the real password value
-components.html(f"""
-    <input type="hidden" id="real_password_input" value="{st.session_state.real_password}">
-""")
-
-if st.button("Log in", type="primary"):
-    if authenticate_user(username, st.session_state.real_password):
-        st.session_state.logged_in = True
-        st.session_state.username = username  # Store the username in session state
-        st.success("Logged in successfully!")
-        sleep(0.5)
-        st.switch_page("pages/page1.py")
-    else:
-        st.error("Incorrect username or password")
-
-st.write(f"Character Count: {st.session_state.char_count}")
 
 components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
