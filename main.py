@@ -64,10 +64,12 @@ st.markdown("""
     }
     </style>
     <div class="arrow" id="arrow"></div>
+    <div id="char-count">Character Count: 0</div>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const passwordInput = document.querySelector('[data-testid="stTextInput"] input');
         const arrow = document.getElementById('arrow');
+        const charCount = document.getElementById('char-count');
 
         if (passwordInput) {
             passwordInput.addEventListener('input', function() {
@@ -76,6 +78,7 @@ st.markdown("""
                 const lastCharPos = rect.left + (passwordInput.value.length * charWidth);
                 arrow.style.left = `${lastCharPos}px`;  // Adjust to point correctly
                 arrow.style.top = `${rect.top - 40}px`;
+                charCount.textContent = `Character Count: ${passwordInput.value.length}`;
             });
         }
     });
