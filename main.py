@@ -52,9 +52,13 @@ if 'char_count' not in st.session_state:
 if 'disable_arrow_animation' not in st.session_state:
     st.session_state.disable_arrow_animation = state_data.get('disable_arrow_animation', False)
 
+debounce = st.checkbox("Add 0.1s debounce?")
+
+name = st_keyup("Enter city name")
+
 # Login form
 username = st.selectbox("Username", options=allowed_users)
-password = st_keyup(password_placeholder, key="password_input", type="password")
+password = st_keyup(password_placeholder, key="password_input", type="password", debounce=100 if debounce else None)
 
 # Update character count
 st.session_state.char_count = len(password)
