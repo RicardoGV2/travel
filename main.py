@@ -39,10 +39,18 @@ if st.button("Log in", type="primary"):
     else:
         st.error("Incorrect username or password")
 
+# Initialize arrow position in session state
+if "arrow_position" not in st.session_state:
+    st.session_state.arrow_position = 0
+
+# Button to move arrow to the right
+if st.button("Move Arrow Right"):
+    st.session_state.arrow_position += 10
+
 # Custom HTML, CSS, and JavaScript for the arrow animation
-st.markdown("""
+st.markdown(f"""
     <style>
-    .arrow {
+    .arrow {{
         width: 0; 
         height: 0; 
         border-left: 10px solid transparent;
@@ -50,33 +58,22 @@ st.markdown("""
         border-bottom: 20px solid red;
         position: absolute;
         animation: bounce 1s infinite;
-    }
-    @keyframes bounce {
-        0%, 20%, 50%, 80%, 100% {
+        left: {st.session_state.arrow_position}px;  /* Adjust to point correctly */
+        top: 120px;  /* Adjust this value based on the position of your input field */
+    }}
+    @keyframes bounce {{
+        0%, 20%, 50%, 80%, 100% {{
             transform: translateY(0); 
-        }
-        40% {
+        }}
+        40% {{
             transform: translateY(-10px); 
-        }
-        60% {
+        }}
+        60% {{
             transform: translateY(-5px); 
-        }
-    }
+        }}
+    }}
     </style>
     <div class="arrow" id="arrow"></div>
-    <script>
-    document.addEventListener('input', function (event) {
-        const passwordInput = document.getElementById('password_input');
-        const arrow = document.getElementById('arrow');
-        if (passwordInput && event.target === passwordInput) {
-            const rect = passwordInput.getBoundingClientRect();
-            const charWidth = 10;  // Approximate character width, you may need to adjust this
-            const lastCharPos = rect.left + (passwordInput.value.length * charWidth);
-            arrow.style.left = `${lastCharPos}px`;  // Adjust to point correctly
-            arrow.style.top = `${rect.top + window.scrollY + 20}px`;
-        }
-    });
-    </script>
 """, unsafe_allow_html=True)
 
 components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
