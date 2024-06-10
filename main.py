@@ -30,10 +30,6 @@ password_placeholder = "Password (use 'australia')"
 if 'char_count' not in st.session_state:
     st.session_state.char_count = 0
 
-# Function to update character count
-def update_char_count():
-    st.session_state.char_count = len(st.session_state.password_input)
-
 # Login form
 username = st.selectbox("Username", options=allowed_users)
 password = st_keyup(password_placeholder, type="password", autocomplete="off", key="password_input")
