@@ -67,7 +67,7 @@ st.markdown("""
     <div id="char-count">Character Count: 0</div>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const passwordInput = document.querySelector('[data-testid="stTextInput"] input');
+        const passwordInput = document.querySelector('input[data-testid="stTextInput"]');
         const arrow = document.getElementById('arrow');
         const charCount = document.getElementById('char-count');
 
