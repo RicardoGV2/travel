@@ -82,11 +82,11 @@ st.markdown(f"""
                 const charWidth = 9;  // Approximate character width, you may need to adjust this
                 const rect = passwordInput.getBoundingClientRect();
                 const lastCharPos = rect.left + (passwordInput.value.length * charWidth);
-                arrow.style.left = `${lastCharPos}px`;  // Adjust to point correctly
-                arrow.style.top = `${rect.top - 40}px`;
+                arrow.style.left = lastCharPos + 'px';  // Adjust to point correctly
+                arrow.style.top = (rect.top - 40) + 'px';
 
                 // Update character count
-                charCountDiv.textContent = `Character Count: ${passwordInput.value.length}`;
+                charCountDiv.textContent = 'Character Count: ' + passwordInput.value.length;
             }});
         }}
     }});
