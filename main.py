@@ -85,4 +85,4 @@ st.markdown("""
     </script>
 """, unsafe_allow_html=True)
 
-components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx
+components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
