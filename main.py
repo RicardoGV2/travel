@@ -42,9 +42,9 @@ username = st.selectbox("Username", options=allowed_users)
 password_input = st_keyup(password_placeholder, type="password", autocomplete="off", key="password_input", on_change=update_char_count)
 
 # Custom HTML, CSS, and JavaScript for the arrow animation and masking password input
-st.markdown(f"""
+st.markdown("""
     <style>
-    .arrow {{
+    .arrow {
         width: 0; 
         height: 0; 
         border-left: 10px solid transparent;
@@ -52,27 +52,27 @@ st.markdown(f"""
         border-bottom: 20px solid red;
         position: absolute;
         animation: bounce 1s infinite;
-    }}
-    @keyframes bounce {{
-        0%, 20%, 50%, 80%, 100% {{
+    }
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
             transform: translateY(0); 
-        }}
-        40% {{
+        }
+        40% {
             transform: translateY(-10px); 
-        }}
-        60% {{
+        }
+        60% {
             transform: translateY(-5px); 
-        }}
-    }}
+        }
+    }
     </style>
     <div class="arrow" id="arrow"></div>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {{
+    document.addEventListener('DOMContentLoaded', function() {
         const passwordInput = document.querySelector('input[data-baseweb="input"]');
         const arrow = document.getElementById('arrow');
 
-        if (passwordInput) {{
-            passwordInput.addEventListener('input', function() {{
+        if (passwordInput) {
+            passwordInput.addEventListener('input', function() {
                 const realPasswordInput = document.getElementById('real_password_input');
                 const charWidth = 9;  // Approximate character width, you may need to adjust this
                 const rect = passwordInput.getBoundingClientRect();
@@ -85,11 +85,11 @@ st.markdown(f"""
                 passwordInput.value = '*'.repeat(realPasswordInput.value.length);
 
                 // Adjust the arrow position
-                arrow.style.left = `${{lastCharPos}}px`;  // Adjust to point correctly
-                arrow.style.top = `${{rect.top - 40}}px`;
-            }});
+                arrow.style.left = `${lastCharPos}px`;  // Adjust to point correctly
+                arrow.style.top = `${rect.top - 40}px`;
+            });
         }
-    }});
+    });
     </script>
 """, unsafe_allow_html=True)
 
