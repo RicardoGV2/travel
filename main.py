@@ -66,16 +66,16 @@ st.markdown("""
     </style>
     <div class="arrow"></div>
     <script>
-    const observer = new MutationObserver(() => {
+    document.addEventListener('input', function (event) {
         const passwordInput = document.querySelector('input[type="password"]');
         const arrow = document.querySelector('.arrow');
-        if (passwordInput) {
+        if (passwordInput && event.target === passwordInput) {
             const rect = passwordInput.getBoundingClientRect();
-            arrow.style.left = `${rect.left - 20}px`;
+            const charWidth = 8;  // Approximate character width, you may need to adjust this
+            const lastCharPos = rect.left + (passwordInput.value.length * charWidth);
+            arrow.style.left = `${lastCharPos - 20}px`;  // Adjust to point correctly
             arrow.style.top = `${rect.top - 40}px`;
         }
     });
-
-    observer.observe(document, { childList: true, subtree: true });
     </script>
 """, unsafe_allow_html=True)
