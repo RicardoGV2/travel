@@ -26,7 +26,7 @@ password_placeholder = "Password (use 'australia')"
 
 # Login form
 username = st.selectbox("Username", options=allowed_users)
-password = st.text_input(password_placeholder, type="password", autocomplete="new-password")
+password = st.text_input(password_placeholder, type="password", autocomplete="off")
 
 if st.button("Log in", type="primary"):
     if authenticate_user(username, password):
