@@ -151,7 +151,7 @@ if selected_date:
         # Get the top voted options for the selected date
         top_voted = get_top_voted_options(votes, selected_date_str)
 
-        # Display the data being sent to the timeline
+        # Debug info for top voted options
         if show_debug:
             st.write("## Debug Info: Data Sent to Timeline")
             st.json(data[selected_date_str])
@@ -168,3 +168,5 @@ if selected_date:
             components.html(html_content, height=1000)
     else:
         st.write("No data available for the selected date.")
+else:
+    st.write("No data available for the selected date.")
