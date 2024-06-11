@@ -182,12 +182,14 @@ with st.expander("Propose a New Activity"):
 with st.expander("Delete an Activity"):
     del_date = st.date_input("Select Date for Deleting Activity:", value=event_dates[0] if event_dates else datetime.today().date(), key="del_date")
     del_date_ddmm = convert_date_to_ddmm(del_date.strftime("%Y-%m-%d"))
-    if del_date_ddmm:
+    if del_date_ddmm in data:
         del_time = st.selectbox("Select Time for Deleting Activity:", options=list(data[del_date_ddmm].keys()), key="del_time")
         if del_time:
             del_activity = st.selectbox("Select Activity to Delete:", options=data[del_date_ddmm][del_time], key="del_activity")
             if st.button("Delete Selected Activity"):
                 delete_activity(del_date_ddmm, del_time, del_activity)
+    else:
+        st.error("No activities found for the selected date.")
 
 st.title("Itinerary Planner")
 
