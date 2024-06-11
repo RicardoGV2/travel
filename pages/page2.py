@@ -78,6 +78,10 @@ def load_votes():
 data = load_data()
 votes = load_votes()
 
+# Debugging output to verify loaded data
+st.write("Loaded data:", data)
+st.write("Loaded votes:", votes)
+
 # Function to get top voted options
 def get_top_voted_options(votes, selected_date=None):
     top_voted = {}
@@ -166,6 +170,9 @@ if selected_date:
     if selected_date_ddmm in initial_data:
         # Get the top voted options for the selected date
         top_voted = get_top_voted_options(votes, selected_date_str)
+        
+        # Debugging output to verify top voted options
+        st.write("Top voted options for selected date:", top_voted)
 
         # Create and display the network with top voted options
         net = create_network_with_top_votes(data, top_voted)
