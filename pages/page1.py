@@ -66,6 +66,8 @@ def update_votes(selected_date, selected_time, selected_option):
     current_vote = st.session_state['user_votes'][selected_date].get(selected_time)
     if current_vote:
         votes[selected_date][selected_time][current_vote] -= 1
+    if selected_option not in votes[selected_date][selected_time]:
+        votes[selected_date][selected_time][selected_option] = 0
     votes[selected_date][selected_time][selected_option] += 1
     st.session_state['user_votes'][selected_date][selected_time] = selected_option
     save_votes(votes)
