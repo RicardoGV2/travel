@@ -18,6 +18,7 @@ votes_file = "votes.json"
 debts_file = "debts.json"
 debts_history_file = "debts_history.json"
 checklists_file = "checklists.json"
+users_file = "users.json"
 
 # Load data
 def load_data(file_path):
@@ -195,6 +196,27 @@ def display_and_edit_json(file_path, title):
                         st.success(f"Saved {title} successfully")
                     except Exception as e:
                         st.error(f"Error updating data: {e}")
+        elif title == "users.json":
+            if data:
+                st.write("Users")
+                visual_data = []
+                for user, details in data.items():
+                    visual_data.append(f"{user}: {', '.join([f'{key}: {value}' for key, value in details.items()])}")
+                visual_data_str = "\n".join(visual_data)
+                updated_visual_data_str = st.text_area("Edit Users", visual_data_str, height=300)
+                if st.button(f"Save {title}"):
+                    try:
+                        new_data = {}
+                        lines = updated_visual_data_str.split('\n')
+                        for line in lines:
+                            if ": " in line:
+                                user, details_str = line.split(": ", 1)
+                                details = {kv.split(": ")[0]: kv.split(": ")[1] for kv in details_str.split(", ")}
+                                new_data[user.strip()] = details
+                        save_data(file_path, new_data)
+                        st.success(f"Saved {title} successfully")
+                    except Exception as e:
+                        st.error(f"Error updating data: {e}")
 
 # Display and edit each JSON file
 display_and_edit_json(data_file, "data.json")
@@ -202,3 +224,5 @@ display_and_edit_json(votes_file, "votes.json")
 display_and_edit_json(debts_file, "debts.json")
 display_and_edit_json(debts_history_file, "debts_history.json")
 display_and_edit_json(checklists_file, "checklists.json")
+display_and_edit_json(users_file, "users.json")
+
