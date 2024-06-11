@@ -135,7 +135,7 @@ for item in all_items:
                 st.button('❌', key=f'{key_prefix}_button', on_click=delete_shared_item, args=(item_name,), type="primary")
             else:
                 #st.markdown("<button class='delete-button' disabled>❌</button>", unsafe_allow_html=True)
-                st.button('❌', key=f'{key_prefix}_button', on_click=delete_shared_item, args=(item_name,), type="primary")
+                st.button('❌', key=f'{key_prefix}_button', on_click=delete_shared_item, args=(item_name,), type="primary", disabled=True)
         else:
             st.button('❌', key=f'{key_prefix}_button', on_click=delete_item_from_checklist, args=(selected_user, item_name), type="primary")
        
