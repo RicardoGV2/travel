@@ -136,8 +136,21 @@ for item in all_items:
     with col1:
         st.checkbox(item_name, value=checked, key=f"{selected_user}_{item_name}", on_change=update_item_state, args=(selected_user, item_name, not checked))
     with col2:
-        if st.button('❌', key=f'delete_{selected_user}_{item_name}', on_click=delete_item_from_checklist, args=(selected_user, item_name)):
-            pass
+        if item in shared_items:
+            st.button('❌', key=f'delete_{selected_user}_{item_name}', disabled=True)
+        else:
+            st.button('❌', key=f'delete_{selected_user}_{item_name}', on_click=delete_item_from_checklist, args=(selected_user, item_name))
+
+# Display delete buttons for shared items in the shared list
+if selected_user == "Shared":
+    for item in shared_items:
+        item_name = item["name"]
+        checked = item["checked"]
+        col1, col2 = st.columns([0.9, 0.1])
+        with col1:
+            st.checkbox(item_name, value=checked, key=f"Shared_{item_name}", on_change=update_item_state, args=("Shared", item_name, not checked))
+        with col2:
+            st.button('❌', key=f'delete_shared_{item_name}', on_click=delete_shared_item, args=(item_name,))
 
 # Option to show/hide checklists JSON, available only for user "Ricardo"
 if st.session_state.get("username") == "Ricardo":
