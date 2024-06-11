@@ -120,6 +120,9 @@ st.markdown("""
         margin-bottom: 20px;
         float: right;
         vertical-align: top;
+        height: auto;
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
     }
     .item-container {
         display: flex;
