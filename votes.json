@@ -1,47 +1,99 @@
 {
-    "14/06": {
-        "06:00": {
-            "Llegada al aeropuerto": 1
-        },
+    "12/06": {
         "07:00": {
-            "Desayuno en el aeropuerto": 1
+            "desayuno en el hotel": 0,
+            "desayuno en aeropuerto": 0
         },
         "08:00": {
-            "Bus a Sydney": 0
+            "Voy por Francisco y turisteamos en Brisbane": 0
         },
-        "09:30": {
-            "Bus al tour": 0
-        },
-        "10:00": {
-            "Tour 1 20 AUD": 0,
-            " Tour 2 25 AUD": 0
-        },
-        "12:00": {
-            "Bus a otra actividad": 0
-        },
-        "12:30": {
-            "Actividad 1": 0,
-            " Actividad 2": 0
-        },
-        "18:00": {
-            "Cena": 0
+        "20:30": {
+            "Cena en el hotel": 0
+        }
+    },
+    "13/06": {
+        "08:00": {
+            "Byron Bay": 0
+        }
+    },
+    "14/06": {
+        "08:00": {
+            "Vamos por mis pap\u00e1s y Katia, nos regresamos a Gold Coast y ese d\u00eda les ense\u00f1o la ciudad": 0
         }
     },
     "15/06": {
         "08:00": {
-            "Desayuno en el hotel": 0
-        },
-        "09:00": {
-            "Visita al parque": 0
-        },
-        "12:00": {
-            "Almuerzo en el restaurante": 0
-        },
-        "15:00": {
-            "Visita al museo": 0
-        },
-        "18:00": {
-            "Cena en el centro": 0
+            "Hinterland y Tambourine Mountain": 0
+        }
+    },
+    "16/06": {
+        "08:00": {
+            "Market HOTA y Springbrook": 0
+        }
+    },
+    "17/06": {
+        "08:00": {
+            "Coolangatta y Snapper Rocks": 0
+        }
+    },
+    "18/06": {
+        "08:00": {
+            "Ir por Janet a Brisbane y de ah\u00ed a Noosa o al Australia Zoo (si Francisco no est\u00e1 mejor vamos ese d\u00eda a Noosa)": 0
+        }
+    },
+    "19/06": {
+        "08:00": {
+            "Sydney": 0
+        }
+    },
+    "21/06": {
+        "08:00": {
+            "Regreso a GC": 0
+        }
+    },
+    "22/06": {
+        "08:00": {
+            "Tangalooma o Australia Zoo": 0
+        }
+    },
+    "23/06": {
+        "08:00": {
+            "Tangalooma o Australia Zoo": 0
+        }
+    },
+    "24/06": {
+        "08:00": {
+            "Llevar a Francisco al Aeropuerto y de ah\u00ed turistear por Brisbane": 0
+        }
+    },
+    "25/06": {
+        "08:00": {
+            "Currumbin": 0
+        }
+    },
+    "26/06": {
+        "08:00": {
+            "Cook Island Aquatic": 0
+        }
+    },
+    "27/06": {
+        "08:00": {
+            "Actividades acu\u00e1ticas": 0
+        }
+    },
+    "28/06": {
+        "08:00": {
+            "Byron Bay": 0
+        }
+    },
+    "29/06": {
+        "08:00": {
+            "Monte Tambourine": 0
+        }
+    },
+    "30/06": {
+        "08:00": {
+            "Llevarlos a Brisbane": 0
         }
     }
 }
