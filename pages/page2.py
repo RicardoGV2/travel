@@ -140,6 +140,9 @@ if selected_date:
         # Get the top voted options for the selected date
         top_voted = get_top_voted_options(votes, selected_date_str)
 
+        st.write("Top voted options for selected date:")
+        st.write(top_voted)  # Debugging output
+
         # Create and display the network with top voted options
         net = create_network_with_top_votes(data, top_voted)
         path = 'full_network.html'
