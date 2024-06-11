@@ -110,7 +110,7 @@ all_items = {item["name"]: item for item in shared_items + user_items}.values()
 # CSS to style the delete button as an icon and align it to the right
 st.markdown("""
     <style>
-    .delete-button {
+    .delete-button { 
         background: none;
         border: none;
         color: red;
