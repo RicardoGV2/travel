@@ -64,12 +64,22 @@ def ensure_selected_date_in_session_state(selected_date):
 def update_votes(selected_date, selected_time, selected_option):
     ensure_selected_date_in_session_state(selected_date)
     current_vote = st.session_state['user_votes'][selected_date].get(selected_time)
-    if current_vote:
+    st.write(f"Current vote for {selected_time}: {current_vote}")
+    st.write(f"Updating vote for {selected_time} to {selected_option}")
+
+    # Reduce count of previous vote
+    if current_vote and current_vote in votes[selected_date][selected_time]:
         votes[selected_date][selected_time][current_vote] -= 1
+
+    # Increase count of new vote
     if selected_option not in votes[selected_date][selected_time]:
         votes[selected_date][selected_time][selected_option] = 0
     votes[selected_date][selected_time][selected_option] += 1
+
+    # Update session state
     st.session_state['user_votes'][selected_date][selected_time] = selected_option
+
+    # Save updated votes
     save_votes(votes)
     sleep(2)  # Add a delay of 2 seconds after voting
     st.experimental_rerun()
@@ -201,10 +211,7 @@ if selected_date in data:
         selected_option_display = st.radio("", vote_display, key=f"display_{selected_date}_{time}")
         selected_option = selected_option_display.split(' - ')[0]
         if st.button(f"Vote for {selected_option}", key=f"button_{selected_date}_{time}"):
-            if current_vote != selected_option:
-                update_votes(selected_date, time, selected_option)
-            else:
-                st.warning("You have already voted for this option.")
+            update_votes(selected_date, time, selected_option)
 else:
     st.write("No data available for the selected date.")
 
