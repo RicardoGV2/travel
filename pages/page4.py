@@ -110,7 +110,16 @@ all_items = {item["name"]: item for item in shared_items + user_items}.values()
 # CSS to style the delete button as an icon and align it to the right
 st.markdown("""
     <style>
-
+    button[kind="primary"] {
+        background: none;
+        border: none;
+        color: red;
+        cursor: pointer;
+        font-size: 1.2em;
+        margin-left: 10px;
+        float: right;
+        vertical-align: top;
+    }
     .item-container {
         display: flex;
         justify-content: space-between;
@@ -140,23 +149,7 @@ for item in all_items:
             st.button('❌', key=f'{key_prefix}_button', on_click=delete_item_from_checklist, args=(selected_user, item_name), type="primary")
        
 
-        
-
-        st.markdown("""
-        <style>
-        button[kind="primary"] {
-            background: none;
-            border: none;
-            color: red;
-            cursor: pointer;
-            font-size: 1.2em;
-            margin-left: 10px;
-            float: right;
-            vertical-align: top;
-        }
-        
-        </style>
-        """, unsafe_allow_html=True)
+    
 
 # Option to show/hide checklists JSON, available only for user "Ricardo"
 if st.session_state.get("username") == "Ricardo":
