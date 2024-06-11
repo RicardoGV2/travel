@@ -4,6 +4,8 @@ import os
 from collections import defaultdict
 from navigation import make_sidebar
 from streamlit_autorefresh import st_autorefresh
+import streamlit.components.v1 as components
+
 
 make_sidebar()
 
