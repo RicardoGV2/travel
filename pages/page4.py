@@ -47,7 +47,7 @@ def add_item_to_checklist(user, item):
         save_data(checklists_file, checklists)
         st.experimental_rerun()
 
-# Function to add a shared item to all checklists
+# Function to add a shared item to all checklists  
 def add_shared_item(item):
     if item not in [i["name"] for i in checklists["users"]["Shared"]]:
         #checklists["users"]["Shared"].append({"name": item, "checked": False})
