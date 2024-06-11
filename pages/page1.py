@@ -47,10 +47,6 @@ def save_votes(votes):
 data = load_data()
 votes = load_votes()
 
-# Debug: Display loaded data
-st.write("### Debug: Loaded Data")
-st.json(data)
-
 # Initialize session state for tracking votes
 if 'user_votes' not in st.session_state:
     st.session_state['user_votes'] = {date: {time: None for time in data[date]} for date in data}
@@ -64,9 +60,7 @@ def ensure_selected_date_in_session_state(selected_date):
 def update_votes(selected_date, selected_time, selected_option):
     ensure_selected_date_in_session_state(selected_date)
     current_vote = st.session_state['user_votes'][selected_date].get(selected_time)
-    st.write(f"Current vote for {selected_time}: {current_vote}")
-    st.write(f"Updating vote for {selected_time} to {selected_option}")
-
+    
     # Reduce count of previous vote
     if current_vote and current_vote in votes[selected_date][selected_time]:
         votes[selected_date][selected_time][current_vote] -= 1
@@ -112,6 +106,9 @@ refresh_interval = st.sidebar.number_input("Refresh Interval (seconds)", min_val
 # Always declare the checkbox but only use it for Ricardo
 show_votes_json = st.sidebar.checkbox("Show Votes JSON", value=False)
 show_votes_json_visible = st.session_state.get('username') == "Ricardo"
+
+# Checkbox to show/hide debugging labels and JSON
+show_debug = st.sidebar.checkbox("Show Debug Info", value=False)
 
 # Autorefresh every 'refresh_interval' seconds if enabled
 if auto_refresh and refresh_interval:
@@ -191,7 +188,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Debug: Display selected date
-st.write(f"### Debug: Selected Date {selected_date}")
+if show_debug:
+    st.write(f"### Debug: Selected Date {selected_date}")
 
 if selected_date in data:
     for time in sorted(data[selected_date]):
@@ -218,7 +216,11 @@ if selected_date in data:
 else:
     st.write("No data available for the selected date.")
 
-# Display the current votes
-if show_votes_json_visible and show_votes_json:
+# Display the current votes and debugging JSON
+if show_votes_json_visible and show_votes_json or show_debug:
     st.write("## Current Votes")
     st.json(votes)
+
+if show_debug:
+    st.write("### Debug: Loaded Data")
+    st.json(data)
