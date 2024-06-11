@@ -5,3 +5,4 @@ streamlit_autorefresh
 streamlit-cookies-manager
 streamlit-keyup
 streamlit-calendar
+streamlit-agenda

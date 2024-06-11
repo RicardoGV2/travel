@@ -7,7 +7,7 @@ import json
 import os
 from collections import OrderedDict
 from streamlit_autorefresh import st_autorefresh
-from datetime import datetime
+from datetime import datetime, timedelta
 import streamlit_calendar as stcal
 
 make_sidebar()
@@ -134,14 +134,7 @@ if auto_refresh and refresh_interval:
 def get_event_dates(data):
     event_dates = []
     for date in data:
-        try:
-            event_dates.append(datetime.strptime(date, "%Y-%m-%d").date())
-        except ValueError:
-            # Fallback for different date formats
-            try:
-                event_dates.append(datetime.strptime(date, "%d/%m").replace(year=datetime.now().year).date())
-            except ValueError:
-                pass
+        event_dates.append(datetime.strptime(date, "%Y-%m-%d").date())
     return event_dates
 
 # Calendar for date selection
