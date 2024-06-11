@@ -117,7 +117,7 @@ st.markdown("""
         cursor: pointer;
         font-size: 1.2em;
         margin-left: 10px;
-        margin-bottom: 30px !important;
+        margin-bottom: 40px !important;
         float: right;
         vertical-align: top !important;
         height: auto;
