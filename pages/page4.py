@@ -132,31 +132,25 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# JavaScript to capture the click event and set the hidden input value
+# JavaScript to capture the click event and update the URL with the item to delete
 st.markdown("""
     <script>
     function deleteItem(itemName) {
-        document.getElementById("item-to-delete").value = itemName;
-        document.getElementById("delete-form").submit();
+        const params = new URLSearchParams(window.location.search);
+        params.set('delete_item', itemName);
+        window.location.search = params.toString();
     }
     </script>
     """, unsafe_allow_html=True)
 
-# Hidden input form to capture the item to delete
-st.markdown("""
-    <form id="delete-form" method="post">
-        <input type="hidden" id="item-to-delete" name="item-to-delete">
-    </form>
-    """, unsafe_allow_html=True)
-
-# Process the deletion if the form was submitted
-if st.form_submit_button("submit", key="delete-form"):
-    item_to_delete = st.session_state.get("item-to-delete")
-    if item_to_delete:
-        if selected_user == "Shared":
-            delete_shared_item(item_to_delete)
-        else:
-            delete_item_from_checklist(selected_user, item_to_delete)
+# Handle the URL parameter to perform the deletion
+delete_item = st.experimental_get_query_params().get('delete_item', [None])[0]
+if delete_item:
+    if selected_user == "Shared":
+        delete_shared_item(delete_item)
+    else:
+        delete_item_from_checklist(selected_user, delete_item)
+    st.experimental_set_query_params(delete_item=None)
 
 # Display items with delete buttons
 for item in all_items:
