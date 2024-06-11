@@ -39,7 +39,7 @@ initial_data = {
     # Add more days as needed
 }
 
-# Function to convert dates to "YYYY-MM-DD" format
+# Function to convert dates to "YYYY-MM-DD" format for internal processing
 def convert_dates_to_2024(data):
     converted_data = {}
     for date, value in data.items():
@@ -179,7 +179,7 @@ if selected_date:
 
     if selected_date_ddmm in initial_data:
         # Get the top voted options for the selected date
-        top_voted = get_top_voted_options(votes, selected_date_str)
+        top_voted = get_top_voted_options(votes, selected_date_ddmm)
         
         # Debugging output to verify top voted options
         st.write("Top voted options for selected date:", top_voted)
