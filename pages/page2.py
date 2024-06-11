@@ -7,7 +7,8 @@ import json
 import os
 from collections import OrderedDict
 from streamlit_autorefresh import st_autorefresh
-import streamlit.components.v1 as components
+from datetime import datetime, timedelta
+import streamlit_calendar as stcal
 
 make_sidebar()
 
@@ -19,7 +20,7 @@ votes_file = "votes.json"
 
 # Example initial data for multiple days
 initial_data = {
-    "14/06": {
+    "2024-06-14": {
         "06:00": ["Llegada al aeropuerto"],
         "07:00": ["Desayuno en el aeropuerto"],
         "08:00": ["Bus a Sydney"],
@@ -29,7 +30,7 @@ initial_data = {
         "12:30": ["Actividad 1", "Actividad 2"],
         "18:00": ["Cena"]
     },
-    "15/06": {
+    "2024-06-15": {
         "08:00": ["Desayuno en el hotel"],
         "09:00": ["Visita al parque"],
         "12:00": ["Almuerzo en el restaurante"],
@@ -129,18 +130,33 @@ refresh_interval = st.sidebar.number_input("Refresh Interval (seconds)", min_val
 if auto_refresh and refresh_interval:
     st_autorefresh(interval=refresh_interval * 1000, key="datarefresh")
 
-# Date selection for timeline
+# Function to mark dates with data
+def get_event_dates(data):
+    event_dates = []
+    for date in data:
+        event_dates.append(datetime.strptime(date, "%Y-%m-%d").date())
+    return event_dates
+
+# Calendar for date selection
 st.title("Timeline Viewer")
-selected_date = st.selectbox("Select Date to View Timeline:", options=list(data.keys()), format_func=lambda x: x)
+event_dates = get_event_dates(data)
+selected_date = stcal.calendar(selected=event_dates, unique=True)
 
-# Get the top voted options for the selected date
-top_voted = get_top_voted_options(votes, selected_date)
+if selected_date:
+    selected_date_str = selected_date.strftime("%Y-%m-%d")
+    st.write(f"Selected Date: {selected_date_str}")
 
-# Create and display the network with top voted options
-net = create_network_with_top_votes(data, top_voted)
-path = 'full_network.html'
-net.save_graph(path)
+    if selected_date_str in data:
+        # Get the top voted options for the selected date
+        top_voted = get_top_voted_options(votes, selected_date_str)
 
-with open(path, 'r', encoding='utf-8') as file:
-    html_content = file.read()
-    components.html(html_content, height=1000)
+        # Create and display the network with top voted options
+        net = create_network_with_top_votes(data, top_voted)
+        path = 'full_network.html'
+        net.save_graph(path)
+
+        with open(path, 'r', encoding='utf-8') as file:
+            html_content = file.read()
+            components.html(html_content, height=1000)
+    else:
+        st.write("No data available for the selected date.")
