@@ -32,22 +32,22 @@ def convert_dates_to_2024(data):
 def load_data():
     if os.path.exists(data_file):
         with open(data_file, 'r') as file:
-            return convert_dates_to_2024(json.load(file))
+            data = json.load(file)
+            return convert_dates_to_2024(data)
     else:
         return {}
 
 # Function to load votes
-def load_votes():
+def load_votes(data):
     if os.path.exists(votes_file):
         with open(votes_file, 'r') as file:
             return json.load(file)
     else:
-        data = load_data()
         return {date: {time: {option: 0 for option in data[date][time]} for time in data[date]} for date in data}
 
 # Load data and votes
 data = load_data()
-votes = load_votes()
+votes = load_votes(data)
 
 # Function to get top voted options
 def get_top_voted_options(votes, selected_date=None):
@@ -78,11 +78,12 @@ def create_network_with_top_votes(data, top_voted):
         for time in data[date]:
             if date in top_voted and time in top_voted[date]:
                 top_option = top_voted[date][time]
-                time_node = f"{date}_{time}_{top_option}"
-                G.add_node(time_node, label=f"{time}\n{top_option}", shape="box")
-                if previous_node:
-                    G.add_edge(previous_node, time_node)
-                previous_node = time_node
+                if top_option:  # Ensure there's a valid top option
+                    time_node = f"{date}_{time}_{top_option}"
+                    G.add_node(time_node, label=f"{time}\n{top_option}", shape="box")
+                    if previous_node:
+                        G.add_edge(previous_node, time_node)
+                    previous_node = time_node
     
     net.from_nx(G)
     net.set_options("""
@@ -108,13 +109,10 @@ def create_network_with_top_votes(data, top_voted):
     """)
     return net
 
-# Add a setting to pause or continue autorefresh and to show/hide debug info
+# Add a setting to pause or continue autorefresh and to show/hide votes JSON
 st.sidebar.title("Settings")
 auto_refresh = st.sidebar.checkbox("Enable Auto Refresh", value=True)
 refresh_interval = st.sidebar.number_input("Refresh Interval (seconds)", min_value=1, max_value=60, value=7) if auto_refresh else None
-
-# Checkbox to show/hide debugging labels and JSON
-show_debug = st.sidebar.checkbox("Show Debug Info", value=False)
 
 # Autorefresh every 'refresh_interval' seconds if enabled
 if auto_refresh and refresh_interval:
@@ -144,17 +142,6 @@ if selected_date:
         # Get the top voted options for the selected date
         top_voted = get_top_voted_options(votes, selected_date_ddmm)
 
-        # Debug info for data and top voted options
-        if show_debug:
-            st.write("## Debug Info: Data Sent to Timeline")
-            st.json(data[selected_date_ddmm])
-            st.write("## Debug Info: Top Voted Options")
-            st.json(top_voted)
-            if selected_date_ddmm in top_voted:
-                st.json(top_voted[selected_date_ddmm])
-            else:
-                st.write("No top voted options for the selected date.")
-
         # Create and display the network with top voted options
         net = create_network_with_top_votes(data, top_voted)
         path = 'full_network.html'
@@ -165,5 +152,3 @@ if selected_date:
             components.html(html_content, height=1000)
     else:
         st.write("No data available for the selected date.")
-else:
-    st.write("No data available for the selected date")
