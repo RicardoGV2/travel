@@ -110,15 +110,6 @@ all_items = {item["name"]: item for item in shared_items + user_items}.values()
 # CSS to style the delete button as an icon and align it to the right
 st.markdown("""
     <style>
-    .delete-button {
-        background: none;
-        border: none;
-        color: red;
-        cursor: pointer;
-        font-size: 1.2em;
-        margin-left: 10px;
-        float: right;
-    }
     .item-container {
         display: flex;
         justify-content: space-between;
@@ -126,25 +117,62 @@ st.markdown("""
         border-bottom: 1px solid #ddd;
         padding: 5px 0;
     }
+    .delete-button {
+        background: none;
+        border: none;
+        color: red;
+        cursor: pointer;
+        font-size: 1.2em;
+        margin-left: 10px;
+    }
+    .delete-button:disabled {
+        cursor: not-allowed;
+        color: grey;
+    }
     </style>
     """, unsafe_allow_html=True)
+
+# JavaScript to capture the click event and set the hidden input value
+st.markdown("""
+    <script>
+    function deleteItem(itemName) {
+        document.getElementById("item-to-delete").value = itemName;
+        document.getElementById("delete-form").submit();
+    }
+    </script>
+    """, unsafe_allow_html=True)
+
+# Hidden input form to capture the item to delete
+st.markdown("""
+    <form id="delete-form" method="post">
+        <input type="hidden" id="item-to-delete" name="item-to-delete">
+    </form>
+    """, unsafe_allow_html=True)
+
+# Process the deletion if the form was submitted
+if st.form_submit_button("submit", key="delete-form"):
+    item_to_delete = st.session_state.get("item-to-delete")
+    if item_to_delete:
+        if selected_user == "Shared":
+            delete_shared_item(item_to_delete)
+        else:
+            delete_item_from_checklist(selected_user, item_to_delete)
 
 # Display items with delete buttons
 for item in all_items:
     item_name = item["name"]
     checked = item["checked"]
     key_prefix = f"{selected_user}_{item_name}" if selected_user != "Shared" else f"Shared_{item_name}"
-    col1, col2 = st.columns([0.9, 0.1])
-    with col1:
-        st.checkbox(item_name, value=checked, key=f"{key_prefix}_checkbox", on_change=update_item_state, args=(selected_user, item_name, not checked))
-    with col2:
-        if item in shared_items:
-            if selected_user == "Shared":
-                st.button('❌', key=f'{key_prefix}_button', on_click=delete_shared_item, args=(item_name,))
-            else:
-                st.markdown("<button class='delete-button' disabled>❌</button>", unsafe_allow_html=True)
+    st.markdown(f"<div class='item-container'><div>", unsafe_allow_html=True)
+    st.checkbox(item_name, value=checked, key=f"{key_prefix}_checkbox", on_change=update_item_state, args=(selected_user, item_name, not checked))
+    if item in shared_items:
+        if selected_user == "Shared":
+            st.markdown(f"<button class='delete-button' onclick='deleteItem(\"{item_name}\")'>❌</button>", unsafe_allow_html=True)
         else:
-            st.button('❌', key=f'{key_prefix}_button', on_click=delete_item_from_checklist, args=(selected_user, item_name))
+            st.markdown(f"<button class='delete-button' disabled>❌</button>", unsafe_allow_html=True)
+    else:
+        st.markdown(f"<button class='delete-button' onclick='deleteItem(\"{item_name}\")'>❌</button>", unsafe_allow_html=True)
+    st.markdown("</div></div>", unsafe_allow_html=True)
 
 # Option to show/hide checklists JSON, available only for user "Ricardo"
 if st.session_state.get("username") == "Ricardo":
