@@ -20,7 +20,7 @@ votes_file = "votes.json"
 
 # Example initial data for multiple days
 initial_data = {
-    "2024-06-14": {
+    "14/06": {
         "06:00": ["Llegada al aeropuerto"],
         "07:00": ["Desayuno en el aeropuerto"],
         "08:00": ["Bus a Sydney"],
@@ -30,7 +30,7 @@ initial_data = {
         "12:30": ["Actividad 1", "Actividad 2"],
         "18:00": ["Cena"]
     },
-    "2024-06-15": {
+    "15/06": {
         "08:00": ["Desayuno en el hotel"],
         "09:00": ["Visita al parque"],
         "12:00": ["Almuerzo en el restaurante"],
@@ -39,6 +39,9 @@ initial_data = {
     },
     # Add more days as needed
 }
+
+# Convert initial_data keys to "YYYY-MM-DD" format
+initial_data = {datetime.strptime(date, "%d/%m").strftime("2024-%m-%d"): value for date, value in initial_data.items()}
 
 # Function to load data
 def load_data():
