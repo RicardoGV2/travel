@@ -64,11 +64,8 @@ def get_top_voted_options(votes, selected_date=None):
         top_voted[date] = {}
         for time in votes[date]:
             options = votes[date][time]
-            if options:
-                top_option = max(options, key=options.get)
-                top_voted[date][time] = top_option
-            else:
-                top_voted[date][time] = None
+            top_option = max(options, key=options.get)
+            top_voted[date][time] = top_option
     return top_voted
 
 # Function to create network with top voted options
