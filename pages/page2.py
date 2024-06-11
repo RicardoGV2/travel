@@ -40,8 +40,19 @@ initial_data = {
     # Add more days as needed
 }
 
+# Function to convert dates to "YYYY-MM-DD" format
+def convert_dates_to_2024(data):
+    converted_data = {}
+    for date, value in data.items():
+        try:
+            converted_date = datetime.strptime(date, "%d/%m").replace(year=2024).strftime("%Y-%m-%d")
+            converted_data[converted_date] = value
+        except ValueError as e:
+            st.write(f"Date conversion error for {date}: {e}")
+    return converted_data
+
 # Convert initial_data keys to "YYYY-MM-DD" format
-initial_data = {datetime.strptime(date, "%d/%m").strftime("2024-%m-%d"): value for date, value in initial_data.items()}
+initial_data = convert_dates_to_2024(initial_data)
 
 # Function to load data
 def load_data():
