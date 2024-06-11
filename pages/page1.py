@@ -4,14 +4,12 @@ import json
 import os
 from collections import OrderedDict
 from streamlit_autorefresh import st_autorefresh
-from time import sleep  # Import sleep function
+from time import sleep
 import streamlit.components.v1 as components
-
 
 make_sidebar()
 
 components.iframe("https://lottie.host/embed/89efecc0-ccec-423e-b237-16c5de971907/m5iscTBfB6.json")
-
 
 # Paths to the data and votes files
 data_file = "data.json"
@@ -108,8 +106,6 @@ def delete_activity(selected_date, selected_time, selected_activity):
 st.sidebar.title("Settings")
 auto_refresh = st.sidebar.checkbox("Enable Auto Refresh", value=True)
 refresh_interval = st.sidebar.number_input("Refresh Interval (seconds)", min_value=1, max_value=60, value=7) if auto_refresh else None
-show_add_activity = st.sidebar.checkbox("Show Add Activity Section", value=True)
-show_delete_activity = st.sidebar.checkbox("Show Delete Activity Section", value=True)
 
 # Always declare the checkbox but only use it for Ricardo
 show_votes_json = st.sidebar.checkbox("Show Votes JSON", value=False)
@@ -120,8 +116,7 @@ if auto_refresh and refresh_interval:
     st_autorefresh(interval=refresh_interval * 1000, key="datarefresh")
 
 # Section to add new activities
-if show_add_activity:
-    st.title("Propose a New Activity")
+with st.expander("Propose a New Activity"):
     new_date = st.selectbox("Select Date for New Activity:", options=list(data.keys()), key="new_date")
     new_time = st.text_input("Enter Time for New Activity (e.g., 14:00):", key="new_time")
     new_activity = st.text_input("Enter New Activity Description:", key="new_activity")
@@ -155,8 +150,7 @@ if show_add_activity:
             st.error("Please fill in all fields to add a new activity.")
 
 # Section to delete activities
-if show_delete_activity:
-    st.title("Delete an Activity")
+with st.expander("Delete an Activity"):
     del_date = st.selectbox("Select Date for Deleting Activity:", options=list(data.keys()), key="del_date")
     if del_date:
         del_time = st.selectbox("Select Time for Deleting Activity:", options=list(data[del_date].keys()), key="del_time")
