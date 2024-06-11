@@ -6,6 +6,7 @@ from collections import OrderedDict
 from streamlit_autorefresh import st_autorefresh
 from time import sleep
 import streamlit.components.v1 as components
+from datetime import datetime  # Importing datetime module
 
 make_sidebar()
 
