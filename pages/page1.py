@@ -36,7 +36,8 @@ initial_data = {
         "18:00": ["Cena en el centro"]
     },
     # Add more days as needed
-}'''
+}
+'''
 initial_data = {
     "12/06": {
         "All Day": ["Voy por Francisco y turisteamos en Brisbane"]
