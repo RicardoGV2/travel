@@ -128,26 +128,16 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# Form to manage items
-with st.form("checklist_form"):
-    for item in all_items:
-        col1, col2 = st.columns([0.9, 0.1])
-        with col1:
-            checked = st.checkbox(item["name"], value=item["checked"], key=f"{selected_user}_{item['name']}")
-        with col2:
-            st.markdown(f"<button class='delete-button' type='submit' name='delete' value='{item['name']}'>❌</button>", unsafe_allow_html=True)
-        update_item_state(selected_user, item["name"], checked)
-
-    submitted = st.form_submit_button("Submit")
-
-if submitted:
-    if "delete" in st.experimental_get_query_params():
-        param = st.experimental_get_query_params().get("delete")[0]
-        user, item_name = param.split("_", 1)
-        if item_name in [item["name"] for item in checklists["users"]["Shared"]]:
-            delete_shared_item(item_name)
-        else:
-            delete_item_from_checklist(user, item_name)
+# Display items with delete buttons
+for item in all_items:
+    item_name = item["name"]
+    checked = item["checked"]
+    col1, col2 = st.columns([0.9, 0.1])
+    with col1:
+        st.checkbox(item_name, value=checked, key=f"{selected_user}_{item_name}", on_change=update_item_state, args=(selected_user, item_name, not checked))
+    with col2:
+        if st.button('❌', key=f'delete_{selected_user}_{item_name}', on_click=delete_item_from_checklist, args=(selected_user, item_name)):
+            pass
 
 # Option to show/hide checklists JSON, available only for user "Ricardo"
 if st.session_state.get("username") == "Ricardo":
