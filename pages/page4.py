@@ -119,7 +119,7 @@ st.markdown("""
         margin-left: 10px;
         margin-bottom: 20px;
         float: right;
-        vertical-align: top;
+        vertical-align: top !important;;
         height: auto;
         padding-top: -30px !important;
         padding-bottom: 50px !important;
