@@ -109,7 +109,7 @@ if auto_refresh and refresh_interval:
     st_autorefresh(interval=refresh_interval * 1000, key="datarefresh")
 
 # Date selection for timeline
-st.title("Timeline Viewer ")
+st.title("Timeline Viewer")
 selected_date = st.selectbox("Select Date to View Timeline:", options=list(data.keys()), format_func=lambda x: x)
 
 # Get the top voted options for the selected date
