@@ -123,7 +123,7 @@ def get_event_dates(data):
     event_dates = []
     for date in data:
         try:
-            event_dates.append(datetime.strptime(date, "%d/%m").date())
+            event_dates.append(datetime.strptime(date, "%d/%m").replace(year=2024).date())
         except ValueError:
             pass  # Silently ignore date parsing errors
     return event_dates
@@ -198,3 +198,49 @@ if selected_date:
     if show_debug:
         st.write("### Debug: Loaded Data")
         st.json(data)
+
+# Section to add new activities
+with st.expander("Propose a New Activity"):
+    new_date = st.date_input("Select Date for New Activity:", value=event_dates[0] if event_dates else datetime.today().date(), key="new_date")
+    new_date_ddmm = convert_date_to_ddmm(new_date.strftime("%Y-%m-%d"))
+    new_time = st.text_input("Enter Time for New Activity (e.g., 14:00):", key="new_time")
+    new_activity = st.text_input("Enter New Activity Description:", key="new_activity")
+    new_cost = st.number_input("Enter Cost for New Activity (in AUD):", key="new_cost", min_value=0)
+
+    if st.button("Add New Activity"):
+        if new_date and new_time and new_activity:
+            try:
+                activity_entry = f"{new_activity} {new_cost} AUD"
+                if new_date_ddmm not in data:
+                    data[new_date_ddmm] = {}
+                if new_time in data[new_date_ddmm]:
+                    data[new_date_ddmm][new_time].append(activity_entry)
+                else:
+                    data[new_date_ddmm][new_time] = [activity_entry]
+                # Ensure the new activity is also added to the votes structure
+                if new_date_ddmm not in votes:
+                    votes[new_date_ddmm] = {}
+                if new_time not in votes[new_date_ddmm]:
+                    votes[new_date_ddmm][new_time] = {}
+                votes[new_date_ddmm][new_time][activity_entry] = 0
+                # Sort the times for the date
+                data[new_date_ddmm] = dict(OrderedDict(sorted(data[new_date_ddmm].items())))
+                votes[new_date_ddmm] = dict(OrderedDict(sorted(votes[new_date_ddmm].items())))
+                save_data(data)
+                save_votes(votes)
+                st.experimental_rerun()
+            except Exception as e:
+                st.error(f"Error adding new activity: {e}")
+        else:
+            st.error("Please fill in all fields to add a new activity.")
+
+# Section to delete activities
+with st.expander("Delete an Activity"):
+    del_date = st.date_input("Select Date for Deleting Activity:", value=event_dates[0] if event_dates else datetime.today().date(), key="del_date")
+    del_date_ddmm = convert_date_to_ddmm(del_date.strftime("%Y-%m-%d"))
+    if del_date_ddmm:
+        del_time = st.selectbox("Select Time for Deleting Activity:", options=list(data[del_date_ddmm].keys()), key="del_time")
+        if del_time:
+            del_activity = st.selectbox("Select Activity to Delete:", options=data[del_date_ddmm][del_time], key="del_activity")
+            if st.button("Delete Selected Activity"):
+                delete_activity(del_date_ddmm, del_time, del_activity)
