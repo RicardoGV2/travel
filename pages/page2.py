@@ -11,7 +11,7 @@ import streamlit.components.v1 as components
 
 make_sidebar()
 
-components.iframe("https://lottie.host/embed/7f29759c-68e1-44dc-9e29-1dba4a8dcd35/oFZnsvwURp.json")
+components.iframe("https://lottie.host/embed/d184c6c6-3f70-4986-858c-358a985a98cc/mgG3h5XqEX.json")
 
 # Paths to the data and votes files
 data_file = "data.json"

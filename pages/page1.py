@@ -10,7 +10,7 @@ import streamlit.components.v1 as components
 
 make_sidebar()
 
-components.iframe("https://lottie.host/embed/72bb3b64-3dab-4113-a252-e9ba5715375d/bPDfeogW7N.json")
+components.iframe("https://lottie.host/embed/89efecc0-ccec-423e-b237-16c5de971907/m5iscTBfB6.json")
 
 
 # Paths to the data and votes files
