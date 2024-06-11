@@ -106,12 +106,12 @@ user_items = checklists["users"][selected_user]
 all_items = {item["name"]: item for item in shared_items + user_items}.values()
 
 for item in all_items:
-    col1, col2 = st.columns([0.8, 0.2])
+    col1, col2 = st.columns([0.9, 0.1])
     with col1:
         checked = st.checkbox(item["name"], value=item["checked"], key=f"{selected_user}_{item['name']}")
         update_item_state(selected_user, item["name"], checked)
     with col2:
-        if st.button("Delete", key=f"delete_{selected_user}_{item['name']}"):
+        if st.button("❌", key=f"delete_{selected_user}_{item['name']}"):
             if item in shared_items:
                 delete_shared_item(item["name"])
             else:
