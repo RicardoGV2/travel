@@ -126,7 +126,7 @@ for item in all_items:
     item_name = item["name"]
     checked = item["checked"]
     key_prefix = f"{selected_user}_{item_name}" if selected_user != "Shared" else f"Shared_{item_name}"
-    col1, col2 = st.columns([0.9, 0.1])
+    col1, col2 = st.columns(2)#st.columns([0.9, 0.1])
     with col1:
         st.checkbox(item_name, value=checked, key=f"{key_prefix}_checkbox", on_change=update_item_state, args=(selected_user, item_name, not checked))
     with col2:
@@ -145,7 +145,6 @@ for item in all_items:
         st.markdown("""
         <style>
         button[kind="primary"] {
-            margin-bottom: 40px;
             background: none;
             border: none;
             color: red;
