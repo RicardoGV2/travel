@@ -17,11 +17,23 @@ components.iframe("https://lottie.host/embed/d184c6c6-3f70-4986-858c-358a985a98c
 data_file = "data.json"
 votes_file = "votes.json"
 
+# Function to convert dates to "YYYY-MM-DD" format for internal processing
+def convert_dates_to_2024(data):
+    converted_data = {}
+    for date, value in data.items():
+        try:
+            converted_date = datetime.strptime(date, "%d/%m").replace(year=2024).strftime("%Y-%m-%d")
+            converted_data[converted_date] = value
+        except ValueError:
+            pass  # Silently ignore date conversion errors
+    return converted_data
+
 # Function to load data
 def load_data():
     if os.path.exists(data_file):
         with open(data_file, 'r') as file:
-            return json.load(file)
+            data = json.load(file)
+            return convert_dates_to_2024(data)
     else:
         return {}
 
@@ -42,12 +54,6 @@ def load_votes():
 # Load data and votes
 data = load_data()
 votes = load_votes()
-
-# Debugging: Display loaded data and votes
-st.write("Loaded data:")
-st.json(data)
-st.write("Loaded votes:")
-st.json(votes)
 
 # Ensure the username is set in the session state
 if 'username' not in st.session_state:
@@ -84,14 +90,6 @@ def create_network_with_top_votes(data, top_voted):
                 if previous_node:
                     G.add_edge(previous_node, time_node)
                 previous_node = time_node
-
-    # Debugging: Display nodes and edges
-    st.write("Nodes in the graph:")
-    for node in G.nodes(data=True):
-        st.write(node)
-    st.write("Edges in the graph:")
-    for edge in G.edges(data=True):
-        st.write(edge)
     
     net.from_nx(G)
     net.set_options("""
@@ -126,6 +124,9 @@ refresh_interval = st.sidebar.number_input("Refresh Interval (seconds)", min_val
 show_data_json = st.sidebar.checkbox("Show Data JSON", value=False)
 show_data_json_visible = st.session_state.get('username') == "Ricardo"
 
+# Debugging output to check the username
+st.sidebar.write(f"Username: {st.session_state['username']}")
+
 # Autorefresh every 'refresh_interval' seconds if enabled
 if auto_refresh and refresh_interval:
     st_autorefresh(interval=refresh_interval * 1000, key="datarefresh")
@@ -147,18 +148,12 @@ selected_date = st.date_input("Select Date to View Timeline:", value=event_dates
 
 if selected_date:
     selected_date_str = selected_date.strftime("%Y-%m-%d")
+    selected_date_ddmm = selected_date.strftime("%d/%m")
     st.write(f"Selected Date: {selected_date_str}")
 
-    # Debugging: Check if selected date is in data
-    st.write(f"Checking if {selected_date_str} is in data...")
-    st.write(f"Data keys: {list(data.keys())}")
-
-    if selected_date_str in data:
+    if selected_date_ddmm in data:
         # Get the top voted options for the selected date
-        top_voted = get_top_voted_options(votes, selected_date_str)
-
-        st.write("Top voted options for selected date:")
-        st.write(top_voted)  # Debugging output
+        top_voted = get_top_voted_options(votes, selected_date_ddmm)
 
         # Create and display the network with top voted options
         net = create_network_with_top_votes(data, top_voted)
