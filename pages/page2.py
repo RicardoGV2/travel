@@ -37,11 +37,6 @@ def load_data():
     else:
         return {}
 
-# Function to save data
-def save_data(data, file_path):
-    with open(file_path, 'w') as file:
-        json.dump(data, file, indent=4)
-
 # Function to load votes
 def load_votes(data):
     if os.path.exists(votes_file):
@@ -58,23 +53,17 @@ votes = load_votes(data)
 # Function to get top voted options
 def get_top_voted_options(votes, selected_date=None):
     top_voted = {}
-    st.write("Votes data:", votes)  # Debug: Display the votes data
     for date in votes:
         if selected_date and date != selected_date:
             continue
         top_voted[date] = {}
-        st.write(f"Processing date: {date}")  # Debug: Display the date being processed
         for time in votes[date]:
             options = votes[date][time]
-            st.write(f"Options for {time}:", options)  # Debug: Display the options for the time
             if options:
                 top_option = max(options, key=options.get)
-                st.write(f"Top option for {time}: {top_option}")  # Debug: Display the top option
                 top_voted[date][time] = top_option
             else:
-                st.write(f"No options for {time}")  # Debug: Display when there are no options
                 top_voted[date][time] = None
-    st.write("Top voted options:", top_voted)  # Debug: Display the top voted options
     return top_voted
 
 # Function to create network with top voted options
@@ -179,4 +168,4 @@ if selected_date:
     else:
         st.write("No data available for the selected date.")
 else:
-    st.write("No data available for the selected date")
+    st.write("No data available for the selected date.")
