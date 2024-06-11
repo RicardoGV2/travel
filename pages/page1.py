@@ -55,8 +55,14 @@ st.json(data)
 if 'user_votes' not in st.session_state:
     st.session_state['user_votes'] = {date: {time: None for time in data[date]} for date in data}
 
+# Ensure the selected date exists in session state
+def ensure_selected_date_in_session_state(selected_date):
+    if selected_date not in st.session_state['user_votes']:
+        st.session_state['user_votes'][selected_date] = {time: None for time in data[selected_date]}
+
 # Function to update votes
 def update_votes(selected_date, selected_time, selected_option):
+    ensure_selected_date_in_session_state(selected_date)
     current_vote = st.session_state['user_votes'][selected_date].get(selected_time)
     if current_vote:
         votes[selected_date][selected_time][current_vote] -= 1
@@ -147,6 +153,9 @@ st.title("Itinerary Planner")
 
 # Date selection for voting
 selected_date = st.selectbox("Select Date for Voting:", options=list(data.keys()), format_func=lambda x: x, disabled=False, label_visibility='collapsed')
+
+# Ensure the selected date exists in session state
+ensure_selected_date_in_session_state(selected_date)
 
 # Voting section
 st.write("## Vote for Preferences")
