@@ -211,7 +211,10 @@ if selected_date in data:
         selected_option_display = st.radio("", vote_display, key=f"display_{selected_date}_{time}")
         selected_option = selected_option_display.split(' - ')[0]
         if st.button(f"Vote for {selected_option}", key=f"button_{selected_date}_{time}"):
-            update_votes(selected_date, time, selected_option)
+            if current_vote != selected_option:
+                update_votes(selected_date, time, selected_option)
+            else:
+                st.warning("You have already voted for this option.")
 else:
     st.write("No data available for the selected date.")
 
