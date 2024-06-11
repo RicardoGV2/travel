@@ -46,8 +46,8 @@ def convert_dates_to_2024(data):
         try:
             converted_date = datetime.strptime(date, "%d/%m").replace(year=2024).strftime("%Y-%m-%d")
             converted_data[converted_date] = value
-        except ValueError as e:
-            st.write(f"Date conversion error for {date}: {e}")
+        except ValueError:
+            pass  # Silently ignore date conversion errors
     return converted_data
 
 # Convert initial_data keys to "YYYY-MM-DD" format
@@ -149,8 +149,8 @@ def get_event_dates(data):
     for date in data:
         try:
             event_dates.append(datetime.strptime(date, "%Y-%m-%d").date())
-        except ValueError as e:
-            st.write(f"Date parsing error for {date}: {e}")
+        except ValueError:
+            pass  # Silently ignore date parsing errors
     return event_dates
 
 # Calendar for date selection
