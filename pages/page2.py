@@ -95,6 +95,13 @@ def get_top_voted_options(votes, selected_date=None):
             top_voted[date][time] = top_option
     return top_voted
 
+# Debugging function to print the network
+def print_network(G):
+    for node in G.nodes(data=True):
+        st.write(f"Node: {node}")
+    for edge in G.edges(data=True):
+        st.write(f"Edge: {edge}")
+
 # Function to create network with top voted options
 def create_network_with_top_votes(data, top_voted):
     net = Network(height="1000px", width="100%", directed=True)
@@ -113,7 +120,10 @@ def create_network_with_top_votes(data, top_voted):
                 if previous_node:
                     G.add_edge(previous_node, time_node)
                 previous_node = time_node
-    
+
+    # Debugging output to verify the network
+    print_network(G)
+
     net.from_nx(G)
     net.set_options("""
     var options = {
