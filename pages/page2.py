@@ -64,8 +64,11 @@ def get_top_voted_options(votes, selected_date=None):
         top_voted[date] = {}
         for time in votes[date]:
             options = votes[date][time]
-            top_option = max(options, key=options.get)
-            top_voted[date][time] = top_option
+            if options:
+                top_option = max(options, key=options.get)
+                top_voted[date][time] = top_option
+            else:
+                top_voted[date][time] = None
     return top_voted
 
 # Function to create network with top voted options
@@ -81,11 +84,12 @@ def create_network_with_top_votes(data, top_voted):
         for time in data[date]:
             if date in top_voted and time in top_voted[date]:
                 top_option = top_voted[date][time]
-                time_node = f"{date}_{time}_{top_option}"
-                G.add_node(time_node, label=f"{time}\n{top_option}", shape="box")
-                if previous_node:
-                    G.add_edge(previous_node, time_node)
-                previous_node = time_node
+                if top_option:  # Ensure there's a valid top option
+                    time_node = f"{date}_{time}_{top_option}"
+                    G.add_node(time_node, label=f"{time}\n{top_option}", shape="box")
+                    if previous_node:
+                        G.add_edge(previous_node, time_node)
+                    previous_node = time_node
     
     net.from_nx(G)
     net.set_options("""
@@ -140,6 +144,7 @@ selected_date = st.date_input("Select Date to View Timeline:", value=event_dates
 
 if selected_date:
     selected_date_str = selected_date.strftime("%Y-%m-%d")
+    selected_date_ddmm = selected_date.strftime("%d/%m")
     st.write(f"Selected Date: {selected_date_str}")
 
     if selected_date_str in data:
