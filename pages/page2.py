@@ -140,14 +140,13 @@ def get_event_dates(data):
         try:
             event_dates.append(datetime.strptime(date, "%Y-%m-%d").date())
         except ValueError as e:
-            print(f"Date parsing error for {date}: {e}")
+            st.write(f"Date parsing error for {date}: {e}")
     return event_dates
 
 # Calendar for date selection
 st.title("Timeline Viewer")
 event_dates = get_event_dates(data)
-print(f"Event dates: {event_dates}")
-selected_date = stcal.calendar(selected=event_dates, unique=True)
+selected_date = st.date_input("Select Date to View Timeline:", value=event_dates[0] if event_dates else datetime.today().date())
 
 if selected_date:
     selected_date_str = selected_date.strftime("%Y-%m-%d")
