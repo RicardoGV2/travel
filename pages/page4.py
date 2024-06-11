@@ -9,9 +9,8 @@ import streamlit.components.v1 as components
 
 make_sidebar()
 
-components.iframe("https://lottie.host/embed/4f1d6ae5-0dfa-41b3-878c-134c1ab5ef63/boemJK6OPy.json")
-components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
-components.iframe("https://lottie.host/embed/bd719eee-7761-43fd-b302-14929e7ba5a7/SK06QOwJOY.json")
+components.iframe("https://lottie.host/embed/9baf20e0-746f-479c-ae84-db01663d2618/APnILAMrdN.json")
+
 
 
 
