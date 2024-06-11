@@ -142,9 +142,24 @@ for item in all_items:
             if selected_user == "Shared":
                 st.button('❌', key=f'{key_prefix}_button', on_click=delete_shared_item, args=(item_name,))
             else:
-                st.markdown("<button class='delete-button' disabled>❌</button>", unsafe_allow_html=True)
+                #st.markdown("<button class='delete-button' disabled>❌</button>", unsafe_allow_html=True)
+                st.button('❌', key=f'{key_prefix}_button', on_click=delete_shared_item, args=(item_name,), type="primary")
         else:
             st.button('❌', key=f'{key_prefix}_button', on_click=delete_item_from_checklist, args=(selected_user, item_name))
+       
+
+        
+
+        st.markdown("""
+        <style>
+         button[kind="primary"] {
+            background-color: orange;
+        }
+        button[kind="seondary"] {
+            background-color: purple;
+        }
+        </style>
+        """, unsafe_allow_html=True)
 
 # Option to show/hide checklists JSON, available only for user "Ricardo"
 if st.session_state.get("username") == "Ricardo":
