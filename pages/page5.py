@@ -33,6 +33,15 @@ def save_data(file_path, data):
     with open(file_path, 'w') as file:
         json.dump(data, file, indent=4)
 
+# Function to update votes.json based on data.json
+def update_votes_based_on_data(data, votes):
+    new_votes = defaultdict(lambda: defaultdict(lambda: defaultdict(int)))
+    for date, times in data.items():
+        for time, activities in times.items():
+            for activity in activities:
+                new_votes[date][time][activity] = votes.get(date, {}).get(time, {}).get(activity, 0)
+    return new_votes
+
 # Page layout
 st.title("JSON Data Editor")
 
@@ -58,6 +67,8 @@ def display_and_edit_json(file_path, title):
                 data = json.loads(data_str)
                 save_data(file_path, data)
                 st.success(f"Saved {title} successfully")
+                if title == "data.json":
+                    update_votes_json(data)
             except json.JSONDecodeError as e:
                 st.error(f"Error parsing JSON: {e}")
     else:
@@ -89,6 +100,7 @@ def display_and_edit_json(file_path, title):
                                     new_data[current_date][time] = acts
                         save_data(file_path, new_data)
                         st.success(f"Saved {title} successfully")
+                        update_votes_json(new_data)
                     except Exception as e:
                         st.error(f"Error updating data: {e}")
         elif title == "votes.json":
@@ -218,6 +230,12 @@ def display_and_edit_json(file_path, title):
                     except Exception as e:
                         st.error(f"Error updating data: {e}")
 
+# Function to update votes.json based on data.json
+def update_votes_json(data):
+    votes = load_data(votes_file)
+    new_votes = update_votes_based_on_data(data, votes)
+    save_data(votes_file, new_votes)
+
 # Display and edit each JSON file
 display_and_edit_json(data_file, "data.json")
 display_and_edit_json(votes_file, "votes.json")
@@ -225,4 +243,3 @@ display_and_edit_json(debts_file, "debts.json")
 display_and_edit_json(debts_history_file, "debts_history.json")
 display_and_edit_json(checklists_file, "checklists.json")
 display_and_edit_json(users_file, "users.json")
-
