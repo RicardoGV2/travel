@@ -6,7 +6,6 @@ from navigation import make_sidebar
 from streamlit_autorefresh import st_autorefresh
 import streamlit.components.v1 as components
 
-
 make_sidebar()
 
 components.iframe("https://lottie.host/embed/9baf20e0-746f-479c-ae84-db01663d2618/APnILAMrdN.json")
@@ -48,6 +47,14 @@ def add_item_to_checklist(user, item):
         save_data(checklists_file, checklists)
         st.experimental_rerun()
 
+# Function to add a shared item to all checklists
+def add_shared_item(item):
+    for user in checklists["users"]:
+        if item not in [i["name"] for i in checklists["users"][user]]:
+            checklists["users"][user].append({"name": item, "checked": False})
+    save_data(checklists_file, checklists)
+    st.experimental_rerun()
+
 # Function to update the checked state of an item
 def update_item_state(user, item_name, checked):
     for item in checklists["users"][user]:
@@ -62,6 +69,13 @@ def delete_item_from_checklist(user, item_name):
     save_data(checklists_file, checklists)
     st.experimental_rerun()
 
+# Function to delete a shared item from all checklists
+def delete_shared_item(item_name):
+    for user in checklists["users"]:
+        checklists["users"][user] = [item for item in checklists["users"][user] if item["name"] != item_name]
+    save_data(checklists_file, checklists)
+    st.experimental_rerun()
+
 # Page layout
 st.title("Checklist")
 
@@ -71,8 +85,12 @@ user = st.selectbox("Select User:", ["Shared"] + list(users.keys()), key="user")
 item = st.text_input("Add an item:", key="item")
 if st.button("Add Item"):
     if item:
-        add_item_to_checklist(user, item)
-        st.success(f"Added '{item}' to {user}'s checklist.")
+        if user == "Shared":
+            add_shared_item(item)
+            st.success(f"Added '{item}' to shared checklist.")
+        else:
+            add_item_to_checklist(user, item)
+            st.success(f"Added '{item}' to {user}'s checklist.")
     else:
         st.error("Please enter an item.")
 
@@ -94,7 +112,10 @@ for item in all_items:
         update_item_state(selected_user, item["name"], checked)
     with col2:
         if st.button("Delete", key=f"delete_{selected_user}_{item['name']}"):
-            delete_item_from_checklist(selected_user, item["name"])
+            if item in shared_items:
+                delete_shared_item(item["name"])
+            else:
+                delete_item_from_checklist(selected_user, item["name"])
 
 # Option to show/hide checklists JSON, available only for user "Ricardo"
 if st.session_state.get("username") == "Ricardo":
