@@ -1,45 +1,11 @@
 {
     "users": {
-        "Shared": [
-            {
-                "name": "a",
-                "checked": false
-            }
-        ],
-        "Jorge": [
-            {
-                "name": "aa",
-                "checked": false
-            }
-        ],
-        "Raquel": [
-            {
-                "name": "aa",
-                "checked": true
-            },
-            {
-                "name": "as",
-                "checked": true
-            }
-        ],
+        "Shared": [],
+        "Jorge": [],
+        "Raquel": [],
         "Karime": [],
-        "Katia": [
-            {
-                "name": "toalla",
-                "checked": true
-            }
-        ],
-        "Janet": [
-            {
-                "name": "audifonos",
-                "checked": true
-            }
-        ],
-        "Ricardo": [
-            {
-                "name": "audifonos",
-                "checked": true
-            }
-        ]
+        "Katia": [],
+        "Janet": [],
+        "Ricardo": []
     }
 }
