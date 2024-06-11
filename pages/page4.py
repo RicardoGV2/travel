@@ -127,26 +127,28 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-for item in all_items:
-    item_checked = item["checked"]
-    item_name = item["name"]
-    item_key = f"{selected_user}_{item_name}"
-    col1, col2 = st.columns([0.8, 0.2])
-    with col1:
-        checked = st.checkbox(item_name, value=item_checked, key=item_key, on_change=update_item_state, args=(selected_user, item_name, not item_checked))
-    with col2:
-        delete_button_html = f"""
-        <button class="delete-button" onclick="window.location.href = window.location.href + '&delete={selected_user}_{item_name}';">❌</button>
-        """
-        st.markdown(f'<div class="item-container">{delete_button_html}</div>', unsafe_allow_html=True)
+# Function to render the item with delete button
+def render_item(item_name, item_checked, user):
+    item_key = f"{user}_{item_name}"
+    checked = st.checkbox(item_name, value=item_checked, key=item_key)
+    update_item_state(user, item_name, checked)
+    delete_button_html = f"""
+    <button class="delete-button" onclick="window.location.href = '/?delete={user}_{item_name}';">❌</button>
+    """
+    st.markdown(f'<div class="item-container">{item_name}{delete_button_html}</div>', unsafe_allow_html=True)
 
-if st.experimental_get_query_params().get('delete'):
-    param = st.experimental_get_query_params().get('delete')[0]
-    selected_user, item_name = param.split('_', 1)
+# Render all items
+for item in all_items:
+    render_item(item["name"], item["checked"], selected_user)
+
+# Check for deletion
+if "delete" in st.experimental_get_query_params():
+    param = st.experimental_get_query_params().get("delete")[0]
+    user, item_name = param.split("_", 1)
     if item_name in [item["name"] for item in checklists["users"]["Shared"]]:
         delete_shared_item(item_name)
     else:
-        delete_item_from_checklist(selected_user, item_name)
+        delete_item_from_checklist(user, item_name)
 
 # Option to show/hide checklists JSON, available only for user "Ricardo"
 if st.session_state.get("username") == "Ricardo":
