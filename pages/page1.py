@@ -71,6 +71,10 @@ def save_votes(votes):
 data = load_data()
 votes = load_votes()
 
+# Debug: Display loaded data
+st.write("### Debug: Loaded Data")
+st.json(data)
+
 # Initialize session state for tracking votes
 if 'user_votes' not in st.session_state:
     st.session_state['user_votes'] = {date: {time: None for time in data[date]} for date in data}
@@ -194,6 +198,8 @@ def get_selected_date_in_format(selected_date):
     return datetime.strptime(selected_date, "%Y-%m-%d").strftime("%d/%m")
 
 selected_date_ddmm = get_selected_date_in_format(selected_date)
+
+st.write(f"### Debug: Selected Date {selected_date_ddmm}")
 
 if selected_date_ddmm in data:
     for time in sorted(data[selected_date_ddmm]):
