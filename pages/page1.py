@@ -27,6 +27,17 @@ def convert_dates_to_2024(data):
             st.error(f"Date conversion error for {date}: {e}")
     return converted_data
 
+# Function to convert dates from "YYYY-MM-DD" back to "dd/MM" for display
+def convert_dates_to_ddmm(data):
+    converted_data = {}
+    for date, value in data.items():
+        try:
+            converted_date = datetime.strptime(date, "%Y-%m-%d").strftime("%d/%m")
+            converted_data[converted_date] = value
+        except ValueError as e:
+            st.error(f"Date conversion error for {date}: {e}")
+    return converted_data
+
 # Function to load data
 def load_data():
     if os.path.exists(data_file):
@@ -38,8 +49,9 @@ def load_data():
 
 # Function to save data
 def save_data(data):
+    data_to_save = convert_dates_to_ddmm(data)
     with open(data_file, 'w') as file:
-        json.dump(data, file, indent=4)
+        json.dump(data_to_save, file, indent=4)
 
 # Function to load votes
 def load_votes():
@@ -177,25 +189,31 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-for time in sorted(data[selected_date]):
+# Function to get selected date in required format
+def get_selected_date_in_format(selected_date):
+    return datetime.strptime(selected_date, "%Y-%m-%d").strftime("%d/%m")
+
+selected_date_ddmm = get_selected_date_in_format(selected_date)
+
+for time in sorted(data[selected_date_ddmm]):
     st.markdown(f'<div class="date-section">{time}</div>', unsafe_allow_html=True)
-    options = data[selected_date][time]
-    if selected_date in votes and time in votes[selected_date]:
-        vote_counts = {option: votes[selected_date][time].get(option, 0) for option in options}
+    options = data[selected_date_ddmm][time]
+    if selected_date_ddmm in votes and time in votes[selected_date_ddmm]:
+        vote_counts = {option: votes[selected_date_ddmm][time].get(option, 0) for option in options}
     else:
         vote_counts = {option: 0 for option in options}
     vote_display = [f"{option} - {vote_counts[option]} ❤️" for option in options]
     
     # Check if the user has already voted
-    current_vote = st.session_state['user_votes'][selected_date].get(time)
+    current_vote = st.session_state['user_votes'][selected_date_ddmm].get(time)
     if current_vote:
         st.info(f"You have already voted for {current_vote}. You can change your vote below.")
     
-    selected_option_display = st.radio("", vote_display, key=f"display_{selected_date}_{time}")
+    selected_option_display = st.radio("", vote_display, key=f"display_{selected_date_ddmm}_{time}")
     selected_option = selected_option_display.split(' - ')[0]
-    if st.button(f"Vote for {selected_option}", key=f"button_{selected_date}_{time}"):
+    if st.button(f"Vote for {selected_option}", key=f"button_{selected_date_ddmm}_{time}"):
         if current_vote != selected_option:
-            update_votes(selected_date, time, selected_option)
+            update_votes(selected_date_ddmm, time, selected_option)
         else:
             st.warning("You have already voted for this option.")
 
