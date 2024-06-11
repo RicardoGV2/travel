@@ -55,6 +55,10 @@ def load_votes():
 data = load_data()
 votes = load_votes()
 
+# Ensure the username is set in the session state
+if 'username' not in st.session_state:
+    st.session_state['username'] = "default"
+
 # Function to get top voted options
 def get_top_voted_options(votes, selected_date=None):
     top_voted = {}
@@ -119,6 +123,9 @@ refresh_interval = st.sidebar.number_input("Refresh Interval (seconds)", min_val
 # Checkbox to show data.json for Ricardo
 show_data_json = st.sidebar.checkbox("Show Data JSON", value=False)
 show_data_json_visible = st.session_state.get('username') == "Ricardo"
+
+# Debugging output to check the username
+st.sidebar.write(f"Username: {st.session_state['username']}")
 
 # Autorefresh every 'refresh_interval' seconds if enabled
 if auto_refresh and refresh_interval:
