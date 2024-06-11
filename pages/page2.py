@@ -108,25 +108,44 @@ show_debug = st.sidebar.checkbox("Show Debug Info", value=False)
 if auto_refresh and refresh_interval:
     st_autorefresh(interval=refresh_interval * 1000, key="datarefresh")
 
-# Date selection for timeline
+# Function to mark dates with data
+def get_event_dates(data):
+    event_dates = []
+    for date in data:
+        try:
+            event_dates.append(datetime.strptime(date, "%d/%m").replace(year=2024).date())
+        except ValueError:
+            pass  # Silently ignore date parsing errors
+    return event_dates
+
+# Calendar for date selection
 st.title("Timeline Viewer")
-selected_date = st.selectbox("Select Date to View Timeline:", options=list(data.keys()), format_func=lambda x: x)
+event_dates = get_event_dates(data)
+selected_date = st.date_input("Select Date to View Timeline:", value=event_dates[0] if event_dates else datetime.today().date())
 
-# Get the top voted options for the selected date
-top_voted = get_top_voted_options(votes, selected_date)
+if selected_date:
+    selected_date_str = selected_date.strftime("%Y-%m-%d")
+    selected_date_ddmm = selected_date.strftime("%d/%m")
+    st.write(f"Selected Date: {selected_date_str}")
 
-# Debug: Display data and top voted options
-if show_debug:
-    st.write("## Debug Info: Data")
-    st.json(data)
-    st.write("## Debug Info: Top Voted Options")
-    st.json(top_voted)
+    if selected_date_ddmm in data:
+        # Get the top voted options for the selected date
+        top_voted = get_top_voted_options(votes, selected_date_ddmm)
 
-# Create and display the network with top voted options
-net = create_network_with_top_votes(data, top_voted)
-path = 'full_network.html'
-net.save_graph(path)
+        # Debug: Display data and top voted options
+        if show_debug:
+            st.write("## Debug Info: Data")
+            st.json(data)
+            st.write("## Debug Info: Top Voted Options")
+            st.json(top_voted)
 
-with open(path, 'r', encoding='utf-8') as file:
-    html_content = file.read()
-    components.html(html_content, height=1000)
+        # Create and display the network with top voted options
+        net = create_network_with_top_votes(data, top_voted)
+        path = 'full_network.html'
+        net.save_graph(path)
+
+        with open(path, 'r', encoding='utf-8') as file:
+            html_content = file.read()
+            components.html(html_content, height=1000)
+    else:
+        st.write("No data available for the selected date.")
