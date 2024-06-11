@@ -4,8 +4,12 @@ import os
 from collections import defaultdict
 from navigation import make_sidebar
 from streamlit_autorefresh import st_autorefresh
+import streamlit.components.v1 as components
 
 make_sidebar()
+
+components.iframe("https://lottie.host/embed/4bac0cdf-860e-4718-a8ff-a4059fd5fafc/vhLZo3BySp.json")
+
 
 # Paths to the debts files
 debts_file = "debts.json"
