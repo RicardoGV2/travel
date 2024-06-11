@@ -153,18 +153,18 @@ if selected_date:
     selected_date_ddmm = selected_date.strftime("%d/%m")
     st.write(f"Selected Date: {selected_date_str}")
 
-    if selected_date_str in data:
+    if selected_date_ddmm in data:
         # Get the top voted options for the selected date
-        top_voted = get_top_voted_options(votes, selected_date_str)
-        st.write(f"top_voted: {top_voted}")
+        top_voted = get_top_voted_options(votes, selected_date_ddmm)
+
         # Debug info for data and top voted options
         if show_debug:
             st.write("## Debug Info: Data Sent to Timeline")
-            st.json(data[selected_date_str])
+            st.json(data[selected_date_ddmm])
             st.write("## Debug Info: Top Voted Options")
             st.json(top_voted)
-            if selected_date_str in top_voted:
-                st.json(top_voted[selected_date_str])
+            if selected_date_ddmm in top_voted:
+                st.json(top_voted[selected_date_ddmm])
             else:
                 st.write("No top voted options for the selected date.")
 
