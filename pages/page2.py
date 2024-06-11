@@ -150,7 +150,7 @@ if selected_date:
     if selected_date_str in data:
         # Get the top voted options for the selected date
         top_voted = get_top_voted_options(votes, selected_date_str)
-
+        print(top_voted)
         # Debug info for data and top voted options
         if show_debug:
             st.write("## Debug Info: Data Sent to Timeline")
