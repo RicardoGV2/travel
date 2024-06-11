@@ -152,6 +152,7 @@ for item in all_items:
             font-size: 1.2em;
             margin-left: 10px;
             float: right;
+            vertical-align: middle;
         }
         
         </style>
