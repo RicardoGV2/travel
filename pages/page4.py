@@ -11,10 +11,6 @@ make_sidebar()
 
 components.iframe("https://lottie.host/embed/9baf20e0-746f-479c-ae84-db01663d2618/APnILAMrdN.json")
 
-
-
-
-
 # Paths to the checklists and users files
 checklists_file = "checklists.json"
 users_file = "users.json"
