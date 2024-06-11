@@ -132,12 +132,12 @@ for item in all_items:
     with col2:
         if item in shared_items:
             if selected_user == "Shared":
-                st.button('❌', key=f'{key_prefix}_button', on_click=delete_shared_item, args=(item_name,), type="secondary")
+                st.button('❌', key=f'{key_prefix}_button', on_click=delete_shared_item, args=(item_name,), type="primary")
             else:
                 #st.markdown("<button class='delete-button' disabled>❌</button>", unsafe_allow_html=True)
                 st.button('❌', key=f'{key_prefix}_button', on_click=delete_shared_item, args=(item_name,), type="primary")
         else:
-            st.button('❌', key=f'{key_prefix}_button', on_click=delete_item_from_checklist, args=(selected_user, item_name), type="secondary")
+            st.button('❌', key=f'{key_prefix}_button', on_click=delete_item_from_checklist, args=(selected_user, item_name), type="primary")
        
 
         
@@ -153,15 +153,7 @@ for item in all_items:
             margin-left: 10px;
             float: right;
         }
-        button[kind="secondary"] {
-            background: none;
-            border: none;
-            color: red;
-            cursor: pointer;
-            font-size: 1.2em;
-            margin-left: 10px;
-            float: right;
-        }
+        
         </style>
         """, unsafe_allow_html=True)
 
