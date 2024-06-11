@@ -166,4 +166,4 @@ if selected_date:
     else:
         st.write("No data available for the selected date.")
 else:
-    st.write("No data available for the selected date.")
+    st.write("No data available for the selected date")
