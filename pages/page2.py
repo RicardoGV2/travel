@@ -134,7 +134,14 @@ if auto_refresh and refresh_interval:
 def get_event_dates(data):
     event_dates = []
     for date in data:
-        event_dates.append(datetime.strptime(date, "%Y-%m-%d").date())
+        try:
+            event_dates.append(datetime.strptime(date, "%Y-%m-%d").date())
+        except ValueError:
+            # Fallback for different date formats
+            try:
+                event_dates.append(datetime.strptime(date, "%d/%m").replace(year=datetime.now().year).date())
+            except ValueError:
+                pass
     return event_dates
 
 # Calendar for date selection
