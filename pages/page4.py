@@ -153,7 +153,7 @@ for item in all_items:
             margin-left: 10px;
             float: right;
         }
-        button[kind="seondary"] {
+        button[kind="secondary"] {
             background: none;
             border: none;
             color: red;
