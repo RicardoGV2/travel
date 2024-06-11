@@ -7,6 +7,10 @@ from streamlit_autorefresh import st_autorefresh
 
 make_sidebar()
 
+components.iframe("https://lottie.host/4f1d6ae5-0dfa-41b3-878c-134c1ab5ef63/boemJK6OPy.json")
+
+
+
 # Paths to the checklists and users files
 checklists_file = "checklists.json"
 users_file = "users.json"
