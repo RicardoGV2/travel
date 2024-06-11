@@ -122,7 +122,7 @@ st.markdown("""
         vertical-align: top !important;
         height: auto;
         padding-top: 10px !important;
-        padding-bottom: 40px !important;
+        padding-bottom: 10px !important;
     }
     .item-container {
         display: flex;
