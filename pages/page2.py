@@ -38,22 +38,22 @@ def load_data():
         return {}
 
 # Function to save data
-def save_data(data):
-    with open(data_file, 'w') as file:
+def save_data(data, file_path):
+    with open(file_path, 'w') as file:
         json.dump(data, file, indent=4)
 
 # Function to load votes
-def load_votes():
+def load_votes(data):
     if os.path.exists(votes_file):
         with open(votes_file, 'r') as file:
-            return json.load(file)
+            votes = json.load(file)
+            return votes
     else:
-        data = load_data()
         return {date: {time: {option: 0 for option in data[date][time]} for time in data[date]} for date in data}
 
 # Load data and votes
 data = load_data()
-votes = load_votes()
+votes = load_votes(data)
 
 # Function to get top voted options
 def get_top_voted_options(votes, selected_date=None):
@@ -151,12 +151,12 @@ if selected_date:
         # Get the top voted options for the selected date
         top_voted = get_top_voted_options(votes, selected_date_str)
 
-        # Debug info for top voted options
+        # Debug info for data and top voted options
         if show_debug:
             st.write("## Debug Info: Data Sent to Timeline")
             st.json(data[selected_date_str])
             st.write("## Debug Info: Top Voted Options")
-            st.json(top_voted)
+            st.json(top_voted[selected_date_str])
 
         # Create and display the network with top voted options
         net = create_network_with_top_votes(data, top_voted)
