@@ -52,8 +52,8 @@ def add_shared_item(item):
     if item not in [i["name"] for i in checklists["users"]["Shared"]]:
         #checklists["users"]["Shared"].append({"name": item, "checked": False})
         for user in checklists["users"]:
-            if user != "Shared":
-                checklists["users"][user].append({"name": item, "checked": False})
+            #if user != "Shared":
+            checklists["users"][user].append({"name": item, "checked": False})
         save_data(checklists_file, checklists)
         st.experimental_rerun()
 
