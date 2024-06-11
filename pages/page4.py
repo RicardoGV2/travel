@@ -6,6 +6,7 @@ from navigation import make_sidebar
 from streamlit_autorefresh import st_autorefresh
 import streamlit.components.v1 as components
 
+
 make_sidebar()
 
 components.iframe("https://lottie.host/embed/9baf20e0-746f-479c-ae84-db01663d2618/APnILAMrdN.json")
@@ -127,28 +128,26 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# Function to render the item with delete button
-def render_item(item_name, item_checked, user):
-    item_key = f"{user}_{item_name}"
-    checked = st.checkbox(item_name, value=item_checked, key=item_key)
-    update_item_state(user, item_name, checked)
-    delete_button_html = f"""
-    <button class="delete-button" onclick="window.location.href = '/?delete={user}_{item_name}';">❌</button>
-    """
-    st.markdown(f'<div class="item-container">{item_name}{delete_button_html}</div>', unsafe_allow_html=True)
+# Form to manage items
+with st.form("checklist_form"):
+    for item in all_items:
+        col1, col2 = st.columns([0.9, 0.1])
+        with col1:
+            checked = st.checkbox(item["name"], value=item["checked"], key=f"{selected_user}_{item['name']}")
+        with col2:
+            st.markdown(f"<button class='delete-button' type='submit' name='delete' value='{item['name']}'>❌</button>", unsafe_allow_html=True)
+        update_item_state(selected_user, item["name"], checked)
 
-# Render all items
-for item in all_items:
-    render_item(item["name"], item["checked"], selected_user)
+    submitted = st.form_submit_button("Submit")
 
-# Check for deletion
-if "delete" in st.experimental_get_query_params():
-    param = st.experimental_get_query_params().get("delete")[0]
-    user, item_name = param.split("_", 1)
-    if item_name in [item["name"] for item in checklists["users"]["Shared"]]:
-        delete_shared_item(item_name)
-    else:
-        delete_item_from_checklist(user, item_name)
+if submitted:
+    if "delete" in st.experimental_get_query_params():
+        param = st.experimental_get_query_params().get("delete")[0]
+        user, item_name = param.split("_", 1)
+        if item_name in [item["name"] for item in checklists["users"]["Shared"]]:
+            delete_shared_item(item_name)
+        else:
+            delete_item_from_checklist(user, item_name)
 
 # Option to show/hide checklists JSON, available only for user "Ricardo"
 if st.session_state.get("username") == "Ricardo":
