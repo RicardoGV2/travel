@@ -15,94 +15,25 @@ components.iframe("https://lottie.host/embed/89efecc0-ccec-423e-b237-16c5de97190
 data_file = "data.json"
 votes_file = "votes.json"
 
-# Example initial data for multiple days
-
-initial_data = {
-    "14/06": {
-        "06:00": ["Llegada al aeropuerto"],
-        "07:00": ["Desayuno en el aeropuerto"],
-        "08:00": ["Bus a Sydney"],
-        "09:30": ["Bus al tour"],
-        "10:00": ["Tour 1 20 AUD", "Tour 2 25 AUD"],
-        "12:00": ["Bus a otra actividad"],
-        "12:30": ["Actividad 1", "Actividad 2"],
-        "18:00": ["Cena"]
-    },
-    "15/06": {
-        "08:00": ["Desayuno en el hotel"],
-        "09:00": ["Visita al parque"],
-        "12:00": ["Almuerzo en el restaurante"],
-        "15:00": ["Visita al museo"],
-        "18:00": ["Cena en el centro"]
-    },
-    # Add more days as needed
-}
-'''
-initial_data = {
-    "12/06": {
-        "All Day": ["Voy por Francisco y turisteamos en Brisbane"]
-    },
-    "13/06": {
-        "All Day": ["Byron Bay"]
-    },
-    "14/06": {
-        "All Day": ["Vamos por mis papás y Katia, nos regresamos a Gold Coast y ese día les enseño la ciudad"]
-    },
-    "15/06": {
-        "All Day": ["Hinterland y Tambourine Mountain"]
-    },
-    "16/06": {
-        "All Day": ["Market HOTA y Springbrook"]
-    },
-    "17/06": {
-        "All Day": ["Coolangatta y Snapper Rocks"]
-    },
-    "18/06": {
-        "All Day": ["Ir por Janet a Brisbane y de ahí a Noosa o al Australia Zoo (si Francisco no está mejor vamos ese día a Noosa)"]
-    },
-    "19/06": {
-        "All Day": ["Sydney"]
-    },
-    "21/06": {
-        "All Day": ["Regreso a GC"]
-    },
-    "22/06": {
-        "All Day": ["Tangalooma o Australia Zoo"]
-    },
-    "23/06": {
-        "All Day": ["Tangalooma o Australia Zoo"]
-    },
-    "24/06": {
-        "All Day": ["Llevar a Francisco al Aeropuerto y de ahí turistear por Brisbane"]
-    },
-    "25/06": {
-        "All Day": ["Currumbin"]
-    },
-    "26/06": {
-        "All Day": ["Cook Island Aquatic"]
-    },
-    "27/06": {
-        "All Day": ["Actividades acuáticas"]
-    },
-    "28/06": {
-        "All Day": ["Byron Bay"]
-    },
-    "29/06": {
-        "All Day": ["Monte Tambourine"]
-    },
-    "30/06": {
-        "All Day": ["Llevarlos a Brisbane"]
-    },
-}'''
-
+# Function to convert dates to "YYYY-MM-DD" format for internal processing
+def convert_dates_to_2024(data):
+    converted_data = {}
+    for date, value in data.items():
+        try:
+            converted_date = datetime.strptime(date, "%d/%m").replace(year=2024).strftime("%Y-%m-%d")
+            converted_data[converted_date] = value
+        except ValueError:
+            pass  # Silently ignore date conversion errors
+    return converted_data
 
 # Function to load data
 def load_data():
     if os.path.exists(data_file):
         with open(data_file, 'r') as file:
-            return json.load(file)
+            data = json.load(file)
+            return convert_dates_to_2024(data)
     else:
-        return initial_data
+        return {}
 
 # Function to save data
 def save_data(data):
@@ -115,7 +46,8 @@ def load_votes():
         with open(votes_file, 'r') as file:
             return json.load(file)
     else:
-        return {date: {time: {option: 0 for option in initial_data[date][time]} for time in initial_data[date]} for date in initial_data}
+        data = load_data()
+        return {date: {time: {option: 0 for option in data[date][time]} for time in data[date]} for date in data}
 
 # Function to save votes
 def save_votes(votes):
