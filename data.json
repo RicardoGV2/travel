@@ -1,47 +1,56 @@
 {
+    "12/06": {
+        "08:00": ["Voy por Francisco y turisteamos en Brisbane"]
+    },
+    "13/06": {
+        "08:00": ["Byron Bay"]
+    },
     "14/06": {
-        "06:00": [
-            "Llegada al aeropuerto"
-        ],
-        "07:00": [
-            "Desayuno en el aeropuerto"
-        ],
-        "08:00": [
-            "Bus a Sydney"
-        ],
-        "09:30": [
-            "Bus al tour"
-        ],
-        "10:00": [
-            "Tour 1 20 AUD",
-            "Tour 2 25 AUD"
-        ],
-        "12:00": [
-            "Bus a otra actividad"
-        ],
-        "12:30": [
-            "Actividad 1",
-            "Actividad 2"
-        ],
-        "18:00": [
-            "Cena"
-        ]
+        "08:00": ["Vamos por mis papás y Katia, nos regresamos a Gold Coast y ese día les enseño la ciudad"]
     },
     "15/06": {
-        "08:00": [
-            "Desayuno en el hotel"
-        ],
-        "09:00": [
-            "Visita al parque"
-        ],
-        "12:00": [
-            "Almuerzo en el restaurante"
-        ],
-        "15:00": [
-            "Visita al museo"
-        ],
-        "18:00": [
-            "Cena en el centro"
-        ]
+        "08:00": ["Hinterland y Tambourine Mountain"]
+    },
+    "16/06": {
+        "08:00": ["Market HOTA y Springbrook"]
+    },
+    "17/06": {
+        "08:00": ["Coolangatta y Snapper Rocks"]
+    },
+    "18/06": {
+        "08:00": ["Ir por Janet a Brisbane y de ahí a Noosa o al Australia Zoo (si Francisco no está mejor vamos ese día a Noosa)"]
+    },
+    "19/06": {
+        "08:00": ["Sydney"]
+    },
+    "21/06": {
+        "08:00": ["Regreso a GC"]
+    },
+    "22/06": {
+        "08:00": ["Tangalooma o Australia Zoo"]
+    },
+    "23/06": {
+        "08:00": ["Tangalooma o Australia Zoo"]
+    },
+    "24/06": {
+        "08:00": ["Llevar a Francisco al Aeropuerto y de ahí turistear por Brisbane"]
+    },
+    "25/06": {
+        "08:00": ["Currumbin"]
+    },
+    "26/06": {
+        "08:00": ["Cook Island Aquatic"]
+    },
+    "27/06": {
+        "08:00": ["Actividades acuáticas"]
+    },
+    "28/06": {
+        "08:00": ["Byron Bay"]
+    },
+    "29/06": {
+        "08:00": ["Monte Tambourine"]
+    },
+    "30/06": {
+        "08:00": ["Llevarlos a Brisbane"]
     }
 }
