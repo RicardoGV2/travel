@@ -16,7 +16,7 @@ data_file = "data.json"
 votes_file = "votes.json"
 
 # Example initial data for multiple days
-'''
+
 initial_data = {
     "14/06": {
         "06:00": ["Llegada al aeropuerto"],
@@ -92,7 +92,7 @@ initial_data = {
     "30/06": {
         "All Day": ["Llevarlos a Brisbane"]
     },
-}
+}'''
 
 
 # Function to load data
