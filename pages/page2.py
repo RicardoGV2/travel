@@ -8,7 +8,6 @@ import os
 from collections import OrderedDict
 from streamlit_autorefresh import st_autorefresh
 from datetime import datetime, timedelta
-import streamlit_calendar as stcal
 
 make_sidebar()
 
