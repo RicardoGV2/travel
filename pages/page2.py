@@ -17,37 +17,26 @@ components.iframe("https://lottie.host/embed/d184c6c6-3f70-4986-858c-358a985a98c
 data_file = "data.json"
 votes_file = "votes.json"
 
-# Function to convert dates to "YYYY-MM-DD" format for internal processing
-def convert_dates_to_2024(data):
-    converted_data = {}
-    for date, value in data.items():
-        try:
-            converted_date = datetime.strptime(date, "%d/%m").replace(year=2024).strftime("%Y-%m-%d")
-            converted_data[converted_date] = value
-        except ValueError:
-            pass  # Silently ignore date conversion errors
-    return converted_data
-
 # Function to load data
 def load_data():
     if os.path.exists(data_file):
         with open(data_file, 'r') as file:
-            data = json.load(file)
-            return convert_dates_to_2024(data)
+            return json.load(file)
     else:
         return {}
 
 # Function to load votes
-def load_votes(data):
+def load_votes():
     if os.path.exists(votes_file):
         with open(votes_file, 'r') as file:
             return json.load(file)
     else:
+        data = load_data()
         return {date: {time: {option: 0 for option in data[date][time]} for time in data[date]} for date in data}
 
 # Load data and votes
 data = load_data()
-votes = load_votes(data)
+votes = load_votes()
 
 # Function to get top voted options
 def get_top_voted_options(votes, selected_date=None):
@@ -113,42 +102,31 @@ def create_network_with_top_votes(data, top_voted):
 st.sidebar.title("Settings")
 auto_refresh = st.sidebar.checkbox("Enable Auto Refresh", value=True)
 refresh_interval = st.sidebar.number_input("Refresh Interval (seconds)", min_value=1, max_value=60, value=7) if auto_refresh else None
+show_debug = st.sidebar.checkbox("Show Debug Info", value=False)
 
 # Autorefresh every 'refresh_interval' seconds if enabled
 if auto_refresh and refresh_interval:
     st_autorefresh(interval=refresh_interval * 1000, key="datarefresh")
 
-# Function to mark dates with data
-def get_event_dates(data):
-    event_dates = []
-    for date in data:
-        try:
-            event_dates.append(datetime.strptime(date, "%Y-%m-%d").date())
-        except ValueError:
-            pass  # Silently ignore date parsing errors
-    return event_dates
+# Date selection for timeline
+st.title("Timeline Viewer ")
+selected_date = st.selectbox("Select Date to View Timeline:", options=list(data.keys()), format_func=lambda x: x)
 
-# Calendar for date selection
-st.title("Timeline Viewer")
-event_dates = get_event_dates(data)
-selected_date = st.date_input("Select Date to View Timeline:", value=event_dates[0] if event_dates else datetime.today().date())
+# Get the top voted options for the selected date
+top_voted = get_top_voted_options(votes, selected_date)
 
-if selected_date:
-    selected_date_str = selected_date.strftime("%Y-%m-%d")
-    selected_date_ddmm = selected_date.strftime("%d/%m")
-    st.write(f"Selected Date: {selected_date_str}")
+# Debug: Display data and top voted options
+if show_debug:
+    st.write("## Debug Info: Data")
+    st.json(data)
+    st.write("## Debug Info: Top Voted Options")
+    st.json(top_voted)
 
-    if selected_date_ddmm in data:
-        # Get the top voted options for the selected date
-        top_voted = get_top_voted_options(votes, selected_date_ddmm)
+# Create and display the network with top voted options
+net = create_network_with_top_votes(data, top_voted)
+path = 'full_network.html'
+net.save_graph(path)
 
-        # Create and display the network with top voted options
-        net = create_network_with_top_votes(data, top_voted)
-        path = 'full_network.html'
-        net.save_graph(path)
-
-        with open(path, 'r', encoding='utf-8') as file:
-            html_content = file.read()
-            components.html(html_content, height=1000)
-    else:
-        st.write("No data available for the selected date.")
+with open(path, 'r', encoding='utf-8') as file:
+    html_content = file.read()
+    components.html(html_content, height=1000)
