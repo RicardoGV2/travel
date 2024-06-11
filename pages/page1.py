@@ -16,6 +16,7 @@ data_file = "data.json"
 votes_file = "votes.json"
 
 # Example initial data for multiple days
+'''
 initial_data = {
     "14/06": {
         "06:00": ["Llegada al aeropuerto"],
@@ -35,7 +36,64 @@ initial_data = {
         "18:00": ["Cena en el centro"]
     },
     # Add more days as needed
+}'''
+initial_data = {
+    "12/06": {
+        "All Day": ["Voy por Francisco y turisteamos en Brisbane"]
+    },
+    "13/06": {
+        "All Day": ["Byron Bay"]
+    },
+    "14/06": {
+        "All Day": ["Vamos por mis papás y Katia, nos regresamos a Gold Coast y ese día les enseño la ciudad"]
+    },
+    "15/06": {
+        "All Day": ["Hinterland y Tambourine Mountain"]
+    },
+    "16/06": {
+        "All Day": ["Market HOTA y Springbrook"]
+    },
+    "17/06": {
+        "All Day": ["Coolangatta y Snapper Rocks"]
+    },
+    "18/06": {
+        "All Day": ["Ir por Janet a Brisbane y de ahí a Noosa o al Australia Zoo (si Francisco no está mejor vamos ese día a Noosa)"]
+    },
+    "19/06": {
+        "All Day": ["Sydney"]
+    },
+    "21/06": {
+        "All Day": ["Regreso a GC"]
+    },
+    "22/06": {
+        "All Day": ["Tangalooma o Australia Zoo"]
+    },
+    "23/06": {
+        "All Day": ["Tangalooma o Australia Zoo"]
+    },
+    "24/06": {
+        "All Day": ["Llevar a Francisco al Aeropuerto y de ahí turistear por Brisbane"]
+    },
+    "25/06": {
+        "All Day": ["Currumbin"]
+    },
+    "26/06": {
+        "All Day": ["Cook Island Aquatic"]
+    },
+    "27/06": {
+        "All Day": ["Actividades acuáticas"]
+    },
+    "28/06": {
+        "All Day": ["Byron Bay"]
+    },
+    "29/06": {
+        "All Day": ["Monte Tambourine"]
+    },
+    "30/06": {
+        "All Day": ["Llevarlos a Brisbane"]
+    }
 }
+
 
 # Function to load data
 def load_data():
