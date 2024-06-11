@@ -1,6 +1,8 @@
 {
     "12/06": {
-        "08:00": ["Voy por Francisco y turisteamos en Brisbane"]
+        "07:00": ["desayuno en el hotel", "desayuno en aeropuerto"],
+        "08:00": ["Voy por Francisco y turisteamos en Brisbane"],
+        "20:30": ["Cena en el hotel"]
     },
     "13/06": {
         "08:00": ["Byron Bay"]
