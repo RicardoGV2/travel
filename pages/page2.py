@@ -50,7 +50,7 @@ def load_data():
 
 # Function to save data
 def save_data(data):
-    with open(data_file, 'w') as file:
+    with open(data_file, 'w') as file):
         json.dump(data, file, indent=4)
 
 # Function to load votes
