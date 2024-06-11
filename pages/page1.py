@@ -6,7 +6,7 @@ from collections import OrderedDict
 from streamlit_autorefresh import st_autorefresh
 from time import sleep
 import streamlit.components.v1 as components
-from datetime import datetime  # Importing datetime module
+from datetime import datetime
 
 make_sidebar()
 
@@ -169,34 +169,29 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Function to get selected date in required format
-def get_selected_date_in_format(selected_date):
-    return datetime.strptime(selected_date, "%Y-%m-%d").strftime("%d/%m")
+# Debug: Display selected date
+st.write(f"### Debug: Selected Date {selected_date}")
 
-selected_date_ddmm = get_selected_date_in_format(selected_date)
-
-st.write(f"### Debug: Selected Date {selected_date_ddmm}")
-
-if selected_date_ddmm in data:
-    for time in sorted(data[selected_date_ddmm]):
+if selected_date in data:
+    for time in sorted(data[selected_date]):
         st.markdown(f'<div class="date-section">{time}</div>', unsafe_allow_html=True)
-        options = data[selected_date_ddmm][time]
-        if selected_date_ddmm in votes and time in votes[selected_date_ddmm]:
-            vote_counts = {option: votes[selected_date_ddmm][time].get(option, 0) for option in options}
+        options = data[selected_date][time]
+        if selected_date in votes and time in votes[selected_date]:
+            vote_counts = {option: votes[selected_date][time].get(option, 0) for option in options}
         else:
             vote_counts = {option: 0 for option in options}
         vote_display = [f"{option} - {vote_counts[option]} ❤️" for option in options]
         
         # Check if the user has already voted
-        current_vote = st.session_state['user_votes'][selected_date_ddmm].get(time)
+        current_vote = st.session_state['user_votes'][selected_date].get(time)
         if current_vote:
             st.info(f"You have already voted for {current_vote}. You can change your vote below.")
         
-        selected_option_display = st.radio("", vote_display, key=f"display_{selected_date_ddmm}_{time}")
+        selected_option_display = st.radio("", vote_display, key=f"display_{selected_date}_{time}")
         selected_option = selected_option_display.split(' - ')[0]
-        if st.button(f"Vote for {selected_option}", key=f"button_{selected_date_ddmm}_{time}"):
+        if st.button(f"Vote for {selected_option}", key=f"button_{selected_date}_{time}"):
             if current_vote != selected_option:
-                update_votes(selected_date_ddmm, time, selected_option)
+                update_votes(selected_date, time, selected_option)
             else:
                 st.warning("You have already voted for this option.")
 else:
