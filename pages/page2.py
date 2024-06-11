@@ -63,7 +63,7 @@ def load_data():
 
 # Function to save data
 def save_data(data):
-    with open(data_file, 'w') as file:
+    with open(data_file, 'w') as file):
         json.dump(data, file, indent=4)
 
 # Function to load votes
@@ -78,10 +78,6 @@ def load_votes():
 data = load_data()
 votes = load_votes()
 
-# Debugging output to verify loaded data
-st.write("Loaded data:", data)
-st.write("Loaded votes:", votes)
-
 # Function to get top voted options
 def get_top_voted_options(votes, selected_date=None):
     top_voted = {}
@@ -94,13 +90,6 @@ def get_top_voted_options(votes, selected_date=None):
             top_option = max(options, key=options.get)
             top_voted[date][time] = top_option
     return top_voted
-
-# Debugging function to print the network
-def print_network(G):
-    for node in G.nodes(data=True):
-        st.write(f"Node: {node}")
-    for edge in G.edges(data=True):
-        st.write(f"Edge: {edge}")
 
 # Function to create network with top voted options
 def create_network_with_top_votes(data, top_voted):
@@ -120,10 +109,7 @@ def create_network_with_top_votes(data, top_voted):
                 if previous_node:
                     G.add_edge(previous_node, time_node)
                 previous_node = time_node
-
-    # Debugging output to verify the network
-    print_network(G)
-
+    
     net.from_nx(G)
     net.set_options("""
     var options = {
@@ -180,9 +166,6 @@ if selected_date:
     if selected_date_ddmm in initial_data:
         # Get the top voted options for the selected date
         top_voted = get_top_voted_options(votes, selected_date_ddmm)
-        
-        # Debugging output to verify top voted options
-        st.write("Top voted options for selected date:", top_voted)
 
         # Create and display the network with top voted options
         net = create_network_with_top_votes(data, top_voted)
