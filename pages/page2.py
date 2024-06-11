@@ -84,6 +84,14 @@ def create_network_with_top_votes(data, top_voted):
                 if previous_node:
                     G.add_edge(previous_node, time_node)
                 previous_node = time_node
+
+    # Debugging: Display nodes and edges
+    st.write("Nodes in the graph:")
+    for node in G.nodes(data=True):
+        st.write(node)
+    st.write("Edges in the graph:")
+    for edge in G.edges(data=True):
+        st.write(edge)
     
     net.from_nx(G)
     net.set_options("""
@@ -139,7 +147,6 @@ selected_date = st.date_input("Select Date to View Timeline:", value=event_dates
 
 if selected_date:
     selected_date_str = selected_date.strftime("%Y-%m-%d")
-    selected_date_ddmm = selected_date.strftime("%d/%m")
     st.write(f"Selected Date: {selected_date_str}")
 
     # Debugging: Check if selected date is in data
