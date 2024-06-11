@@ -23,8 +23,8 @@ def convert_dates_to_2024(data):
         try:
             converted_date = datetime.strptime(date, "%d/%m").replace(year=2024).strftime("%Y-%m-%d")
             converted_data[converted_date] = value
-        except ValueError:
-            pass  # Silently ignore date conversion errors
+        except ValueError as e:
+            st.error(f"Date conversion error for {date}: {e}")
     return converted_data
 
 # Function to load data
