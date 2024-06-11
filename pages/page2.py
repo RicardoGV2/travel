@@ -124,9 +124,6 @@ refresh_interval = st.sidebar.number_input("Refresh Interval (seconds)", min_val
 show_data_json = st.sidebar.checkbox("Show Data JSON", value=False)
 show_data_json_visible = st.session_state.get('username') == "Ricardo"
 
-# Debugging output to check the username
-st.sidebar.write(f"Username: {st.session_state['username']}")
-
 # Autorefresh every 'refresh_interval' seconds if enabled
 if auto_refresh and refresh_interval:
     st_autorefresh(interval=refresh_interval * 1000, key="datarefresh")
