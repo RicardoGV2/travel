@@ -5,8 +5,13 @@ import os
 from collections import OrderedDict
 from streamlit_autorefresh import st_autorefresh
 from time import sleep  # Import sleep function
+import streamlit.components.v1 as components
+
 
 make_sidebar()
+
+components.iframe("https://lottie.host/embed/72bb3b64-3dab-4113-a252-e9ba5715375d/bPDfeogW7N.json")
+
 
 # Paths to the data and votes files
 data_file = "data.json"

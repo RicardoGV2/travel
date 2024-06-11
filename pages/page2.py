@@ -7,8 +7,11 @@ import json
 import os
 from collections import OrderedDict
 from streamlit_autorefresh import st_autorefresh
+import streamlit.components.v1 as components
 
 make_sidebar()
+
+components.iframe("https://lottie.host/embed/7f29759c-68e1-44dc-9e29-1dba4a8dcd35/oFZnsvwURp.json")
 
 # Paths to the data and votes files
 data_file = "data.json"
