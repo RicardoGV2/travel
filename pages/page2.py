@@ -7,7 +7,7 @@ import json
 import os
 from collections import OrderedDict
 from streamlit_autorefresh import st_autorefresh
-import streamlit.components.v1 as components
+from datetime import datetime, timedelta
 
 make_sidebar()
 
@@ -17,52 +17,37 @@ components.iframe("https://lottie.host/embed/d184c6c6-3f70-4986-858c-358a985a98c
 data_file = "data.json"
 votes_file = "votes.json"
 
-# Example initial data for multiple days
-initial_data = {
-    "14/06": {
-        "06:00": ["Llegada al aeropuerto"],
-        "07:00": ["Desayuno en el aeropuerto"],
-        "08:00": ["Bus a Sydney"],
-        "09:30": ["Bus al tour"],
-        "10:00": ["Tour 1 20 AUD", "Tour 2 25 AUD"],
-        "12:00": ["Bus a otra actividad"],
-        "12:30": ["Actividad 1", "Actividad 2"],
-        "18:00": ["Cena"]
-    },
-    "15/06": {
-        "08:00": ["Desayuno en el hotel"],
-        "09:00": ["Visita al parque"],
-        "12:00": ["Almuerzo en el restaurante"],
-        "15:00": ["Visita al museo"],
-        "18:00": ["Cena en el centro"]
-    },
-    # Add more days as needed
-}
+# Function to convert dates to "YYYY-MM-DD" format for internal processing
+def convert_dates_to_2024(data):
+    converted_data = {}
+    for date, value in data.items():
+        try:
+            converted_date = datetime.strptime(date, "%d/%m").replace(year=2024).strftime("%Y-%m-%d")
+            converted_data[converted_date] = value
+        except ValueError:
+            pass  # Silently ignore date conversion errors
+    return converted_data
 
 # Function to load data
 def load_data():
     if os.path.exists(data_file):
         with open(data_file, 'r') as file:
-            return json.load(file)
+            data = json.load(file)
+            return convert_dates_to_2024(data)
     else:
-        return initial_data
-
-# Function to save data
-def save_data(data):
-    with open(data_file, 'w') as file:
-        json.dump(data, file, indent=4)
+        return {}
 
 # Function to load votes
-def load_votes():
+def load_votes(data):
     if os.path.exists(votes_file):
         with open(votes_file, 'r') as file:
             return json.load(file)
     else:
-        return {date: {time: {option: 0 for option in initial_data[date][time]} for time in initial_data[date]} for date in initial_data}
+        return {date: {time: {option: 0 for option in data[date][time]} for time in data[date]} for date in data}
 
 # Load data and votes
 data = load_data()
-votes = load_votes()
+votes = load_votes(data)
 
 # Function to get top voted options
 def get_top_voted_options(votes, selected_date=None):
@@ -73,8 +58,11 @@ def get_top_voted_options(votes, selected_date=None):
         top_voted[date] = {}
         for time in votes[date]:
             options = votes[date][time]
-            top_option = max(options, key=options.get)
-            top_voted[date][time] = top_option
+            if options:
+                top_option = max(options, key=options.get)
+                top_voted[date][time] = top_option
+            else:
+                top_voted[date][time] = None
     return top_voted
 
 # Function to create network with top voted options
@@ -90,11 +78,12 @@ def create_network_with_top_votes(data, top_voted):
         for time in data[date]:
             if date in top_voted and time in top_voted[date]:
                 top_option = top_voted[date][time]
-                time_node = f"{date}_{time}_{top_option}"
-                G.add_node(time_node, label=f"{time}\n{top_option}", shape="box")
-                if previous_node:
-                    G.add_edge(previous_node, time_node)
-                previous_node = time_node
+                if top_option:  # Ensure there's a valid top option
+                    time_node = f"{date}_{time}_{top_option}"
+                    G.add_node(time_node, label=f"{time}\n{top_option}", shape="box")
+                    if previous_node:
+                        G.add_edge(previous_node, time_node)
+                    previous_node = time_node
     
     net.from_nx(G)
     net.set_options("""
@@ -129,18 +118,37 @@ refresh_interval = st.sidebar.number_input("Refresh Interval (seconds)", min_val
 if auto_refresh and refresh_interval:
     st_autorefresh(interval=refresh_interval * 1000, key="datarefresh")
 
-# Date selection for timeline
-st.title("Timeline Viewer ")
-selected_date = st.selectbox("Select Date to View Timeline:", options=list(data.keys()), format_func=lambda x: x)
+# Function to mark dates with data
+def get_event_dates(data):
+    event_dates = []
+    for date in data:
+        try:
+            event_dates.append(datetime.strptime(date, "%Y-%m-%d").date())
+        except ValueError:
+            pass  # Silently ignore date parsing errors
+    return event_dates
 
-# Get the top voted options for the selected date
-top_voted = get_top_voted_options(votes, selected_date)
+# Calendar for date selection
+st.title("Timeline Viewer")
+event_dates = get_event_dates(data)
+selected_date = st.date_input("Select Date to View Timeline:", value=event_dates[0] if event_dates else datetime.today().date())
 
-# Create and display the network with top voted options
-net = create_network_with_top_votes(data, top_voted)
-path = 'full_network.html'
-net.save_graph(path)
+if selected_date:
+    selected_date_str = selected_date.strftime("%Y-%m-%d")
+    selected_date_ddmm = selected_date.strftime("%d/%m")
+    st.write(f"Selected Date: {selected_date_str}")
 
-with open(path, 'r', encoding='utf-8') as file:
-    html_content = file.read()
-    components.html(html_content, height=1000)
+    if selected_date_ddmm in data:
+        # Get the top voted options for the selected date
+        top_voted = get_top_voted_options(votes, selected_date_ddmm)
+
+        # Create and display the network with top voted options
+        net = create_network_with_top_votes(data, top_voted)
+        path = 'full_network.html'
+        net.save_graph(path)
+
+        with open(path, 'r', encoding='utf-8') as file:
+            html_content = file.read()
+            components.html(html_content, height=1000)
+    else:
+        st.write("No data available for the selected date.")
