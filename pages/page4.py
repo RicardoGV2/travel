@@ -111,8 +111,7 @@ for item in all_items:
         checked = st.checkbox(item["name"], value=item["checked"], key=f"{selected_user}_{item['name']}")
         update_item_state(selected_user, item["name"], checked)
     with col2:
-        st.markdown(f"<div style='text-align: right;'>{st.button('❌', key=f'delete_{selected_user}_{item['name']}')}</div>", unsafe_allow_html=True)
-        if st.session_state.get(f'delete_{selected_user}_{item["name"]}'):
+        if st.button('❌', key=f"delete_{selected_user}_{item['name']}"):
             if item in shared_items:
                 delete_shared_item(item["name"])
             else:
