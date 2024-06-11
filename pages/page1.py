@@ -16,42 +16,18 @@ components.iframe("https://lottie.host/embed/89efecc0-ccec-423e-b237-16c5de97190
 data_file = "data.json"
 votes_file = "votes.json"
 
-# Function to convert dates to "YYYY-MM-DD" format for internal processing
-def convert_dates_to_2024(data):
-    converted_data = {}
-    for date, value in data.items():
-        try:
-            converted_date = datetime.strptime(date, "%d/%m").replace(year=2024).strftime("%Y-%m-%d")
-            converted_data[converted_date] = value
-        except ValueError as e:
-            st.error(f"Date conversion error for {date}: {e}")
-    return converted_data
-
-# Function to convert dates from "YYYY-MM-DD" back to "dd/MM" for display
-def convert_dates_to_ddmm(data):
-    converted_data = {}
-    for date, value in data.items():
-        try:
-            converted_date = datetime.strptime(date, "%Y-%m-%d").strftime("%d/%m")
-            converted_data[converted_date] = value
-        except ValueError as e:
-            st.error(f"Date conversion error for {date}: {e}")
-    return converted_data
-
 # Function to load data
 def load_data():
     if os.path.exists(data_file):
         with open(data_file, 'r') as file:
-            data = json.load(file)
-            return convert_dates_to_2024(data)
+            return json.load(file)
     else:
         return {}
 
 # Function to save data
 def save_data(data):
-    data_to_save = convert_dates_to_ddmm(data)
     with open(data_file, 'w') as file:
-        json.dump(data_to_save, file, indent=4)
+        json.dump(data, file, indent=4)
 
 # Function to load votes
 def load_votes():
