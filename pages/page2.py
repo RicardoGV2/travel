@@ -52,7 +52,7 @@ def convert_dates_to_2024(data):
     return converted_data
 
 # Convert initial_data keys to "YYYY-MM-DD" format
-initial_data = convert_dates_to_2024(initial_data)
+data_2024 = convert_dates_to_2024(initial_data)
 
 # Function to load data
 def load_data():
@@ -60,7 +60,7 @@ def load_data():
         with open(data_file, 'r') as file:
             return json.load(file)
     else:
-        return initial_data
+        return data_2024
 
 # Function to save data
 def save_data(data):
@@ -73,7 +73,7 @@ def load_votes():
         with open(votes_file, 'r') as file:
             return json.load(file)
     else:
-        return {date: {time: {option: 0 for option in initial_data[date][time]} for time in initial_data[date]} for date in initial_data}
+        return {date: {time: {option: 0 for option in data_2024[date][time]} for time in data_2024[date]} for date in data_2024}
 
 # Load data and votes
 data = load_data()
