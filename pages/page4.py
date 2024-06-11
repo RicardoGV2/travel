@@ -121,8 +121,8 @@ st.markdown("""
         float: right;
         vertical-align: top;
         height: auto;
-        padding-top: 30px !important;
-        padding-bottom: -10px !important;
+        padding-top: -30px !important;
+        padding-bottom: 50px !important;
     }
     .item-container {
         display: flex;
