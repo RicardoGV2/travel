@@ -161,9 +161,10 @@ selected_date = st.date_input("Select Date to View Timeline:", value=event_dates
 
 if selected_date:
     selected_date_str = selected_date.strftime("%Y-%m-%d")
+    selected_date_ddmm = selected_date.strftime("%d/%m")
     st.write(f"Selected Date: {selected_date_str}")
 
-    if selected_date_str in data:
+    if selected_date_ddmm in initial_data:
         # Get the top voted options for the selected date
         top_voted = get_top_voted_options(votes, selected_date_str)
 
