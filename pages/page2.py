@@ -43,6 +43,12 @@ def load_votes():
 data = load_data()
 votes = load_votes()
 
+# Debugging: Display loaded data and votes
+st.write("Loaded data:")
+st.json(data)
+st.write("Loaded votes:")
+st.json(votes)
+
 # Ensure the username is set in the session state
 if 'username' not in st.session_state:
     st.session_state['username'] = "default"
@@ -135,6 +141,10 @@ if selected_date:
     selected_date_str = selected_date.strftime("%Y-%m-%d")
     selected_date_ddmm = selected_date.strftime("%d/%m")
     st.write(f"Selected Date: {selected_date_str}")
+
+    # Debugging: Check if selected date is in data
+    st.write(f"Checking if {selected_date_str} is in data...")
+    st.write(f"Data keys: {list(data.keys())}")
 
     if selected_date_str in data:
         # Get the top voted options for the selected date
