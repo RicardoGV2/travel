@@ -145,6 +145,7 @@ for item in all_items:
         st.markdown("""
         <style>
         button[kind="primary"] {
+            margin-bottom: 10px;
             background: none;
             border: none;
             color: red;
