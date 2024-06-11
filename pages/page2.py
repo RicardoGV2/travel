@@ -7,7 +7,7 @@ import json
 import os
 from collections import OrderedDict
 from streamlit_autorefresh import st_autorefresh
-from datetime import datetime, timedelta
+from datetime import datetime
 
 make_sidebar()
 
@@ -148,7 +148,6 @@ selected_date = st.date_input("Select Date to View Timeline:", value=event_dates
 
 if selected_date:
     selected_date_str = selected_date.strftime("%Y-%m-%d")
-    selected_date_ddmm = selected_date.strftime("%d/%m")
     st.write(f"Selected Date: {selected_date_str}")
 
     if selected_date_str in data:
