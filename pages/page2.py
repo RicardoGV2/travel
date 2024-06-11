@@ -28,17 +28,6 @@ def convert_dates_to_2024(data):
             st.error(f"Date conversion error for {date}: time data '{date}' does not match format '%d/%m'")
     return converted_data
 
-# Function to convert dates back to "DD/MM" format for display
-def convert_dates_to_ddmm(data):
-    converted_data = {}
-    for date, value in data.items():
-        try:
-            converted_date = datetime.strptime(date, "%Y-%m-%d").strftime("%d/%m")
-            converted_data[converted_date] = value
-        except ValueError:
-            st.error(f"Date conversion error for {date}: time data '{date}' does not match format '%Y-%m-%d'")
-    return converted_data
-
 # Function to load data
 def load_data():
     if os.path.exists(data_file):
@@ -127,6 +116,9 @@ st.sidebar.title("Settings")
 auto_refresh = st.sidebar.checkbox("Enable Auto Refresh", value=True)
 refresh_interval = st.sidebar.number_input("Refresh Interval (seconds)", min_value=1, max_value=60, value=7) if auto_refresh else None
 
+# Checkbox to show/hide debugging labels and JSON
+show_debug = st.sidebar.checkbox("Show Debug Info", value=False)
+
 # Autorefresh every 'refresh_interval' seconds if enabled
 if auto_refresh and refresh_interval:
     st_autorefresh(interval=refresh_interval * 1000, key="datarefresh")
@@ -153,6 +145,13 @@ if selected_date:
     if selected_date_str in data:
         # Get the top voted options for the selected date
         top_voted = get_top_voted_options(votes, selected_date_str)
+
+        # Display the data being sent to the timeline
+        if show_debug:
+            st.write("## Debug Info: Data Sent to Timeline")
+            st.json(data[selected_date_str])
+            st.write("## Debug Info: Top Voted Options")
+            st.json(top_voted)
 
         # Create and display the network with top voted options
         net = create_network_with_top_votes(data, top_voted)
