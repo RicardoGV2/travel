@@ -137,12 +137,16 @@ if auto_refresh and refresh_interval:
 def get_event_dates(data):
     event_dates = []
     for date in data:
-        event_dates.append(datetime.strptime(date, "%Y-%m-%d").date())
+        try:
+            event_dates.append(datetime.strptime(date, "%Y-%m-%d").date())
+        except ValueError as e:
+            print(f"Date parsing error for {date}: {e}")
     return event_dates
 
 # Calendar for date selection
 st.title("Timeline Viewer")
 event_dates = get_event_dates(data)
+print(f"Event dates: {event_dates}")
 selected_date = stcal.calendar(selected=event_dates, unique=True)
 
 if selected_date:
