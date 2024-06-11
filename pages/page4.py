@@ -117,12 +117,12 @@ st.markdown("""
         cursor: pointer;
         font-size: 1.2em;
         margin-left: 10px;
-        margin-bottom: 20px;
+        margin-bottom: 30px !important;
         float: right;
-        vertical-align: top !important;;
+        vertical-align: top !important;
         height: auto;
-        padding-top: -30px !important;
-        padding-bottom: 50px !important;
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
     }
     .item-container {
         display: flex;
