@@ -1,131 +1,4 @@
-import streamlit as st
-from time import sleep
-import os
-import json
 from navigation import make_sidebar
-from user_management import authenticate_user
-import streamlit.components.v1 as components
-from st_keyup import st_keyup
-
-make_sidebar()
-
-# Paths to jsons
-users_file = "users.json"
-state_file = "state.json"
-
-components.iframe("https://lottie.host/embed/b95a4da8-6ec1-40a4-96d2-dc049c1dfd22/sy5diXhx67.json")
-
-st.title("Welcome to Australia")
-
-# Load users
-def load_data(file_path):
-    if os.path.exists(file_path):
-        with open(file_path, 'r') as file:
-            return json.load(file)
-    else:
-        return {}
-
-# Load and save state functions
-def load_state(file_path):
-    if os.path.exists(file_path):
-        with open(file_path, 'r') as file:
-            return json.load(file)
-    else:
-        return {}
-
-def save_state(file_path, data):
-    with open(file_path, 'w') as file:
-        json.dump(data, file, indent=4)
-
-users_data = load_data(users_file)
-allowed_users = list(users_data.keys())
-password_placeholder = "Password (use 'australia')"
-
-# Load state
-state_data = load_state(state_file)
-
-# Initialize character count in session state
-if 'char_count' not in st.session_state:
-    st.session_state.char_count = 0
-
-# Initialize arrow animation state in session state
-if 'disable_arrow_animation' not in st.session_state:
-    st.session_state.disable_arrow_animation = state_data.get('disable_arrow_animation', False)
-
-# Initialize debounce state in session state
-if 'debounce' not in st.session_state:
-    st.session_state.debounce = state_data.get('debounce', False)
-
-# Sidebar settings
-with st.sidebar:
-    disable_arrow_animation = st.checkbox("Disable Arrow Animation", value=st.session_state.disable_arrow_animation)
-    debounce = st.checkbox("Add 0.1s debounce?", value=st.session_state.debounce)
-
-# Save state when checkboxes change
-if disable_arrow_animation != st.session_state.disable_arrow_animation:
-    st.session_state.disable_arrow_animation = disable_arrow_animation
-    state_data['disable_arrow_animation'] = disable_arrow_animation
-    save_state(state_file, state_data)
-
-if debounce != st.session_state.debounce:
-    st.session_state.debounce = debounce
-    state_data['debounce'] = debounce
-    save_state(state_file, state_data)
-
-# Login form
-username = st.selectbox("Username", options=allowed_users)
-password = st_keyup(password_placeholder, key="password_input", type="password", debounce=100 if st.session_state.debounce else None)
-
-# Update character count
-st.session_state.char_count = len(password)
-
-if st.button("Log in", type="primary"):
-    if authenticate_user(username, password):
-        st.session_state.logged_in = True
-        st.session_state.username = username  # Store the username in session state
-        st.success("Logged in successfully!")
-        sleep(0.5)
-        st.switch_page("pages/page1.py") 
-    else:
-        st.error("Incorrect username or password")
-
-# Initialize arrow position in session state
-if "arrow_position" not in st.session_state:
-    st.session_state.arrow_position = 0
-
-if "arrow_position" in st.session_state:
-    st.session_state.arrow_position = st.session_state.char_count * 8.7
-
-if not st.session_state.get('disable_arrow_animation', False):
-    # Custom HTML, CSS, and JavaScript for the arrow animation
-    st.markdown(f"""
-        <style>
-        .arrow {{
-            width: 0; 
-            height: 0; 
-            border-left: 7px solid transparent;
-            border-right: 7px solid transparent;
-            border-bottom: 17px solid red;
-            position: absolute;
-            animation: bounce 1s infinite;
-            left: {st.session_state.arrow_position + 9}px;  /* Adjust to point correctly */
-            top: -80px;  /* Adjust this value based on the position of your input field */
-        }}
-        @keyframes bounce {{
-            0%, 20%, 50%, 80%, 100% {{
-                transform: translateY(0); 
-            }}
-            40% {{
-                transform: translateY(-10px); 
-            }}
-            60% {{
-                transform: translateY(-5px); 
-            }}
-        }}
-        </style>
-        <div class="arrow" id="arrow"></div>
-    """, unsafe_allow_html=True)
-
 import streamlit as st
 from pyvis.network import Network
 import networkx as nx
@@ -134,10 +7,11 @@ import json
 import os
 from collections import OrderedDict
 from streamlit_autorefresh import st_autorefresh
+import streamlit.components.v1 as components
 
 make_sidebar()
 
-components.iframe("https://lottie.host/embed/d184c6c6-3f70-4986-858c-358a985a98cc/mgG3h5XqEX.json")
+components.iframe("https://lottie.host/embed/7f29759c-68e1-44dc-9e29-1dba4a8dcd35/oFZnsvwURp.json")
 
 # Paths to the data and votes files
 data_file = "data.json"
@@ -205,7 +79,7 @@ def get_top_voted_options(votes, selected_date=None):
 
 # Function to create network with top voted options
 def create_network_with_top_votes(data, top_voted):
-    net = Network(height="1000px", width="100%", directed=True, bgcolor='#f0f2f6', font_color='black')
+    net = Network(height="1000px", width="100%", directed=True)
     G = nx.DiGraph()
 
     previous_node = None
@@ -249,4 +123,24 @@ def create_network_with_top_votes(data, top_voted):
 # Add a setting to pause or continue autorefresh and to show/hide votes JSON
 st.sidebar.title("Settings")
 auto_refresh = st.sidebar.checkbox("Enable Auto Refresh", value=True)
-refresh_interval = st.sidebar.number_input("Refresh Interval (seconds)", min_value=1, max_value=60, value=7) if auto_refresh
+refresh_interval = st.sidebar.number_input("Refresh Interval (seconds)", min_value=1, max_value=60, value=7) if auto_refresh else None
+
+# Autorefresh every 'refresh_interval' seconds if enabled
+if auto_refresh and refresh_interval:
+    st_autorefresh(interval=refresh_interval * 1000, key="datarefresh")
+
+# Date selection for timeline
+st.title("Timeline Viewer")
+selected_date = st.selectbox("Select Date to View Timeline:", options=list(data.keys()), format_func=lambda x: x)
+
+# Get the top voted options for the selected date
+top_voted = get_top_voted_options(votes, selected_date)
+
+# Create and display the network with top voted options
+net = create_network_with_top_votes(data, top_voted)
+path = 'full_network.html'
+net.save_graph(path)
+
+with open(path, 'r', encoding='utf-8') as file:
+    html_content = file.read()
+    components.html(html_content, height=1000)
