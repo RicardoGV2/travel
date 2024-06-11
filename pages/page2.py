@@ -58,14 +58,23 @@ votes = load_votes(data)
 # Function to get top voted options
 def get_top_voted_options(votes, selected_date=None):
     top_voted = {}
+    st.write("Votes data:", votes)  # Debug: Display the votes data
     for date in votes:
         if selected_date and date != selected_date:
             continue
         top_voted[date] = {}
+        st.write(f"Processing date: {date}")  # Debug: Display the date being processed
         for time in votes[date]:
             options = votes[date][time]
-            top_option = max(options, key=options.get)
-            top_voted[date][time] = top_option
+            st.write(f"Options for {time}:", options)  # Debug: Display the options for the time
+            if options:
+                top_option = max(options, key=options.get)
+                st.write(f"Top option for {time}: {top_option}")  # Debug: Display the top option
+                top_voted[date][time] = top_option
+            else:
+                st.write(f"No options for {time}")  # Debug: Display when there are no options
+                top_voted[date][time] = None
+    st.write("Top voted options:", top_voted)  # Debug: Display the top voted options
     return top_voted
 
 # Function to create network with top voted options
