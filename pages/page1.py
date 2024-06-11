@@ -91,7 +91,7 @@ initial_data = {
     },
     "30/06": {
         "All Day": ["Llevarlos a Brisbane"]
-    }
+    },
 }
 
 
