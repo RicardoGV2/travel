@@ -124,33 +124,19 @@ for item in all_items:
     checked = item["checked"]
     key_prefix = f"{selected_user}_{item_name}"
 
-    # Using Streamlit components for interaction
-    checkbox_html = f"""
-    <input type="checkbox" class="checkbox" id="{key_prefix}_checkbox" {'checked' if checked else ''} onchange="updateItemState('{selected_user}', '{item_name}', this.checked)">
-    <label for="{key_prefix}_checkbox">{item_name}</label>
-    """
-
-    button_html = ""
-    if selected_user == "Shared" or item in shared_items:
-        if selected_user == "Shared":
-            button_html = f"""
-            <button class="delete-button" onclick="deleteSharedItem('{item_name}')">❌</button>
-            """
+    col1, col2 = st.columns([0.9, 0.1])
+    with col1:
+        st.checkbox(item_name, value=checked, key=f"{key_prefix}_checkbox", on_change=update_item_state, args=(selected_user, item_name, not checked))
+    with col2:
+        if selected_user == "Shared" or item in shared_items:
+            if selected_user == "Shared":
+                if st.button('❌', key=f'{key_prefix}_button', on_click=delete_shared_item, args=(item_name,), type="primary"):
+                    delete_shared_item(item_name)
+            else:
+                st.button('❌', key=f'{key_prefix}_button', disabled=True)
         else:
-            button_html = f"""
-            <button class="delete-button" disabled>❌</button>
-            """
-    else:
-        button_html = f"""
-        <button class="delete-button" onclick="deleteItem('{selected_user}', '{item_name}')">❌</button>
-        """
-
-    st.markdown(f"""
-    <div class="horizontal-container">
-        {checkbox_html}
-        {button_html}
-    </div>
-    """, unsafe_allow_html=True)
+            if st.button('❌', key=f'{key_prefix}_button', on_click=delete_item_from_checklist, args=(selected_user, item_name), type="primary"):
+                delete_item_from_checklist(selected_user, item_name)
 
 # Option to show/hide checklists JSON, available only for user "Ricardo"
 if st.session_state.get("username") == "Ricardo":
