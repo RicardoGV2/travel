@@ -8,7 +8,7 @@ import streamlit.components.v1 as components
 
 make_sidebar()
 
-components.iframe("https://lottie.host/embed/9baf20e0-746f-479c-ae84-db01663d2618/APnILAMrdN.json")
+animation_url = "https://lottie.host/embed/d184c6c6-3f70-4986-858c-358a985a98cc/mgG3h5XqEX.json"
 
 # Paths to the checklists and users files
 checklists_file = "checklists.json"
@@ -43,30 +43,34 @@ checklists = load_data(checklists_file, default_checklists)
 # Function to add an item to a checklist
 def add_item_to_checklist(user, item):
     if item not in [i["name"] for i in checklists["users"][user]]:
-        checklists["users"][user].append({"name": item, "checked": False})
-        save_data(checklists_file, checklists)
-        st.experimental_rerun()
+        with st.spinner('Adding item...'):
+            checklists["users"][user].append({"name": item, "checked": False})
+            save_data(checklists_file, checklists)
+            st.experimental_rerun()
 
 # Function to update the checked state of an item
 def update_item_state(user, item_name, checked):
-    for item in checklists["users"][user]:
-        if item["name"] == item_name:
-            item["checked"] = checked
-            break
-    save_data(checklists_file, checklists)
+    with st.spinner('Updating item state...'):
+        for item in checklists["users"][user]:
+            if item["name"] == item_name:
+                item["checked"] = checked
+                break
+        save_data(checklists_file, checklists)
 
 # Function to delete an item from a checklist
 def delete_item_from_checklist(user, item_name):
-    checklists["users"][user] = [item for item in checklists["users"][user] if item["name"] != item_name]
-    save_data(checklists_file, checklists)
-    st.experimental_rerun()
+    with st.spinner('Deleting item...'):
+        checklists["users"][user] = [item for item in checklists["users"][user] if item["name"] != item_name]
+        save_data(checklists_file, checklists)
+        st.experimental_rerun()
 
 # Function to delete a shared item
 def delete_shared_item(item_name):
-    for user in checklists["users"]:
-        checklists["users"][user] = [item for item in checklists["users"][user] if item["name"] != item_name]
-    save_data(checklists_file, checklists)
-    st.experimental_rerun()
+    with st.spinner('Deleting shared item...'):
+        for user in checklists["users"]:
+            checklists["users"][user] = [item for item in checklists["users"][user] if item["name"] != item_name]
+        save_data(checklists_file, checklists)
+        st.experimental_rerun()
 
 # Page layout
 st.title("Checklist")
