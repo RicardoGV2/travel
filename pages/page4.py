@@ -47,16 +47,6 @@ def add_item_to_checklist(user, item):
         save_data(checklists_file, checklists)
         st.experimental_rerun()
 
-# Function to add a shared item to all checklists
-def add_shared_item(item):
-    if item not in [i["name"] for i in checklists["users"]["Shared"]]:
-        checklists["users"]["Shared"].append({"name": item, "checked": False})
-        for user in checklists["users"]:
-            if user != "Shared" and item not in [i["name"] for i in checklists["users"][user]]:
-                checklists["users"][user].append({"name": item, "checked": False})
-        save_data(checklists_file, checklists)
-        st.experimental_rerun()
-
 # Function to update the checked state of an item
 def update_item_state(user, item_name, checked):
     for item in checklists["users"][user]:
@@ -71,7 +61,7 @@ def delete_item_from_checklist(user, item_name):
     save_data(checklists_file, checklists)
     st.experimental_rerun()
 
-# Function to delete a shared item from all checklists
+# Function to delete a shared item
 def delete_shared_item(item_name):
     for user in checklists["users"]:
         checklists["users"][user] = [item for item in checklists["users"][user] if item["name"] != item_name]
@@ -87,12 +77,8 @@ user = st.selectbox("Select User:", ["Shared"] + list(users.keys()), key="user")
 item = st.text_input("Add an item:", key="item")
 if st.button("Add Item"):
     if item:
-        if user == "Shared":
-            add_shared_item(item)
-            st.success(f"Added '{item}' to shared checklist.")
-        else:
-            add_item_to_checklist(user, item)
-            st.success(f"Added '{item}' to {user}'s checklist.")
+        add_item_to_checklist(user, item)
+        st.success(f"Added '{item}' to {user}'s checklist.")
     else:
         st.error("Please enter an item.")
 
@@ -107,53 +93,64 @@ user_items = checklists["users"][selected_user]
 # Combine shared and user-specific items without duplicating shared items
 all_items = {item["name"]: item for item in shared_items + user_items}.values()
 
-# CSS to style the delete button as an icon and align it to the right
+# Add custom CSS for button alignment
 st.markdown("""
     <style>
-    button[kind="primary"] {
-        background: none;
-        border: none;
-        color: red;
-        cursor: pointer;
-        font-size: 1.2em;
-        margin-left: 10px;
-        margin-bottom: 40px !important;
-        float: right;
-        vertical-align: top !important;
-        height: auto;
-        padding-top: 10px !important;
-        padding-bottom: 10px !important;
-    }
-    .item-container {
+    .horizontal-container {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        border-bottom: 1px solid #ddd;
-        padding: 0px 0;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+    .horizontal-container .checkbox {
+        margin-right: 10px;
+    }
+    .horizontal-container .delete-button {
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: red;
+        font-size: 16px;
+    }
+    .horizontal-container .delete-button:disabled {
+        color: gray;
+        cursor: not-allowed;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# Display items with delete buttons
 for item in all_items:
     item_name = item["name"]
     checked = item["checked"]
-    key_prefix = f"{selected_user}_{item_name}" if selected_user != "Shared" else f"Shared_{item_name}"
-    col1, col2 = st.columns(2)#st.columns([0.9, 0.1])
-    with col1:
-        st.checkbox(item_name, value=checked, key=f"{key_prefix}_checkbox", on_change=update_item_state, args=(selected_user, item_name, not checked))
-    with col2:
-        if item in shared_items:
-            if selected_user == "Shared":
-                st.button('❌', key=f'{key_prefix}_button', on_click=delete_shared_item, args=(item_name,), type="primary")
-            else:
-                #st.markdown("<button class='delete-button' disabled>❌</button>", unsafe_allow_html=True)
-                st.button('❌', key=f'{key_prefix}_button1', on_click=delete_shared_item, args=(item_name,), type="primary", disabled=True)
-        else:
-            st.button('❌', key=f'{key_prefix}_button', on_click=delete_item_from_checklist, args=(selected_user, item_name), type="primary")
-       
+    key_prefix = f"{selected_user}_{item_name}"
 
-    
+    # Using Streamlit components for interaction
+    checkbox_html = f"""
+    <input type="checkbox" class="checkbox" id="{key_prefix}_checkbox" {'checked' if checked else ''} onchange="updateItemState('{selected_user}', '{item_name}', this.checked)">
+    <label for="{key_prefix}_checkbox">{item_name}</label>
+    """
+
+    button_html = ""
+    if selected_user == "Shared" or item in shared_items:
+        if selected_user == "Shared":
+            button_html = f"""
+            <button class="delete-button" onclick="deleteSharedItem('{item_name}')">❌</button>
+            """
+        else:
+            button_html = f"""
+            <button class="delete-button" disabled>❌</button>
+            """
+    else:
+        button_html = f"""
+        <button class="delete-button" onclick="deleteItem('{selected_user}', '{item_name}')">❌</button>
+        """
+
+    st.markdown(f"""
+    <div class="horizontal-container">
+        {checkbox_html}
+        {button_html}
+    </div>
+    """, unsafe_allow_html=True)
 
 # Option to show/hide checklists JSON, available only for user "Ricardo"
 if st.session_state.get("username") == "Ricardo":
