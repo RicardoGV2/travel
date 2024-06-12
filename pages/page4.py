@@ -5,11 +5,10 @@ from collections import defaultdict
 from navigation import make_sidebar
 from streamlit_autorefresh import st_autorefresh
 import streamlit.components.v1 as components
-import time
 
 make_sidebar()
 
-animation_url = "https://lottie.host/embed/d184c6c6-3f70-4986-858c-358a985a98cc/mgG3h5XqEX.json"
+components.iframe("https://lottie.host/embed/9baf20e0-746f-479c-ae84-db01663d2618/APnILAMrdN.json")
 
 # Paths to the checklists and users files
 checklists_file = "checklists.json"
@@ -41,53 +40,34 @@ default_checklists["users"]["Shared"] = []
 # Load checklists
 checklists = load_data(checklists_file, default_checklists)
 
+# Initialize session state for checklists if not present
+if "checklists" not in st.session_state:
+    st.session_state["checklists"] = checklists
+
 # Function to add an item to a checklist
 def add_item_to_checklist(user, item):
-    if item not in [i["name"] for i in checklists["users"][user]]:
-        placeholder = st.empty()
-        with placeholder:
-            components.iframe(animation_url, height=400)
-        checklists["users"][user].append({"name": item, "checked": False})
-        save_data(checklists_file, checklists)
-        time.sleep(1)  # Add delay to ensure spinner is visible
-        placeholder.empty()
-        st.experimental_rerun()
+    if item not in [i["name"] for i in st.session_state["checklists"]["users"][user]]:
+        st.session_state["checklists"]["users"][user].append({"name": item, "checked": False})
+        save_data(checklists_file, st.session_state["checklists"])
 
 # Function to update the checked state of an item
 def update_item_state(user, item_name, checked):
-    placeholder = st.empty()
-    with placeholder:
-        components.iframe(animation_url, height=400)
-    for item in checklists["users"][user]:
+    for item in st.session_state["checklists"]["users"][user]:
         if item["name"] == item_name:
             item["checked"] = checked
             break
-    save_data(checklists_file, checklists)
-    time.sleep(1)  # Add delay to ensure spinner is visible
-    placeholder.empty()
+    save_data(checklists_file, st.session_state["checklists"])
 
 # Function to delete an item from a checklist
 def delete_item_from_checklist(user, item_name):
-    placeholder = st.empty()
-    with placeholder:
-        components.iframe(animation_url, height=400)
-    checklists["users"][user] = [item for item in checklists["users"][user] if item["name"] != item_name]
-    save_data(checklists_file, checklists)
-    time.sleep(1)  # Add delay to ensure spinner is visible
-    placeholder.empty()
-    st.experimental_rerun()
+    st.session_state["checklists"]["users"][user] = [item for item in st.session_state["checklists"]["users"][user] if item["name"] != item_name]
+    save_data(checklists_file, st.session_state["checklists"])
 
 # Function to delete a shared item
 def delete_shared_item(item_name):
-    placeholder = st.empty()
-    with placeholder:
-        components.iframe(animation_url, height=400)
-    for user in checklists["users"]:
-        checklists["users"][user] = [item for item in checklists["users"][user] if item["name"] != item_name]
-    save_data(checklists_file, checklists)
-    time.sleep(1)  # Add delay to ensure spinner is visible
-    placeholder.empty()
-    st.experimental_rerun()
+    for user in st.session_state["checklists"]["users"]:
+        st.session_state["checklists"]["users"][user] = [item for item in st.session_state["checklists"]["users"][user] if item["name"] != item_name]
+    save_data(checklists_file, st.session_state["checklists"])
 
 # Page layout
 st.title("Checklist")
@@ -108,8 +88,8 @@ selected_user = st.selectbox("View Checklist for User:", ["Shared"] + list(users
 
 # Display checklists with checkboxes and delete buttons, including shared items
 st.subheader(f"{selected_user}'s Checklist (including Shared)")
-shared_items = checklists["users"]["Shared"]
-user_items = checklists["users"][selected_user]
+shared_items = st.session_state["checklists"]["users"]["Shared"]
+user_items = st.session_state["checklists"]["users"][selected_user]
 
 # Combine shared and user-specific items without duplicating shared items
 all_items = {item["name"]: item for item in shared_items + user_items}.values()
@@ -145,24 +125,24 @@ for item in all_items:
     checked = item["checked"]
     key_prefix = f"{selected_user}_{item_name}"
 
-    st.markdown(
-        f"""
-        <div class="horizontal-container">
-            <div class="checkbox">{st.checkbox(item_name, value=checked, key=f"{key_prefix}_checkbox", on_change=update_item_state, args=(selected_user, item_name, not checked))}</div>
-            <div class="delete-button">
-                {"<button class='delete-button' onclick='delete_shared_item(item_name)' disabled>❌</button>" if selected_user != "Shared" and item in shared_items else st.button('❌', key=f'{key_prefix}_button', on_click=delete_shared_item if selected_user == "Shared" else delete_item_from_checklist, args=(selected_user, item_name) if selected_user != "Shared" else (item_name,))}
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    col1, col2 = st.columns([0.9, 0.1])
+    with col1:
+        st.checkbox(item_name, value=checked, key=f"{key_prefix}_checkbox", on_change=update_item_state, args=(selected_user, item_name, not checked))
+    with col2:
+        if selected_user == "Shared" or item in shared_items:
+            if selected_user == "Shared":
+                st.button('❌', key=f'{key_prefix}_button', on_click=delete_shared_item, args=(item_name,))
+            else:
+                st.button('❌', key=f'{key_prefix}_button', disabled=True)
+        else:
+            st.button('❌', key=f'{key_prefix}_button', on_click=delete_item_from_checklist, args=(selected_user, item_name))
 
 # Option to show/hide checklists JSON, available only for user "Ricardo"
 if st.session_state.get("username") == "Ricardo":
     show_checklists_json = st.sidebar.checkbox("Show Checklists JSON", value=False)
     if show_checklists_json:
         st.write("## Current Checklists JSON")
-        st.json(checklists)
+        st.json(st.session_state["checklists"])
 
 # Auto refresh settings
 st.sidebar.title("Settings")
