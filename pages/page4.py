@@ -43,34 +43,46 @@ checklists = load_data(checklists_file, default_checklists)
 # Function to add an item to a checklist
 def add_item_to_checklist(user, item):
     if item not in [i["name"] for i in checklists["users"][user]]:
-        with st.spinner('Adding item...'):
-            checklists["users"][user].append({"name": item, "checked": False})
-            save_data(checklists_file, checklists)
-            st.experimental_rerun()
+        placeholder = st.empty()
+        with placeholder:
+            components.iframe(animation_url, height=400)
+        checklists["users"][user].append({"name": item, "checked": False})
+        save_data(checklists_file, checklists)
+        placeholder.empty()
+        st.experimental_rerun()
 
 # Function to update the checked state of an item
 def update_item_state(user, item_name, checked):
-    with st.spinner('Updating item state...'):
-        for item in checklists["users"][user]:
-            if item["name"] == item_name:
-                item["checked"] = checked
-                break
-        save_data(checklists_file, checklists)
+    placeholder = st.empty()
+    with placeholder:
+        components.iframe(animation_url, height=400)
+    for item in checklists["users"][user]:
+        if item["name"] == item_name:
+            item["checked"] = checked
+            break
+    save_data(checklists_file, checklists)
+    placeholder.empty()
 
 # Function to delete an item from a checklist
 def delete_item_from_checklist(user, item_name):
-    with st.spinner('Deleting item...'):
-        checklists["users"][user] = [item for item in checklists["users"][user] if item["name"] != item_name]
-        save_data(checklists_file, checklists)
-        st.experimental_rerun()
+    placeholder = st.empty()
+    with placeholder:
+        components.iframe(animation_url, height=400)
+    checklists["users"][user] = [item for item in checklists["users"][user] if item["name"] != item_name]
+    save_data(checklists_file, checklists)
+    placeholder.empty()
+    st.experimental_rerun()
 
 # Function to delete a shared item
 def delete_shared_item(item_name):
-    with st.spinner('Deleting shared item...'):
-        for user in checklists["users"]:
-            checklists["users"][user] = [item for item in checklists["users"][user] if item["name"] != item_name]
-        save_data(checklists_file, checklists)
-        st.experimental_rerun()
+    placeholder = st.empty()
+    with placeholder:
+        components.iframe(animation_url, height=400)
+    for user in checklists["users"]:
+        checklists["users"][user] = [item for item in checklists["users"][user] if item["name"] != item_name]
+    save_data(checklists_file, checklists)
+    placeholder.empty()
+    st.experimental_rerun()
 
 # Page layout
 st.title("Checklist")
